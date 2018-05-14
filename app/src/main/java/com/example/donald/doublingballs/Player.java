@@ -14,17 +14,17 @@ enum Direction {
 
 public class Player {
 
-    private int xPos;
-    private int yPos;
-    private float speed = 7f;
+    private float xPos;
+    private float yPos;
+    private float speed = 20f; // TODO Turbotreter
 
     private Direction direction = Direction.RIGHT;
     private State currentState = State.RIGHT_STAND_STILL;
 
     private int pictureCount;
 
-    private int playerWidth;
-    private int playerHeigth;
+    private float playerWidth;
+    private float playerHeigth;
 
     private Bitmap[] leftWalk;
     private Bitmap[] rightWalk;
@@ -38,8 +38,8 @@ public class Player {
 
     public Player(Bitmap[] leftWalk, Bitmap[] rightWalk,
                   Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting) {
-        this.xPos = 100;
-        this.yPos = 0;
+        this.xPos = Constants.SCREEN_WIDTH / 2;
+        this.yPos = Constants.SCREEN_HEIGHT; // TODO Background.height * % Anteil
         this.leftWalk = leftWalk;
         this.rightWalk = rightWalk;
         this.leftStandStill = leftStandStill;
@@ -54,6 +54,7 @@ public class Player {
         pictureCount = 0;
     }
 
+    /*
     public void determineState() {
         if (direction == Direction.LEFT) {
             switch (getCurrentState()) {
@@ -92,14 +93,15 @@ public class Player {
             }
         }
     }
+    */
 
     public void update(Canvas c, float numberOfFrames)  {
         //determineState();
         float movedDistance = speed * numberOfFrames;
         if(currentState == State.WALK_LEFT || currentState == State.LEFT_START_WALK) {
             xPos -= movedDistance;
-            if (xPos - playerWidth/2 < 0) {
-                xPos = playerWidth/2;
+            if (xPos - playerHeigth/2 < 0) { // Walking against a wall
+                xPos = playerHeigth/2;
             }
         }
         else if (currentState == State.WALK_RIGHT || currentState == State.RIGHT_START_WALK) {
@@ -113,7 +115,6 @@ public class Player {
     }
 
     public void draw(Canvas canvas) {
-        //TODO RUNDUNGSFEHLER!! NICHT FLOAT SONDERN INT
         RectF rect = new RectF(xPos-playerWidth/2, canvas.getHeight()-playerHeigth*2, xPos+playerWidth/2, canvas.getHeight()-playerHeigth);
         switch(currentState) {
             case LEFT_STAND_STILL:  canvas.drawBitmap(leftStandStill, null, rect, null);
@@ -141,7 +142,7 @@ public class Player {
         }
     }
 
-    public int getxPos() {
+    public float getxPos() {
         return xPos;
     }
 
@@ -149,7 +150,7 @@ public class Player {
         this.xPos = xPos;
     }
 
-    public int getyPos() {
+    public float getyPos() {
         return yPos;
     }
 
@@ -189,7 +190,7 @@ public class Player {
         this.pictureCount = pictureCount;
     }
 
-    public int getPlayerWidth() {
+    public float getPlayerWidth() {
         return playerWidth;
     }
 
@@ -197,7 +198,7 @@ public class Player {
         this.playerWidth = playerWidth;
     }
 
-    public int getPlayerHeigth() {
+    public float getPlayerHeigth() {
         return playerHeigth;
     }
 

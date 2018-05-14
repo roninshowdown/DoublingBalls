@@ -97,10 +97,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             float xPressed = event.getX();
             float yPressed = event.getY();
-            while(event.getAction() == MotionEvent.ACTION_BUTTON_PRESS) Log.d("test", "working");
+            //while(event.getAction() == MotionEvent.ACTION_BUTTON_PRESS) Log.d("test", "working");
             if (xPressed <= buttonLeft.right && xPressed >= buttonLeft.left && yPressed <= buttonLeft.bottom && yPressed >= buttonLeft.top) player.setCurrentState(State.WALK_LEFT);//player.setDirection(Direction.LEFT);
-            if (xPressed <= buttonRight.right && xPressed >= buttonRight.left && yPressed <= buttonRight.bottom && yPressed >= buttonRight.top) player.setCurrentState(State.WALK_RIGHT);//player.setDirection(Direction.RIGHT);
-            if (xPressed <= buttonShoot.right && xPressed >= buttonShoot.left && yPressed <= buttonShoot.bottom && yPressed >= buttonShoot.top) {
+            else if (xPressed <= buttonRight.right && xPressed >= buttonRight.left && yPressed <= buttonRight.bottom && yPressed >= buttonRight.top) player.setCurrentState(State.WALK_RIGHT);//player.setDirection(Direction.RIGHT);
+            else if (xPressed <= buttonShoot.right && xPressed >= buttonShoot.left && yPressed <= buttonShoot.bottom && yPressed >= buttonShoot.top) {
                 player.setCurrentState(State.SHOOT);
                 shots.add(new Shot(player.getxPos(), player.getyPos()-player.getPlayerHeigth(), shot, player));
             }
@@ -165,8 +165,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      * @param numberOfFrames: No. of frames since last call
      */
     private void calculateDisplay(Canvas canvas, float numberOfFrames) {
-        randomlyAddBubbles(canvas.getWidth(), canvas.getHeight(), numberOfFrames);		//Add a new bubble
-        LinkedList<Bubble> bubblesToRemove = new LinkedList<Bubble>();	//Move all bubbles
+        //randomlyAddBubbles(canvas.getWidth(), canvas.getHeight(), numberOfFrames);		//Add a new bubble
+        //LinkedList<Bubble> bubblesToRemove = new LinkedList<Bubble>();	//Move all bubbles
 		/*for (Bubble bubble : bubbles) {
 			bubble.move(canvas, numberOfFrames);
 			if (bubble.outOfRange())									//and keep display leavers in mind
