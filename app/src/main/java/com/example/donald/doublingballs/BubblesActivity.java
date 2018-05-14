@@ -10,9 +10,9 @@ public class BubblesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bubble);
-        DisplayMetrics dm = new DisplayMetrics();
+        /*DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         Constants.SCREEN_WIDTH = dm.widthPixels;
-        Constants.SCREEN_HEIGHT = dm.heightPixels;
+        Constants.SCREEN_HEIGHT = dm.heightPixels;*/
     }
 }
