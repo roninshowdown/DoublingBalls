@@ -245,7 +245,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
                     float fps = 1000.0f / ((float)samplesSum / fpsSamples.length);
                     canvas.drawText(String.format("FPS: %f", fps), 10, 10, new Paint());
-
+                    //CF
 
                     calculateDisplay(canvas, framesSinceLastFrame);	//update positions of bubbles
 
