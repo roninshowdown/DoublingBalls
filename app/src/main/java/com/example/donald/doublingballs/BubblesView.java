@@ -114,8 +114,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 player.setDirection(Direction.RIGHT);
             }
             else if (xPressed <= buttonShoot.right && xPressed >= buttonShoot.left && yPressed <= buttonShoot.bottom && yPressed >= buttonShoot.top) {
-                player.setCurrentState(State.SHOOT);
-                shots.add(new Shot(player.getxPos(), 0, shot, player));
+                if (shots.toArray().length < 3) {
+                    shots.add(new Shot(player.getxPos(), 0, shot, player));
+                    player.setCurrentState(State.SHOOT);
+                }
 
             }
             return true;
@@ -253,7 +255,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
                     float fps = 1000.0f / ((float)samplesSum / fpsSamples.length);
                     canvas.drawText(String.format("FPS: %f", fps), 10, 10, new Paint());
-                    //CF
 
                     calculateDisplay(canvas, framesSinceLastFrame);	//update positions of bubbles
 
