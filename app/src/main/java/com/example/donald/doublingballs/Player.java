@@ -39,7 +39,7 @@ public class Player {
     public Player(Bitmap[] leftWalk, Bitmap[] rightWalk,
                   Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting) {
         this.xPos = Constants.SCREEN_WIDTH / 2;
-        this.yPos = Constants.SCREEN_HEIGHT; // TODO Background.height * % Anteil
+        this.yPos = Constants.SCREEN_HEIGHT * 1.033F; // TODO Background.height * % Anteil
         this.leftWalk = leftWalk;
         this.rightWalk = rightWalk;
         this.leftStandStill = leftStandStill;
@@ -115,7 +115,7 @@ public class Player {
     }
 
     public void draw(Canvas canvas) {
-        RectF rect = new RectF(xPos-playerWidth/2, canvas.getHeight()-playerHeigth*2, xPos+playerWidth/2, canvas.getHeight()-playerHeigth);
+        RectF rect = new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth);
         switch(currentState) {
             case LEFT_STAND_STILL:  canvas.drawBitmap(leftStandStill, null, rect, null);
                 break;
