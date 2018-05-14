@@ -14,7 +14,6 @@ class Bubble {
     public static final int MAX_SPEED = 10;
     public static final int MIN_SPEED = 1;
     private float amountOfWobble = 0;
-    private int test;
 
     private static final float DOUBLE_PI = (float)(2*3.141529);
     public static final float WOBBLE_RATE = (float)8*DOUBLE_PI;
