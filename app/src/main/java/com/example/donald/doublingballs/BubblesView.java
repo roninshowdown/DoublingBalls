@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
