@@ -12,6 +12,7 @@ public class Shot {
     private float shotHeigth;
     private Player player;
     private Bitmap image;
+    private boolean newlyInstantiated = true;
 
     public Shot(float xPos, float yPos, Bitmap image, Player player) {
         this.xPos = xPos;
@@ -23,17 +24,35 @@ public class Shot {
         speed = 7f;
     }
 
-    public void update(Canvas c, float numberOfframes){
-        float movedDistance = speed * numberOfframes;
-        yPos += movedDistance;
+    public void update(Canvas c, float numberOfFrames){
+        float movedDistance = speed * numberOfFrames;
+        if(newlyInstantiated) {
+            yPos = c.getHeight()-player.getPlayerHeigth()*1.7f;
+            newlyInstantiated = false;
+        }
+        yPos -= movedDistance;
     }
-    //TODO FLUGRICHTUNG/SPAWN VON SHOTS
     public void draw(Canvas canvas) {
-        RectF rect = new RectF(xPos-shotWidth/2, canvas.getHeight()+yPos+shotHeigth/2, player.getxPos()+shotWidth/2, canvas.getHeight()+yPos);
+        RectF rect = new RectF(xPos-shotWidth/2,  yPos-shotHeigth,
+                                xPos+shotWidth/2, yPos);
         canvas.drawBitmap(image, null, rect, null);
     }
 
-    public boolean outOfRange() {
-        return yPos <0;
+    public boolean outOfRange(Canvas canvas) { return yPos-shotHeigth< canvas.getHeight()/3; }
+
+    public float getxPos() {
+        return xPos;
+    }
+
+    public void setxPos(float xPos) {
+        this.xPos = xPos;
+    }
+
+    public float getyPos() {
+        return yPos;
+    }
+
+    public void setyPos(float yPos) {
+        this.yPos = yPos;
     }
 }

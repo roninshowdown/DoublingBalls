@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import android.content.Context;
+import android.graphics.Picture;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -29,9 +30,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     //Certain paint properties and objects
     private Bitmap backgroundBitmap;
     private Bitmap bubbleBitmap;
-    private Bitmap shot;
 
+    private Bitmap shot;
     private Set<Shot> shots = new HashSet<Shot>();
+    Set<Shot> shotsToBeRemoved = new HashSet<>();
 
     private Player player;
 
@@ -98,11 +100,18 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             float xPressed = event.getX();
             float yPressed = event.getY();
             //while(event.getAction() == MotionEvent.ACTION_BUTTON_PRESS) Log.d("test", "working");
-            if (xPressed <= buttonLeft.right && xPressed >= buttonLeft.left && yPressed <= buttonLeft.bottom && yPressed >= buttonLeft.top) player.setCurrentState(State.WALK_LEFT);//player.setDirection(Direction.LEFT);
-            else if (xPressed <= buttonRight.right && xPressed >= buttonRight.left && yPressed <= buttonRight.bottom && yPressed >= buttonRight.top) player.setCurrentState(State.WALK_RIGHT);//player.setDirection(Direction.RIGHT);
+            if (xPressed <= buttonLeft.right && xPressed >= buttonLeft.left && yPressed <= buttonLeft.bottom && yPressed >= buttonLeft.top) {
+                player.setCurrentState(State.WALK_LEFT);
+                player.setDirection(Direction.LEFT);
+            }
+            else if (xPressed <= buttonRight.right && xPressed >= buttonRight.left && yPressed <= buttonRight.bottom && yPressed >= buttonRight.top) {
+                player.setCurrentState(State.WALK_RIGHT);
+                player.setDirection(Direction.RIGHT);
+            }
             else if (xPressed <= buttonShoot.right && xPressed >= buttonShoot.left && yPressed <= buttonShoot.bottom && yPressed >= buttonShoot.top) {
                 player.setCurrentState(State.SHOOT);
-                shots.add(new Shot(player.getxPos(), player.getyPos()-player.getPlayerHeigth(), shot, player));
+                shots.add(new Shot(player.getxPos(), 0, shot, player));
+
             }
             return true;
         }
@@ -121,7 +130,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 case WALK_LEFT:			player.setCurrentState(State.LEFT_STAND_STILL);
                     break;
                 case SHOOT:				if (player.getDirection() == Direction.LEFT) player.setCurrentState(State.LEFT_STAND_STILL);
-                else player.setCurrentState(State.RIGHT_STAND_STILL);
+                                        else player.setCurrentState(State.RIGHT_STAND_STILL);
+
                     break;
             }
             return true;
@@ -137,9 +147,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         float aspect = (float)c.getHeight() / c.getWidth();
         Rect srcRect = new Rect(0, (int) (backgroundBitmap.getHeight() - backgroundBitmap.getWidth()*aspect), backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
         c.drawBitmap(backgroundBitmap, srcRect, new Rect(0, 0, c.getWidth(), c.getHeight()), null);
-		/*for (Bubble bubble : bubbles) {									//Draw bubbles
-			bubble.draw(c);
-		}*/
+
         player.draw(c);
 
         for (Shot shot : shots) {
@@ -177,12 +185,16 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 			bubbles.remove(bubble);
 		}*/
 
+        player.update(canvas, numberOfFrames);
+
         for (Shot shot : shots) {
             shot.update(canvas, numberOfFrames);
+            if(shot.outOfRange(canvas)) shotsToBeRemoved.add(shot);
         }
-        //TODO REMOVE SHOTS WHICH ARE OUT OF RANGE
-
-        player.update(canvas, numberOfFrames);
+        for (Shot shot : shotsToBeRemoved) {
+            shots.remove(shot);
+        }
+        //shots.removeAll(shotsToBeRemoved);
     }
 
     /****
