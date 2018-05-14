@@ -32,4 +32,8 @@ public class Shot {
         RectF rect = new RectF(xPos-shotWidth/2, canvas.getHeight()+yPos+shotHeigth/2, player.getxPos()+shotWidth/2, canvas.getHeight()+yPos);
         canvas.drawBitmap(image, null, rect, null);
     }
+
+    public boolean outOfRange() {
+        return yPos <0;
+    }
 }
