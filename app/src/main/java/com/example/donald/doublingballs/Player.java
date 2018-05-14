@@ -138,7 +138,7 @@ public class Player {
                 ++pictureCount;
                 pictureCount %= 10;
                 break;
-            case SHOOT: break;
+            case SHOOT: canvas.drawBitmap(shooting[3], null, rect, null);
         }
     }
 
