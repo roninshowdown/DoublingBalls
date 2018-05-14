@@ -213,7 +213,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      * Private display loop thread
      */
     private class GameLoop extends Thread {
-        private long msPerFrame = 1000/25;	//Frame rate
+        private long msPerFrame = 1000/30;	//Frame rate
         public boolean running = true;		//Control flag for start / stop mechanism
         private int fpsSamples[] = new int[50];
         private int samplePos = 0;
