@@ -25,7 +25,7 @@ public class BallObject {
     private double bounce;
     private double defbounce;
 
-    AudioManager audio;
+    AudioManager audioManager;
     float currentVolume;
 
     private int radius;
@@ -43,7 +43,7 @@ public class BallObject {
         this.p = p;
 
 
-        audio = (AudioManager) v.getContext().getSystemService(
+        audioManager = (AudioManager) v.getContext().getSystemService(
                 Context.AUDIO_SERVICE);
     }
 
@@ -122,7 +122,8 @@ public class BallObject {
         }
 
         if (posy <= (0 + radius)) {
-            //playsound();
+            //playsound();+
+            //Test123
             accy = 0 - Math.abs(accy) * bounce;
         }
 
@@ -139,7 +140,7 @@ public class BallObject {
 
 
     public void playsound() {
-        currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC) / 15.0f;
+        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / 15.0f;
         sounds.play(bounceSound, (float) Math.abs(bounce * bounce)
                 * currentVolume, (float) Math.abs(bounce * bounce)
                 * currentVolume, 0, 0, 1.0f);
