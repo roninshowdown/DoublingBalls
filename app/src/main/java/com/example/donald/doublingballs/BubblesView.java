@@ -28,7 +28,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private LinkedList<Bubble> bubbles = new LinkedList<Bubble>(); //Our bubble objects
     private float BUBBLE_FREQUENCY = 0.3f; //Bubble generation rate
     //Certain paint properties and objects
-    private Bitmap backgroundBitmap;
+    public Bitmap backgroundBitmap;
     private Bitmap bubbleBitmap;
     private Bitmap shot;
     private Bitmap buttonLeftImage;
@@ -152,8 +152,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      * @param c: Canvas to be drawn on
      */
     private void drawScreen(Canvas c) {
-        float aspect = (float)c.getHeight() / c.getWidth();
-        Rect srcRect = new Rect(0, (int) (backgroundBitmap.getHeight() - backgroundBitmap.getWidth()*aspect), backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
+        //float aspect = (float)c.getHeight() / c.getWidth();
+        //Rect srcRect = new Rect(0, (int) (backgroundBitmap.getHeight() - backgroundBitmap.getWidth()*aspect), backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
         backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, c.getWidth(), c.getHeight(), true);
         c.drawBitmap(backgroundBitmap, new Matrix(), null);
         //c.drawBitmap(backgroundBitmap, srcRect, new Rect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT), null);
@@ -167,14 +167,11 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
 
-        buttonLeft = new Rect((int)(c.getWidth() * (1F/5)), (int) (c.getHeight()*(2F/3)), (int) (c.getWidth() * (4F/5)), (int) (c.getHeight() *1F/3));
-        buttonRight = new Rect((int) (Constants.SCREEN_WIDTH / 12.8F), c.getHeight()-150, 400, c.getHeight()-50);
-        buttonShoot = new Rect(c.getWidth()-200, c.getHeight()-150, c.getWidth()-50, c.getHeight()-50);
-        /*
-        c.drawRect(buttonLeft, paint);
-        c.drawRect(buttonRight, paint);
-        c.drawRect(buttonShoot, paint);
-        */
+        buttonLeft = new Rect(50, c.getHeight()-270, 350, c.getHeight() - 20);
+        buttonRight = new Rect( 400,c.getHeight()-270, 700, c.getHeight() - 20);
+        buttonShoot = new Rect(c.getWidth()-400, c.getHeight()-270, c.getWidth()-100, c.getHeight()-50);
+
+
         c.drawBitmap(buttonLeftImage, null, buttonLeft, null);
         c.drawBitmap(buttonRightImage, null, buttonRight, null);
         c.drawBitmap(buttonShootImage, null, buttonShoot, null);

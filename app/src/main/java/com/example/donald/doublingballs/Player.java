@@ -39,7 +39,7 @@ public class Player {
     public Player(Bitmap[] leftWalk, Bitmap[] rightWalk,
                   Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting) {
         this.xPos = Constants.SCREEN_WIDTH / 2;
-        this.yPos = Constants.SCREEN_HEIGHT * 1.033F; // TODO Background.height * % Anteil
+        this.yPos = Constants.SCREEN_HEIGHT * 1.005F; // TODO Background.height * % Anteil
         this.leftWalk = leftWalk;
         this.rightWalk = rightWalk;
         this.leftStandStill = leftStandStill;
