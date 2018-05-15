@@ -35,11 +35,15 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap buttonRightImage;
     private Bitmap buttonShootImage;
 
+    private Paint mPaint;
+    private BallObject ballObject;
+
     private Set<Shot> shots = new HashSet<Shot>();
     Set<Shot> shotsToBeRemoved = new HashSet<>();
 
     private Player player;
-    private Ball ball;
+    //Donald Ball
+    //private Ball ball;
 
     Rect buttonLeft;
     Rect buttonRight;
@@ -93,13 +97,21 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         shooting[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot4);
 
         player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting);
-        ball = new Ball(50, 50, 50,new Paint());
+
+        // Donald Ball
+        //ball = new Ball(50, 50, 50,new Paint());
 
         shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot1);
 
         buttonLeftImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftbutton);
         buttonRightImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightbutton);
         buttonShootImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.weapon);
+
+        // Ball
+
+        mPaint = new Paint();
+        mPaint.setARGB(0xFF, 0x00, 0x80, 0xFF);
+        ballObject = new BallObject(100.0, 50.0, 4.0, 10.0, 0.8, 10, mPaint, this);
     }
 
     @Override
@@ -163,7 +175,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 			bubble.draw(c);
 		}*/
         player.draw(c);
-        ball.draw(c);
+        ballObject.draw(c);
+        //Donald Ball
+        //ball.draw(c);
 
         for (Shot shot : shots) {
             shot.draw(c);
@@ -202,7 +216,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 		}*/
 
         player.update(canvas, numberOfFrames);
-        ball.update(canvas, numberOfFrames);
+
+        //Donald Ball
+        //ball.update(canvas, numberOfFrames);
+        ballObject.update();
 
         for (Shot shot : shots) {
             shot.update(canvas, numberOfFrames);
