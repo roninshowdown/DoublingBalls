@@ -6,6 +6,7 @@ import java.util.Set;
 
 import android.content.Context;
 import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -39,10 +40,11 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     Set<Shot> shotsToBeRemoved = new HashSet<>();
 
     private Player player;
+    private Ball ball;
 
-    Rect buttonLeft;
-    Rect buttonRight;
-    Rect buttonShoot;
+    RectF buttonLeft;
+    RectF buttonRight;
+    RectF buttonShoot;
 
     /****
      * Constructor
@@ -92,6 +94,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         shooting[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot4);
 
         player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting);
+        ball = new Ball(25,25,20,new Paint());
 
         shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot1);
 
@@ -105,14 +108,17 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             float xPressed = event.getX();
             float yPressed = event.getY();
-            //while(event.getAction() == MotionEvent.ACTION_BUTTON_PRESS) Log.d("test", "working");
             if (xPressed <= buttonLeft.right && xPressed >= buttonLeft.left && yPressed <= buttonLeft.bottom && yPressed >= buttonLeft.top) {
                 player.setCurrentState(State.WALK_LEFT);
                 player.setDirection(Direction.LEFT);
+                Log.d("test", "working");
             }
             else if (xPressed <= buttonRight.right && xPressed >= buttonRight.left && yPressed <= buttonRight.bottom && yPressed >= buttonRight.top) {
                 player.setCurrentState(State.WALK_RIGHT);
                 player.setDirection(Direction.RIGHT);
+                Log.d("test", Float.toString(1F/5));
+
+
             }
             else if (xPressed <= buttonShoot.right && xPressed >= buttonShoot.left && yPressed <= buttonShoot.bottom && yPressed >= buttonShoot.top) {
                 if (shots.toArray().length < 3) {
@@ -152,8 +158,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      * @param c: Canvas to be drawn on
      */
     private void drawScreen(Canvas c) {
-        float aspect = (float)c.getHeight() / c.getWidth();
-        Rect srcRect = new Rect(0, (int) (backgroundBitmap.getHeight() - backgroundBitmap.getWidth()*aspect), backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
+        //float aspect = (float)c.getHeight() / c.getWidth();
+        //Rect srcRect = new Rect(0, (int) (backgroundBitmap.getHeight() - backgroundBitmap.getWidth()*aspect), backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
         backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, c.getWidth(), c.getHeight(), true);
         c.drawBitmap(backgroundBitmap, new Matrix(), null);
         //c.drawBitmap(backgroundBitmap, srcRect, new Rect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT), null);
@@ -165,16 +171,26 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         for (Shot shot : shots) {
             shot.draw(c);
         }
+        ball.draw(c);
 
+        /*Log.d("left", Float.toString(c.getWidth()/5F));
+        Log.d("top", Float.toString(c.getHeight()*(2F/3)));
+        Log.d("right", Float.toString(c.getWidth()*(4F/5)));
+        Log.d("bottom", Float.toString(c.getHeight()*(1F/3)));*/
 
-        buttonLeft = new Rect((int)(c.getWidth() * (1F/5)), (int) (c.getHeight()*(2F/3)), (int) (c.getWidth() * (4F/5)), (int) (c.getHeight() *1F/3));
-        buttonRight = new Rect((int) (Constants.SCREEN_WIDTH / 12.8F), c.getHeight()-150, 400, c.getHeight()-50);
-        buttonShoot = new Rect(c.getWidth()-200, c.getHeight()-150, c.getWidth()-50, c.getHeight()-50);
+        buttonLeft = new RectF(50, c.getHeight()-150, 200, c.getHeight()-50);
+        buttonRight = new RectF(250, c.getHeight()-150, 400, c.getHeight()-50);
+        buttonShoot = new RectF(c.getWidth()-200, c.getHeight()-150, c.getWidth()-50, c.getHeight()-50);
+
+        Matrix m = new Matrix();
+        m.mapRect(buttonLeft);
+
         /*
         c.drawRect(buttonLeft, paint);
         c.drawRect(buttonRight, paint);
         c.drawRect(buttonShoot, paint);
         */
+        //buttonLeftImage = Bitmap.createScaledBitmap(buttonLeftImage, 300,200,true);
         c.drawBitmap(buttonLeftImage, null, buttonLeft, null);
         c.drawBitmap(buttonRightImage, null, buttonRight, null);
         c.drawBitmap(buttonShootImage, null, buttonShoot, null);
@@ -207,6 +223,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         for (Shot shot : shotsToBeRemoved) {
             shots.remove(shot);
         }
+        ball.update(canvas, numberOfFrames);
         //shots.removeAll(shotsToBeRemoved);
     }
 
