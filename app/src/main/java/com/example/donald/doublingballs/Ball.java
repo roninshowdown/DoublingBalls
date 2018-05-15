@@ -3,6 +3,7 @@ package com.example.donald.doublingballs;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 public class Ball {
 
@@ -20,8 +21,8 @@ public class Ball {
         this.yPos = yPos;
         this.radius = radius;
         this.paint = paint;
-        dX = 5;
-        dY = 10;
+        dX = 2.5f;
+        dY = 5;
     }
 
     public void draw(Canvas canvas) {
@@ -29,25 +30,32 @@ public class Ball {
     }
 
     public void update(Canvas c, float numberOfFrames) {
-        xPos += dX*numberOfFrames;
-        yPos += dY*numberOfFrames;
 
-        if (xPos >= (c.getWidth()-radius)) {
+        /*if (xPos >= (c.getWidth()-radius)) {
             xPos = (c.getWidth()-radius);
             dX = -dX;
         }
-        if (xPos <= radius) {
+        else if (xPos <= radius) {
             xPos = radius;
             dX = -dX;
         }
 
-        if (yPos >= (c.getWidth()-radius)) {
-            yPos = c.getWidth()-radius;
+        if (yPos >= (c.getHeight()*0.75f-radius)) {
+            yPos = c.getHeight()*0.75f-radius;
             dY = -dY;
         }
-        if (yPos <= radius)
+        else if (yPos <= radius) {
             yPos = radius;
             dY = -dY;
+        }
+        xPos += dX*numberOfFrames;
+        yPos += dY*numberOfFrames;*/
+
+        yPos -= dY;
+        dY -= 0.5;
+        xPos += dX;
+
+        if (xPos > 0);
     }
 
     /*public boolean checkCollision() {
