@@ -6,7 +6,6 @@ import java.util.Set;
 
 import android.content.Context;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -116,7 +115,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 player.setDirection(Direction.RIGHT);
             }
             else if (xPressed <= buttonShoot.right && xPressed >= buttonShoot.left && yPressed <= buttonShoot.bottom && yPressed >= buttonShoot.top) {
-                if (shots.toArray().length < 3) { // TODO Schussanzeige
+                if (shots.toArray().length < 3) {
                     shots.add(new Shot(player.getxPos(), 0, shot, player));
                     player.setCurrentState(State.SHOOT);
                 }
@@ -153,10 +152,14 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      * @param c: Canvas to be drawn on
      */
     private void drawScreen(Canvas c) {
-        //float aspect = (float)c.getHeight() / c.getWidth();
-        //Rect srcRect = new Rect(0, (int) (backgroundBitmap.getHeight() - backgroundBitmap.getWidth()*aspect), backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
+        float aspect = (float)c.getHeight() / c.getWidth();
+        Rect srcRect = new Rect(0, (int) (backgroundBitmap.getHeight() - backgroundBitmap.getWidth()*aspect), backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
         backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, c.getWidth(), c.getHeight(), true);
         c.drawBitmap(backgroundBitmap, new Matrix(), null);
+        //c.drawBitmap(backgroundBitmap, srcRect, new Rect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT), null);
+		/*for (Bubble bubble : bubbles) {									//Draw bubbles
+			bubble.draw(c);
+		}*/
         player.draw(c);
 
         for (Shot shot : shots) {
