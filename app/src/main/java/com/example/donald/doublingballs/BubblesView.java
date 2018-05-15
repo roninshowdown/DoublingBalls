@@ -39,6 +39,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     Set<Shot> shotsToBeRemoved = new HashSet<>();
 
     private Player player;
+    private Ball ball;
 
     Rect buttonLeft;
     Rect buttonRight;
@@ -52,7 +53,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public BubblesView(Context context, AttributeSet attrs) {
         super(context, attrs);
         getHolder().addCallback((Callback) this);	//Register this class as callback handler for the surface
-        backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
+        backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background2);
         bubbleBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble);
 
         Bitmap[] leftWalk = new Bitmap[10];
@@ -92,6 +93,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         shooting[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot4);
 
         player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting);
+        ball = new Ball(50, 50, 50,new Paint());
 
         shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot1);
 
@@ -152,8 +154,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      * @param c: Canvas to be drawn on
      */
     private void drawScreen(Canvas c) {
-        float aspect = (float)c.getHeight() / c.getWidth();
-        Rect srcRect = new Rect(0, (int) (backgroundBitmap.getHeight() - backgroundBitmap.getWidth()*aspect), backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
+        //float aspect = (float)c.getHeight() / c.getWidth();
+        //Rect srcRect = new Rect(0, (int) (backgroundBitmap.getHeight() - backgroundBitmap.getWidth()*aspect), backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
         backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, c.getWidth(), c.getHeight(), true);
         c.drawBitmap(backgroundBitmap, new Matrix(), null);
         //c.drawBitmap(backgroundBitmap, srcRect, new Rect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT), null);
@@ -161,15 +163,16 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 			bubble.draw(c);
 		}*/
         player.draw(c);
+        ball.draw(c);
 
         for (Shot shot : shots) {
             shot.draw(c);
         }
 
 
-        buttonLeft = new Rect((int)(c.getWidth() * (1F/5)), (int) (c.getHeight()*(2F/3)), (int) (c.getWidth() * (4F/5)), (int) (c.getHeight() *1F/3));
-        buttonRight = new Rect((int) (Constants.SCREEN_WIDTH / 12.8F), c.getHeight()-150, 400, c.getHeight()-50);
-        buttonShoot = new Rect(c.getWidth()-200, c.getHeight()-150, c.getWidth()-50, c.getHeight()-50);
+        buttonLeft = new Rect(50, c.getHeight()-270, 350, c.getHeight() - 20);
+        buttonRight = new Rect( 400,c.getHeight()-270, 700, c.getHeight() - 20);
+        buttonShoot = new Rect(c.getWidth()-400, c.getHeight()-270, c.getWidth()-100, c.getHeight()-50);
         /*
         c.drawRect(buttonLeft, paint);
         c.drawRect(buttonRight, paint);
@@ -199,6 +202,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 		}*/
 
         player.update(canvas, numberOfFrames);
+        ball.update(canvas, numberOfFrames);
 
         for (Shot shot : shots) {
             shot.update(canvas, numberOfFrames);

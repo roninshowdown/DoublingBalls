@@ -41,8 +41,8 @@ public class Ball {
             dX = -dX;
         }
 
-        if (yPos >= (c.getHeight()-radius)) {
-            yPos = c.getHeight()-radius;
+        if (yPos >= (c.getWidth()-radius)) {
+            yPos = c.getWidth()-radius;
             dY = -dY;
         }
         if (yPos <= radius)
