@@ -52,7 +52,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public BubblesView(Context context, AttributeSet attrs) {
         super(context, attrs);
         getHolder().addCallback((Callback) this);	//Register this class as callback handler for the surface
-        backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
+        backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background2);
         bubbleBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble);
 
         Bitmap[] leftWalk = new Bitmap[10];
