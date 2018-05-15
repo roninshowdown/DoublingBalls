@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import android.content.Context;
+import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -153,7 +154,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private void drawScreen(Canvas c) {
         float aspect = (float)c.getHeight() / c.getWidth();
         Rect srcRect = new Rect(0, (int) (backgroundBitmap.getHeight() - backgroundBitmap.getWidth()*aspect), backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
-        c.drawBitmap(backgroundBitmap, srcRect, new Rect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT), null);
+        backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, c.getWidth(), c.getHeight(), true);
+        c.drawBitmap(backgroundBitmap, new Matrix(), null);
+        //c.drawBitmap(backgroundBitmap, srcRect, new Rect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT), null);
 		/*for (Bubble bubble : bubbles) {									//Draw bubbles
 			bubble.draw(c);
 		}*/

@@ -38,7 +38,7 @@ public class Shot {
         canvas.drawBitmap(image, null, rect, null);
     }
 
-    public boolean outOfRange(Canvas canvas) { return (yPos-shotHeigth<canvas.getHeight()/8); }
+    public boolean outOfRange(Canvas canvas) { return (yPos-shotHeigth<0); }
 
     public float getxPos() {
         return xPos;
