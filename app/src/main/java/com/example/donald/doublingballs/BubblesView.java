@@ -37,20 +37,18 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap buttonRightImage;
     private Bitmap buttonShootImage;
 
-    private ArrayList<Shot> shots = new ArrayList<Shot>();
+    private ArrayList<Shot> shots = new ArrayList<>();
     ArrayList<Shot> shotsToBeRemoved = new ArrayList<>();
+    ArrayList<BallObject> ballObjectsToBeRemoved = new ArrayList<>();
 
     private Player player;
 
     private Paint mPaint;
-    private BallObject ballObject;
-    private ArrayList<BallObject> balls = new ArrayList<>();
+    private ArrayList<BallObject> ballObjects = new ArrayList<>();
 
     Rect buttonLeft;
     Rect buttonRight;
     Rect buttonShoot;
-
-    private boolean drawBall = true;
 
     /****
      * Constructor
@@ -101,16 +99,13 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting);
 
-        // Donald Ball
-        //ball = new Ball(50, 50, 50,new Paint());
-
         shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot1);
 
         buttonLeftImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftbutton);
         buttonRightImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightbutton);
         buttonShootImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.weapon);
 
-        // Ball
+
 
         mPaint = new Paint();
         mPaint.setARGB(0xFF, 0x00, 0x80, 0xFF);
@@ -222,22 +217,14 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      * @param c: Canvas to be drawn on
      */
     private void drawScreen(Canvas c) {
-        //float aspect = (float)c.getHeight() / c.getWidth();
-        //Rect srcRect = new Rect(0, (int) (backgroundBitmap.getHeight() - backgroundBitmap.getWidth()*aspect), backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
         backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, c.getWidth(), c.getHeight(), true);
         c.drawBitmap(backgroundBitmap, new Matrix(), null);
-        //c.drawBitmap(backgroundBitmap, srcRect, new Rect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT), null);
-		/*for (Bubble bubble : bubbles) {									//Draw bubbles
-			bubble.draw(c);
-		}*/
+
         player.draw(c);
 
         for (BallObject ballObject : ballObjects) {
             ballObject.draw(c);
         }
-        //Donald Ball
-        //ball.draw(c);
-        if (drawBall) ballObject.draw(c);
 
         for (Shot shot : shots) {
             shot.draw(c);
@@ -263,37 +250,37 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      * @param numberOfFrames: No. of frames since last call
      */
     private void calculateDisplay(Canvas canvas, float numberOfFrames) {
-        //randomlyAddBubbles(canvas.getWidth(), canvas.getHeight(), numberOfFrames);		//Add a new bubble
-        //LinkedList<Bubble> bubblesToRemove = new LinkedList<Bubble>();	//Move all bubbles
-		/*for (Bubble bubble : bubbles) {
-			bubble.move(canvas, numberOfFrames);
-			if (bubble.outOfRange())									//and keep display leavers in mind
-				bubblesToRemove.add(bubble);
-		}
-
-		for (Bubble bubble : bubblesToRemove) {							//Remove all bubbled up
-			bubbles.remove(bubble);
-		}*/
 
         player.update(canvas, numberOfFrames);
 
-        //Donald Ball
-        //ball.update(canvas, numberOfFrames);
         for (BallObject ballObject : ballObjects){
             ballObject.update();
         }
 
         for (Shot shot : shots) {
             shot.update(canvas, numberOfFrames);
-            if(shot.outOfRange(canvas) || areColliding(ballObject, shot)) {
+            if(shot.outOfRange(canvas)) {
                 shotsToBeRemoved.add(shot);
-                drawBall = false;
             }
         }
+
+        for (BallObject ballObject : ballObjects) {
+            if (areColliding(ballObject, player));
+            for (Shot shot : shots) {
+                if (areColliding(ballObject, shot)) {
+                    ballObjectsToBeRemoved.add(ballObject);
+                    shotsToBeRemoved.add(shot);
+                }
+            }
+        }
+
         for (Shot shot : shotsToBeRemoved) {
             shots.remove(shot);
         }
-        //shots.removeAll(shotsToBeRemoved);
+        for (BallObject ballObject : ballObjectsToBeRemoved) {
+            ballObjects.remove(ballObject);
+        }
+
     }
 
     /****
@@ -312,15 +299,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 (int)((Bubble.MAX_SPEED-0.1)*Math.random()+0.1),	//This avoids bubbles of speed 0
                 bubbleBitmap));
     }
-
-    /*auf Kollision prüfen
-    *Alle Ball-Koordinaten mit jedem Schuss und dem Player abgleichen
-    * falls hit bei B-S = beide removen
-    * falls hit bei B-P = Ball springt weiter, Player verliert leben
-    * Besonderheiten
-    *  - Ball Radius beachten
-    *  - Schuss alle seiten wichtig
-    *  */
 
     public boolean areColliding(BallObject b, Shot s) {
 
