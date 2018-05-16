@@ -1,5 +1,6 @@
 package com.example.donald.doublingballs;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -39,6 +40,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private BallObject ballObject;
 
     private Set<Shot> shots = new HashSet<Shot>();
+    private ArrayList<BallObject> ballObjects = new ArrayList<BallObject>();
     Set<Shot> shotsToBeRemoved = new HashSet<>();
 
     private Player player;
@@ -111,7 +113,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         mPaint = new Paint();
         mPaint.setARGB(0xFF, 0x00, 0x80, 0xFF);
-        ballObject = new BallObject(150, 70.0, 10, 10.0, 0.8, 100, 0.025, mPaint, this);
+
+        ballObjects.add(new BallObject(150, 70.0, 10, 10.0, 0.8, 100, 0.025, mPaint, this));
+        ballObjects.add(new BallObject(100, 50.0, 10, 13.0, 0.8, 60, 0.025, mPaint, this));
+        ballObjects.add(new BallObject(350, 90.0, 10, 15.0, 0.8, 20, 0.025, mPaint, this));
     }
 
     /*
@@ -225,7 +230,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 			bubble.draw(c);
 		}*/
         player.draw(c);
-        ballObject.draw(c);
+
+        for (BallObject ballObject : ballObjects) {
+            ballObject.draw(c);
+        }
         //Donald Ball
         //ball.draw(c);
 
@@ -269,7 +277,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         //Donald Ball
         //ball.update(canvas, numberOfFrames);
-        ballObject.update();
+        for (BallObject ballObject : ballObjects){
+            ballObject.update();
+        }
 
         for (Shot shot : shots) {
             shot.update(canvas, numberOfFrames);
