@@ -41,12 +41,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     ArrayList<Shot> shotsToBeRemoved = new ArrayList<>();
 
     private Player player;
-    //Donald Ball
-    private Ball ball;
 
     private Paint mPaint;
     private BallObject ballObject;
-    private ArrayList<Ball> balls = new ArrayList<>();
+    private ArrayList<BallObject> balls = new ArrayList<>();
 
     Rect buttonLeft;
     Rect buttonRight;
@@ -102,14 +100,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         shooting[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot4);
 
         player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting);
-        mPaint = new Paint();
-        mPaint.setARGB(0xFF, 0x00, 0x80, 0xFF);
-        ball = new Ball(100, 50, 50,mPaint);
-
-        // Ball
-
-
-        ballObject = new BallObject(100.0, 50.0, 10.0, 25.0, 0.8, 30, mPaint, this);
 
         shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot1);
 
@@ -117,11 +107,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         buttonRightImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightbutton);
         buttonShootImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.weapon);
 
-        // Ball
-
         mPaint = new Paint();
         mPaint.setARGB(0xFF, 0x00, 0x80, 0xFF);
-        ballObject = new BallObject(100.0, 50.0, 4.0, 10.0, 0.8, 10, mPaint, this);
+        ballObject = new BallObject(150.0, 70.0, 10, 10.0, 0.8, 100, 0.025,  mPaint, this);
     }
 
     @Override
@@ -185,8 +173,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 			bubble.draw(c);
 		}*/
         player.draw(c);
-        //ballObject.draw(c);
-        if (drawBall) ball.draw(c);
+        if (drawBall) ballObject.draw(c);
 
         for (Shot shot : shots) {
             shot.draw(c);
@@ -232,7 +219,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         for (Shot shot : shots) {
             shot.update(canvas, numberOfFrames);
-            if(shot.outOfRange(canvas) || areColliding(ball, shot)) {
+            if(shot.outOfRange(canvas) || areColliding(ballObject, shot)) {
                 shotsToBeRemoved.add(shot);
                 drawBall = false;
             }
@@ -269,9 +256,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     *  - Schuss alle seiten wichtig
     *  */
 
-    public boolean areColliding(Ball b, Shot s) {
+    public boolean areColliding(BallObject b, Shot s) {
 
-        float bX = b.getxPos();
+       /* float bX = b.getxPos();
         float bY = b.getyPos();
         float bR = b.getRadius();
         float sX = s.getxPos();
@@ -279,7 +266,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         float sH = s.getShotHeigth();
         float sW = s.getShotWidth();
 
-        /*float BallLeft = bX-bR;
+        float BallLeft = bX-bR;
         float BallRight = bX+bR;
 
         float BallTop = bY-bR;
@@ -299,28 +286,24 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         if ((BallLeft == ShotRight || BallRight == ShotLeft) && bY == sY || //prüft ob der Ball links oder rechts getroffen wurde
              BallBottom == ShotTop && bX == sX ||                           //prüft ob der Ball unten getroffen wurde
                  (BallXHalfLeft == sX || BallXHalfRight == sX) && BallYHalfLeftBottom == ShotTop ||
+                 ) {}*/
 
-
-
-
-                ) {}*/
-
-        float dX = bX - sX;
-        float dY = bY - sY;
+        double dX = b.getPosx() - s.getxPos();
+        double dY = b.getPosy() - s.getyPos();
         double distance = Math.sqrt(dX*dX + dY*dY);
-        if (b.getyPos() >= s.getyPos()+s.getShotHeigth()/2) {
-            if (distance < bR + sH / 2) return true;
+        if (b.getPosy() >= s.getyPos()+s.getShotHeigth()/2) {
+            if (distance < b.getRadius() + s.getShotHeigth() / 2) return true;
         }
         else if (distance <= b.getRadius() + s.getShotWidth()/2) return true;
         return false;
     }
 
-    public boolean areColliding(Ball b, Player p) {
-        float dX = b.getxPos()-p.getxPos();
-        float dY = b.getyPos()-p.getyPos();
+    public boolean areColliding(BallObject b, Player p) {
+        double dX = b.getPosx()-p.getxPos();
+        double dY = b.getPosy()-p.getyPos();
         double distance = Math.sqrt(dX*dX + dY*dY);
 
-        if (b.getyPos() >= p.getyPos()+p.getPlayerHeigth()/2) {
+        if (b.getPosy() >= p.getyPos()+p.getPlayerHeigth()/2) {
             if (distance <= b.getRadius()+p.getPlayerHeigth()/2) return true;
         }
         else if(distance <= b.getRadius()+p.getPlayerWidth()/2) return true;
