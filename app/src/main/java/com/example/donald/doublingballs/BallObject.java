@@ -47,6 +47,72 @@ public class BallObject {
                 Context.AUDIO_SERVICE);
     }
 
+    public void update() {
+
+        posy += accy;
+        accy += 1.5;
+        posx += accx;
+
+        if (accx > 2) {     //Geschwindigkeit in x-Richtung
+            accx -= friction;
+        }
+
+        if (accx < 0)
+            accx += friction;
+
+        if (posy >= (height*0.75f - radius)) { //vom Boden abprallen
+            //playsound();
+            accy = -accy;
+            if (Math.abs(accy) > 4) accy *= bounce;// Sprunghöhe bestimmen
+            if (bounce > 0) bounce -= 0.01;
+        }
+
+        if (posy <= radius) {
+            //playsound();+
+            //Test123
+            accy = 0 - Math.abs(accy) * bounce;
+        }
+
+        if (posx >= (width - radius)) {
+            //playsound();
+            accx = 0 - Math.abs(accx) * bounce;
+        }
+
+        if (posx <= radius) {
+            //playsound();
+            accx = Math.abs(accx) * bounce;
+        }
+    }
+
+
+    public void playsound() {
+        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / 15.0f;
+        sounds.play(bounceSound, (float) Math.abs(bounce * bounce)
+                * currentVolume, (float) Math.abs(bounce * bounce)
+                * currentVolume, 0, 0, 1.0f);
+    }
+
+
+    public void draw(Canvas c) {
+
+        height = c.getClipBounds().height();
+        width = c.getClipBounds().width();
+        c.drawCircle((float) posx, (float) posy, (float) radius, p);
+    }
+
+    /*
+    public void control(MotionEvent e) {
+        currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC) / 15.0f;
+        sounds.play(touchSound, currentVolume, currentVolume, 0, 0, 1.5f);
+        accx = (e.getX() - posx) / 25;
+        accy = (e.getY() - posy) / -25;
+        bounce = defbounce;
+    }
+    */
+    public void setP(Paint p) {
+        this.p = p;
+    }
+
     public double getPosx() {
         return posx;
     }
@@ -99,68 +165,4 @@ public class BallObject {
         this.radius = radius;
     }
 
-    public void setP(Paint p) {
-        this.p = p;
-    }
-
-    public void update() {
-
-        posy -= accy;
-        accy -= 0.5;
-        posx += accx;
-
-        if (accx > 0)
-            accx -= friction;
-        if (accx < 0)
-            accx += friction;
-
-        if (posy >= (height - radius)) {
-            //playsound();
-            accy = (Math.abs(accy) * bounce);
-            if (bounce > 0)
-                bounce -= 0.01;
-        }
-
-        if (posy <= (0 + radius)) {
-            //playsound();+
-            //Test123
-            accy = 0 - Math.abs(accy) * bounce;
-        }
-
-        if (posx >= (width - radius)) {
-            //playsound();
-            accx = 0 - Math.abs(accx) * bounce;
-        }
-
-        if (posx <= (0 + radius)) {
-            //playsound();
-            accx = Math.abs(accx) * bounce;
-        }
-    }
-
-
-    public void playsound() {
-        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / 15.0f;
-        sounds.play(bounceSound, (float) Math.abs(bounce * bounce)
-                * currentVolume, (float) Math.abs(bounce * bounce)
-                * currentVolume, 0, 0, 1.0f);
-    }
-
-
-    public void draw(Canvas c) {
-
-        height = c.getClipBounds().height();
-        width = c.getClipBounds().width();
-        c.drawCircle((float) posx, (float) posy, (float) radius, p);
-    }
-
-    /*
-    public void control(MotionEvent e) {
-        currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC) / 15.0f;
-        sounds.play(touchSound, currentVolume, currentVolume, 0, 0, 1.5f);
-        accx = (e.getX() - posx) / 25;
-        accy = (e.getY() - posy) / -25;
-        bounce = defbounce;
-    }
-    */
 }
