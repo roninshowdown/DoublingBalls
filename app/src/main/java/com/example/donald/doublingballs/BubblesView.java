@@ -111,8 +111,58 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         mPaint = new Paint();
         mPaint.setARGB(0xFF, 0x00, 0x80, 0xFF);
-        ballObject = new BallObject(100.0, 50.0, 4.0, 10.0, 0.8, 10, mPaint, this);
+        ballObject = new BallObject(150, 70.0, 10, 10.0, 0.8, 100, 0.025, mPaint, this);
     }
+
+    /*
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            float xPressed = event.getX();
+            float yPressed = event.getY();
+            //while(event.getAction() == MotionEvent.ACTION_BUTTON_PRESS) Log.d("test", "working");
+            if (xPressed <= buttonLeft.right && xPressed >= buttonLeft.left && yPressed <= buttonLeft.bottom && yPressed >= buttonLeft.top) {
+                player.setCurrentState(State.WALK_LEFT);
+                player.setDirection(Direction.LEFT);
+            }
+            else if (xPressed <= buttonRight.right && xPressed >= buttonRight.left && yPressed <= buttonRight.bottom && yPressed >= buttonRight.top) {
+                player.setCurrentState(State.WALK_RIGHT);
+                player.setDirection(Direction.RIGHT);
+            }
+            else if (xPressed <= buttonShoot.right && xPressed >= buttonShoot.left && yPressed <= buttonShoot.bottom && yPressed >= buttonShoot.top) {
+                if (shots.toArray().length < 3) {
+                    shots.add(new Shot(player.getxPos(), 0, shot, player));
+                    player.setCurrentState(State.SHOOT);
+                }
+
+            }
+            return true;
+        }
+        else if (event.getAction() == MotionEvent.ACTION_POINTER_UP) {
+            switch(player.getCurrentState()) {
+                case RIGHT_STAND_STILL: player.setCurrentState(State.RIGHT_STAND_STILL);
+                    break;
+                case LEFT_STAND_STILL:	player.setCurrentState(State.LEFT_STAND_STILL);
+                    break;
+                case RIGHT_START_WALK: 	player.setCurrentState(State.RIGHT_STAND_STILL);
+                    break;
+                case LEFT_START_WALK: 	player.setCurrentState(State.LEFT_STAND_STILL);
+                    break;
+                case WALK_RIGHT:		player.setCurrentState(State.RIGHT_STAND_STILL);
+                    break;
+                case WALK_LEFT:			player.setCurrentState(State.LEFT_STAND_STILL);
+                    break;
+                case SHOOT:				if (player.getDirection() == Direction.LEFT) player.setCurrentState(State.LEFT_STAND_STILL);
+                else player.setCurrentState(State.RIGHT_STAND_STILL);
+
+                    break;
+            }
+            return true;
+        }
+        return false;
+    }
+    */
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
