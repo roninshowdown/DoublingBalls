@@ -8,8 +8,10 @@ public class Ball {
 
     private float xPos;
     private float yPos;
-    private float dX;
-    private float dY;
+    private float accX;
+    private float accY;
+    private float friction = 0.1f;
+    private float bounce = 0.8f;
 
     private int radius;
     private Paint paint;
@@ -20,8 +22,8 @@ public class Ball {
         this.yPos = yPos;
         this.radius = radius;
         this.paint = paint;
-        dX = 5;
-        dY = 10;
+        accX = 2.5f;
+        accY = 5;
     }
 
     public void draw(Canvas canvas) {
@@ -29,25 +31,31 @@ public class Ball {
     }
 
     public void update(Canvas c, float numberOfFrames) {
-        xPos += dX*numberOfFrames;
-        yPos += dY*numberOfFrames;
+
+        if (accX > 1) accX -= friction;
+        if (accY > 3) accY -= bounce;
 
         if (xPos >= (c.getWidth()-radius)) {
             xPos = (c.getWidth()-radius);
-            dX = -dX;
+            accX = -accX;
         }
-        if (xPos <= radius) {
+        else if (xPos <= radius) {
             xPos = radius;
-            dX = -dX;
+            accX = -accX;
         }
 
-        if (yPos >= (c.getWidth()-radius)) {
-            yPos = c.getWidth()-radius;
-            dY = -dY;
+        if (yPos >= (c.getHeight()*0.75f-radius)) {
+            yPos = c.getHeight()*0.75f-radius;
+            accY = -accY;
+
         }
-        if (yPos <= radius)
+        else if (yPos <= radius) {
             yPos = radius;
-            dY = -dY;
+            accY = -accY;
+        }
+        xPos += accX*numberOfFrames;
+        yPos += accY*numberOfFrames;
+
     }
 
     /*public boolean checkCollision() {
@@ -64,4 +72,27 @@ public class Ball {
         return false;
     }*/
 
+    public float getxPos() {
+        return xPos;
+    }
+
+    public void setxPos(float xPos) {
+        this.xPos = xPos;
+    }
+
+    public float getyPos() {
+        return yPos;
+    }
+
+    public void setyPos(float yPos) {
+        this.yPos = yPos;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
 }

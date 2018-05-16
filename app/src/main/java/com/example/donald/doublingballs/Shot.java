@@ -55,4 +55,20 @@ public class Shot {
     public void setyPos(float yPos) {
         this.yPos = yPos;
     }
+
+    public float getShotWidth() {
+        return shotWidth;
+    }
+
+    public void setShotWidth(float shotWidth) {
+        this.shotWidth = shotWidth;
+    }
+
+    public float getShotHeigth() {
+        return shotHeigth;
+    }
+
+    public void setShotHeigth(float shotHeigth) {
+        this.shotHeigth = shotHeigth;
+    }
 }
