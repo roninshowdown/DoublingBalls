@@ -2,6 +2,7 @@ package com.example.donald.doublingballs;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.RectF;
 
 public class Shot {
@@ -13,6 +14,8 @@ public class Shot {
     private Player player;
     private Bitmap image;
     private boolean newlyInstantiated = true;
+    RectF rect = new RectF();
+    RectF rectBitmap = new RectF();
 
     public Shot(float xPos, float yPos, Bitmap image, Player player) {
         this.xPos = xPos;
@@ -31,11 +34,14 @@ public class Shot {
             newlyInstantiated = false;
         }
         yPos -= movedDistance;
+
+        rect.set(xPos-shotWidth/2,  yPos-shotHeigth/4, xPos+shotWidth/2, yPos+shotHeigth/4);
+        rectBitmap.set(xPos-shotWidth/2,  yPos-shotHeigth/2, xPos+shotWidth/2, yPos+shotHeigth/2);
     }
     public void draw(Canvas canvas) {
-        RectF rect = new RectF(xPos-shotWidth/2,  yPos-shotHeigth,
-                                xPos+shotWidth/2, yPos);
-        canvas.drawBitmap(image, null, rect, null);
+
+        canvas.drawRect(rect, new Paint());
+        canvas.drawBitmap(image, null, rectBitmap, null);
     }
 
     public boolean outOfRange(Canvas canvas) { return (yPos-shotHeigth<0); }

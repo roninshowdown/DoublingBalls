@@ -3,6 +3,7 @@ package com.example.donald.doublingballs;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.view.MotionEvent;
@@ -30,6 +31,7 @@ public class BallObject {
 
     private int radius;
     private Paint p;
+    public RectF rect = new RectF();
 
     public BallObject(double posx, double posy, double accx, double accy,
                       double bounce, int radius,double friction, Paint p, View v) {
@@ -42,7 +44,6 @@ public class BallObject {
         this.radius = radius;
         this.friction = friction;
         this.p = p;
-
 
         audioManager = (AudioManager) v.getContext().getSystemService(
                 Context.AUDIO_SERVICE);
@@ -170,6 +171,8 @@ public class BallObject {
                 accx = Math.abs(accx) * bounce;
             }
         }
+        rect.set((float)posx-radius, (float)posy-radius, (float)posx+radius, (float)posy+radius);
+
     }
 
 
@@ -185,8 +188,9 @@ public class BallObject {
 
         height = c.getClipBounds().height();
         width = c.getClipBounds().width();
-
+        c.drawRect(rect, new Paint());
         c.drawCircle((float) posx, (float) posy, (float) radius, p);
+
     }
 
     /*
