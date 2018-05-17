@@ -200,51 +200,70 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     */
 
 
-    @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            float xPressed = event.getX();
-            float yPressed = event.getY();
-            //while(event.getAction() == MotionEvent.ACTION_BUTTON_PRESS) Log.d("test", "working");
-            if (xPressed <= buttonLeft.right && xPressed >= buttonLeft.left && yPressed <= buttonLeft.bottom && yPressed >= buttonLeft.top) {
-                player.setCurrentState(State.WALK_LEFT);
-                player.setDirection(Direction.LEFT);
-            }
-            else if (xPressed <= buttonRight.right && xPressed >= buttonRight.left && yPressed <= buttonRight.bottom && yPressed >= buttonRight.top) {
-                player.setCurrentState(State.WALK_RIGHT);
-                player.setDirection(Direction.RIGHT);
-            }
-            else if (xPressed <= buttonShoot.right && xPressed >= buttonShoot.left && yPressed <= buttonShoot.bottom && yPressed >= buttonShoot.top) {
-                if (shots.toArray().length < 3) {
-                    shots.add(new Shot(player.getxPos(), 0, shot, player));
-                    player.setCurrentState(State.SHOOT);
+        int activePointerID;
+        if(!gamestart) gameLoop.startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
+
+        switch(event.getAction()) {
+
+            case (MotionEvent.ACTION_DOWN):
+
+                int xPressed = (int) event.getX();
+                int yPressed = (int) event.getY();
+
+                if (buttonLeft.contains(xPressed, yPressed)) {
+                    player.setCurrentState(State.WALK_LEFT);
+                    player.setDirection(Direction.LEFT);
+                } else if (buttonRight.contains(xPressed, yPressed)) {
+                    player.setCurrentState(State.WALK_RIGHT);
+                    player.setDirection(Direction.RIGHT);
+                } else if (buttonShoot.contains(xPressed, yPressed)) {
+                    if (shots.toArray().length < 3) {
+                        shots.add(new Shot(player.getxPos(), 0, shot, player));
+                        player.setCurrentState(State.SHOOT);
+                    }
                 }
+                break;
 
-            }
-            return true;
-        }
-        else if (event.getAction() == MotionEvent.ACTION_UP) {
-            switch(player.getCurrentState()) {
-                case RIGHT_STAND_STILL: player.setCurrentState(State.RIGHT_STAND_STILL);
-                    break;
-                case LEFT_STAND_STILL:	player.setCurrentState(State.LEFT_STAND_STILL);
-                    break;
-                case RIGHT_START_WALK: 	player.setCurrentState(State.RIGHT_STAND_STILL);
-                    break;
-                case LEFT_START_WALK: 	player.setCurrentState(State.LEFT_STAND_STILL);
-                    break;
-                case WALK_RIGHT:		player.setCurrentState(State.RIGHT_STAND_STILL);
-                    break;
-                case WALK_LEFT:			player.setCurrentState(State.LEFT_STAND_STILL);
-                    break;
-                case SHOOT:				if (player.getDirection() == Direction.LEFT) player.setCurrentState(State.LEFT_STAND_STILL);
-                else player.setCurrentState(State.RIGHT_STAND_STILL);
+            case (MotionEvent.ACTION_POINTER_DOWN):
+                //activePointerID = event.getPointerId();
+                if (event.getPointerCount() == 2) {
+                    int xPressedSF = (int)event.getX();
+                    int yPressedSF = (int)event.getY();
+                }
+                break;
 
-                    break;
-            }
-            return true;
-        }
-        return false;
+            case (MotionEvent.ACTION_UP):
+
+                switch (player.getCurrentState()) {
+
+                    case RIGHT_STAND_STILL:
+                        player.setCurrentState(State.RIGHT_STAND_STILL);
+                        break;
+                    case LEFT_STAND_STILL:
+                        player.setCurrentState(State.LEFT_STAND_STILL);
+                        break;
+                    case RIGHT_START_WALK:
+                        player.setCurrentState(State.RIGHT_STAND_STILL);
+                        break;
+                    case LEFT_START_WALK:
+                        player.setCurrentState(State.LEFT_STAND_STILL);
+                        break;
+                    case WALK_RIGHT:
+                        player.setCurrentState(State.RIGHT_STAND_STILL);
+                        break;
+                    case WALK_LEFT:
+                        player.setCurrentState(State.LEFT_STAND_STILL);
+                        break;
+                    case SHOOT:
+                        if (player.getDirection() == Direction.LEFT)
+                            player.setCurrentState(State.LEFT_STAND_STILL);
+                        else player.setCurrentState(State.RIGHT_STAND_STILL);
+                        break;
+                }
+                break;
+
+        }return true;
     }
 
     /****
