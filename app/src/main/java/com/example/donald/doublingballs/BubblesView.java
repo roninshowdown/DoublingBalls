@@ -304,17 +304,17 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
 
-        buttonLeft = new Rect(50, c.getHeight()-270, 350, c.getHeight() - 20);
-        buttonRight = new Rect( 400,c.getHeight()-270, 700, c.getHeight() - 20);
-        buttonShoot = new Rect(c.getWidth()-400, c.getHeight()-270, c.getWidth()-100, c.getHeight()-50);
+       // buttonLeft = new Rect(50, c.getHeight()-270, 350, c.getHeight() - 20);
+        //buttonRight = new Rect( 400,c.getHeight()-270, 700, c.getHeight() - 20);
+        //buttonShoot = new Rect(c.getWidth()-400, c.getHeight()-270, c.getWidth()-100, c.getHeight()-50);
         /*
         c.drawRect(buttonLeft, paint);
         c.drawRect(buttonRight, paint);
         c.drawRect(buttonShoot, paint);
         */
-        c.drawBitmap(buttonLeftImage, null, buttonLeft, null);
-        c.drawBitmap(buttonRightImage, null, buttonRight, null);
-        c.drawBitmap(buttonShootImage, null, buttonShoot, null);
+       // c.drawBitmap(buttonLeftImage, null, buttonLeft, null);
+        //c.drawBitmap(buttonRightImage, null, buttonRight, null);
+        //c.drawBitmap(buttonShootImage, null, buttonShoot, null);
 
         // Draw Time
         Paint timePaint = timePaint = new Paint();
