@@ -308,16 +308,16 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 c.drawBitmap(death, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10  , mPaint);
                 break;
             case 1:
-                c.drawBitmap(life1, c.getWidth() * 2/6, c.getHeight()*82/100, mPaint);
+                c.drawBitmap(life1, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10, mPaint);
                 break;
             case 2:
-                c.drawBitmap(life2,c.getWidth() * 2/6, c.getHeight()*82/100, mPaint);
+                c.drawBitmap(life2,backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10, mPaint);
                 break;
             case 3:
-                c.drawBitmap(life3, c.getWidth() * 2/6, c.getHeight()*82/100, mPaint);
+                c.drawBitmap(life3, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10, mPaint);
                 break;
             case 4:
-                c.drawBitmap(life4, c.getWidth() * 2/6, c.getHeight()*82/100, mPaint);
+                c.drawBitmap(life4, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10, mPaint);
                 break;
         }
 
