@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Set;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.RectF;
+import android.support.v4.graphics.BitmapCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,12 +21,30 @@ import android.graphics.Paint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.widget.Toast;
 
 /****
  * bubblesView: Manages display handling of app. Implements SurfaceHolder.Callback to access certain display properties
  */
 public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
+
+
+    private volatile boolean gamestart = false;
+
+    //Leben
+    private int life = 0;
+
+    // Texte
+    private double bonus_score = 0;
+
+    // Zeit
+    private Thread timeThread;
+    private volatile boolean runningTimeThread=false;    // access to elementary data types (not double or long) are atomic and should be volatile to synchronize content
+    private volatile double elapsedTime = 0.0;
+    synchronized private void resetElapsedTime() { elapsedTime = 0.0;}
+    synchronized private double getElapsedTime() { return elapsedTime; }
+    synchronized private void increaseElapsedTime(double increment) { elapsedTime += increment; }
+
+
 
     private SurfaceHolder surfaceHolder = null; //Surface to hijack
     private GameLoop gameLoop; //Display refresh thread
@@ -38,6 +57,12 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap buttonLeftImage;
     private Bitmap buttonRightImage;
     private Bitmap buttonShootImage;
+
+    private Bitmap death;
+    private Bitmap life1;
+    private Bitmap life2;
+    private Bitmap life3;
+    private Bitmap life4;
 
     private ArrayList<Shot> shots = new ArrayList<>();
     ArrayList<Shot> shotsToBeRemoved = new ArrayList<>();
@@ -107,8 +132,16 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         buttonRightImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightbutton);
         buttonShootImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.weapon);
 
+        // Life
+
+        death = BitmapFactory.decodeResource(context.getResources(), R.drawable.death);
+        life1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life1);
+        life2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life2);
+        life3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life3);
+        life4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life4);
 
 
+        // BallObjects
         mPaint = new Paint();
         mPaint.setARGB(0xFF, 0x00, 0x80, 0xFF);
 
@@ -169,67 +202,49 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int activePointerID;
-        switch(event.getAction()) {
-
-            case (MotionEvent.ACTION_DOWN):
-
-                int xPressed = (int) event.getX();
-                int yPressed = (int) event.getY();
-
-                if (buttonLeft.contains(xPressed, yPressed)) {
-                    player.setCurrentState(State.WALK_LEFT);
-                    player.setDirection(Direction.LEFT);
-                } else if (buttonRight.contains(xPressed, yPressed)) {
-                    player.setCurrentState(State.WALK_RIGHT);
-                    player.setDirection(Direction.RIGHT);
-                } else if (buttonShoot.contains(xPressed, yPressed)) {
-                    if (shots.toArray().length < 3) {
-                        shots.add(new Shot(player.getxPos(), 0, shot, player));
-                        player.setCurrentState(State.SHOOT);
-                    }
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            float xPressed = event.getX();
+            float yPressed = event.getY();
+            //while(event.getAction() == MotionEvent.ACTION_BUTTON_PRESS) Log.d("test", "working");
+            if (xPressed <= buttonLeft.right && xPressed >= buttonLeft.left && yPressed <= buttonLeft.bottom && yPressed >= buttonLeft.top) {
+                player.setCurrentState(State.WALK_LEFT);
+                player.setDirection(Direction.LEFT);
+            }
+            else if (xPressed <= buttonRight.right && xPressed >= buttonRight.left && yPressed <= buttonRight.bottom && yPressed >= buttonRight.top) {
+                player.setCurrentState(State.WALK_RIGHT);
+                player.setDirection(Direction.RIGHT);
+            }
+            else if (xPressed <= buttonShoot.right && xPressed >= buttonShoot.left && yPressed <= buttonShoot.bottom && yPressed >= buttonShoot.top) {
+                if (shots.toArray().length < 3) {
+                    shots.add(new Shot(player.getxPos(), 0, shot, player));
+                    player.setCurrentState(State.SHOOT);
                 }
-                break;
 
-            case (MotionEvent.ACTION_POINTER_DOWN):
-                //activePointerID = event.getPointerId();
-                if (event.getPointerCount() == 2) {
-                    int xPressedSF = (int)event.getX();
-                    int yPressedSF = (int)event.getY();
-                }
-                break;
+            }
+            return true;
+        }
+        else if (event.getAction() == MotionEvent.ACTION_UP) {
+            switch(player.getCurrentState()) {
+                case RIGHT_STAND_STILL: player.setCurrentState(State.RIGHT_STAND_STILL);
+                    break;
+                case LEFT_STAND_STILL:	player.setCurrentState(State.LEFT_STAND_STILL);
+                    break;
+                case RIGHT_START_WALK: 	player.setCurrentState(State.RIGHT_STAND_STILL);
+                    break;
+                case LEFT_START_WALK: 	player.setCurrentState(State.LEFT_STAND_STILL);
+                    break;
+                case WALK_RIGHT:		player.setCurrentState(State.RIGHT_STAND_STILL);
+                    break;
+                case WALK_LEFT:			player.setCurrentState(State.LEFT_STAND_STILL);
+                    break;
+                case SHOOT:				if (player.getDirection() == Direction.LEFT) player.setCurrentState(State.LEFT_STAND_STILL);
+                else player.setCurrentState(State.RIGHT_STAND_STILL);
 
-            case (MotionEvent.ACTION_UP):
-
-                switch (player.getCurrentState()) {
-
-                    case RIGHT_STAND_STILL:
-                        player.setCurrentState(State.RIGHT_STAND_STILL);
-                        break;
-                    case LEFT_STAND_STILL:
-                        player.setCurrentState(State.LEFT_STAND_STILL);
-                        break;
-                    case RIGHT_START_WALK:
-                        player.setCurrentState(State.RIGHT_STAND_STILL);
-                        break;
-                    case LEFT_START_WALK:
-                        player.setCurrentState(State.LEFT_STAND_STILL);
-                        break;
-                    case WALK_RIGHT:
-                        player.setCurrentState(State.RIGHT_STAND_STILL);
-                        break;
-                    case WALK_LEFT:
-                        player.setCurrentState(State.LEFT_STAND_STILL);
-                        break;
-                    case SHOOT:
-                        if (player.getDirection() == Direction.LEFT)
-                            player.setCurrentState(State.LEFT_STAND_STILL);
-                        else player.setCurrentState(State.RIGHT_STAND_STILL);
-                        break;
-                }
-                break;
-
-        }return true;
+                    break;
+            }
+            return true;
+        }
+        return false;
     }
 
     /****
@@ -262,7 +277,35 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         c.drawBitmap(buttonLeftImage, null, buttonLeft, null);
         c.drawBitmap(buttonRightImage, null, buttonRight, null);
         c.drawBitmap(buttonShootImage, null, buttonShoot, null);
+
+        // Draw Time
+        Paint timePaint = timePaint = new Paint();
+        timePaint.setColor(Color.WHITE);
+        timePaint.setTextSize(80);
+        String timeText = "Score: " + String.format("%.0f", getElapsedTime() + bonus_score);
+        //c.drawText(timeText, c.getWidth() * 2/6, c.getHeight() * 9/10, timePaint);
+
+        // Draw Life
+        Paint painttest123 = new Paint();
+        switch (life){
+            case 0:
+                c.drawBitmap(death, c.getWidth() * 2/6, c.getHeight()*6/10, mPaint);
+                break;
+            case 1:
+                c.drawBitmap(life1, c.getWidth() * 2/6, c.getHeight()*6/10, mPaint);
+                break;
+            case 2:
+                c.drawBitmap(life2,c.getWidth() * 2/6, c.getHeight()*6/10, mPaint);
+                break;
+            case 3:
+                c.drawBitmap(life3, c.getWidth() * 2/6, c.getHeight()*6/10, mPaint);
+                break;
+            case 4:
+                c.drawBitmap(life4, c.getWidth() * 2/6, c.getHeight()*6/10, mPaint);
+                break;
+        }
     }
+
 
     /****
      * calculateDisplay: Generates new bubble, moves bubble, removes unused bubbles
@@ -285,11 +328,12 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         for (BallObject ballObject : ballObjects) {
-            if (areColliding(ballObject, player)) Log.d("test", "HIT");
+            if (areColliding(ballObject, player));
             for (Shot shot : shots) {
                 if (areColliding(ballObject, shot)) {
                     ballObjectsToBeRemoved.add(ballObject);
                     shotsToBeRemoved.add(shot);
+                    bonus_score += 100; // 100 Punkte für den Ball
                 }
             }
         }
@@ -301,6 +345,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             ballObjects.remove(ballObject);
         }
 
+        // TimeText
     }
 
     /****
@@ -351,14 +396,12 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
              BallBottom == ShotTop && bX == sX ||                           //prüft ob der Ball unten getroffen wurde
                  (BallXHalfLeft == sX || BallXHalfRight == sX) && BallYHalfLeftBottom == ShotTop ||
                  ) {}*/
-
         if (b.rect.intersect(s.rect)) return true;
         return false;
-
-        /*double dX = b.getPosx() - s.getxPos();
+        /*
+        double dX = b.getPosx() - s.getxPos();
         double dY = b.getPosy() - s.getyPos();
         double distance = Math.sqrt(dX*dX + dY*dY);
-
         if (b.getPosy() >= s.getyPos()+s.getShotHeigth()/2) {
             if (distance < b.getRadius() + s.getShotHeigth() / 2) return true;
         }
@@ -435,6 +478,24 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                         surfaceHolder.unlockCanvasAndPost(canvas);
                 }
             }
+        }
+        public  void startTimeThread() {
+            if(runningTimeThread) return;
+            runningTimeThread = true;
+            resetElapsedTime();
+            timeThread = new Thread(new Runnable() {
+                public void run() {
+                    while (runningTimeThread) {
+                        increaseElapsedTime(0.10);
+
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException ex) {
+                            runningTimeThread=false;
+                        }
+                    }
+                }});
+            timeThread.start();
         }
     }
 
