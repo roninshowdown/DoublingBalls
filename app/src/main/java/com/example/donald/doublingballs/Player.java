@@ -2,6 +2,7 @@ package com.example.donald.doublingballs;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.RectF;
 
 enum State {
@@ -35,6 +36,9 @@ public class Player {
 
     private Bitmap leftStartWalk;
     private Bitmap rightStartWalk;
+
+    public RectF rect = new RectF();
+    public RectF rectBitmap = new RectF();
 
     public Player(Bitmap[] leftWalk, Bitmap[] rightWalk,
                   Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting) {
@@ -111,34 +115,36 @@ public class Player {
                 xPos = c.getWidth()-playerWidth/2;
             }
         }
+        rect.set(xPos-playerWidth/6, yPos-playerHeigth*1.9f, xPos+playerWidth/6, yPos-playerHeigth*1.1f);
+        rectBitmap = new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth);
 
     }
 
     public void draw(Canvas canvas) {
-        RectF rect = new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth);
+        canvas.drawRect(rect, new Paint());
         switch(currentState) {
-            case LEFT_STAND_STILL:  canvas.drawBitmap(leftStandStill, null, rect, null);
+            case LEFT_STAND_STILL:  canvas.drawBitmap(leftStandStill, null, rectBitmap, null);
+                                break;
+
+            case LEFT_START_WALK:   canvas.drawBitmap(leftStartWalk, null, rectBitmap, null);
                 break;
 
-            case LEFT_START_WALK:   canvas.drawBitmap(leftStartWalk, null, rect, null);
-                break;
-
-            case WALK_LEFT:         canvas.drawBitmap(leftWalk[pictureCount], null, rect, null);
+            case WALK_LEFT:         canvas.drawBitmap(leftWalk[pictureCount], null, rectBitmap, null);
                 ++pictureCount;
                 pictureCount %= 10;
                 break;
 
-            case RIGHT_STAND_STILL: canvas.drawBitmap(rightStandStill, null, rect, null);
+            case RIGHT_STAND_STILL: canvas.drawBitmap(rightStandStill, null, rectBitmap, null);
                 break;
 
-            case RIGHT_START_WALK:  canvas.drawBitmap(rightStartWalk, null, rect, null);
+            case RIGHT_START_WALK:  canvas.drawBitmap(rightStartWalk, null, rectBitmap, null);
                 break;
 
-            case WALK_RIGHT:        canvas.drawBitmap(rightWalk[pictureCount], null, rect, null);
+            case WALK_RIGHT:        canvas.drawBitmap(rightWalk[pictureCount], null, rectBitmap, null);
                 ++pictureCount;
                 pictureCount %= 10;
                 break;
-            case SHOOT: canvas.drawBitmap(shooting[3], null, rect, null);
+            case SHOOT: canvas.drawBitmap(shooting[3], null, rectBitmap, null);
         }
     }
 

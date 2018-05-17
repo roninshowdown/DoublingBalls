@@ -7,6 +7,35 @@
 
     <com.example.donald.doublingballs.BubblesView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
+    <ImageButton
+        android:id="@+id/moveLeft"
+        android:layout_width="100dip"
+        android:layout_height="100dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dip"
+        android:layout_marginStart="25dip"
+        android:background="@drawable/leftbuttonpixel1" />
+
+    <ImageButton
+        android:id="@+id/moveRight"
+        android:layout_width="100dip"
+        android:layout_height="100dip"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/moveLeft"
+        android:layout_marginStart="150dip"
+        android:background="@drawable/rightbuttonpixel1" />
+
+    <ImageButton
+        android:id="@+id/shoot"
+        android:layout_width="100dip"
+        android:layout_height="100dip"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/moveLeft"
+        android:layout_marginEnd="25dp"
+        android:background="@drawable/weapon" />
 </RelativeLayout>
