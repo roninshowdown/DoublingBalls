@@ -524,6 +524,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                     }
                 }});
             timeThread.start();
+
         }
     }
 
