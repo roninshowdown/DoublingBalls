@@ -115,7 +115,7 @@ public class Player {
                 xPos = c.getWidth()-playerWidth/2;
             }
         }
-        rect.set(xPos-playerWidth/4, yPos-playerHeigth*2, xPos+playerWidth/4, yPos-playerHeigth);
+        rect.set(xPos-playerWidth/6, yPos-playerHeigth*1.9f, xPos+playerWidth/6, yPos-playerHeigth*1.1f);
         rectBitmap = new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth);
 
     }

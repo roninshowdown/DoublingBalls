@@ -208,6 +208,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
             case (MotionEvent.ACTION_DOWN):
 
+                activePointerID = event.getActionIndex();
                 int xPressed = (int) event.getX();
                 int yPressed = (int) event.getY();
 
@@ -226,10 +227,11 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 break;
 
             case (MotionEvent.ACTION_POINTER_DOWN):
-                //activePointerID = event.getPointerId();
+
+                activePointerID = event.getActionIndex();
                 if (event.getPointerCount() == 2) {
-                    int xPressedSF = (int)event.getX();
-                    int yPressedSF = (int)event.getY();
+                    int xPressedSF = (int)event.getX(activePointerID);
+                    int yPressedSF = (int)event.getY(activePointerID);
                 }
                 break;
 
@@ -262,6 +264,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                         break;
                 }
                 break;
+
+            case (MotionEvent.ACTION_POINTER_UP): break;
+            case (MotionEvent.ACTION_MOVE): break;
 
         }return true;
     }
@@ -305,7 +310,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         //c.drawText(timeText, c.getWidth() * 2/6, c.getHeight() * 9/10, timePaint);
 
         // Draw Life
-        Paint painttest123 = new Paint();
+        /*Paint painttest123 = new Paint();
         switch (life){
             case 0:
                 c.drawBitmap(death, c.getWidth() * 2/6, c.getHeight()*6/10, mPaint);
@@ -322,7 +327,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             case 4:
                 c.drawBitmap(life4, c.getWidth() * 2/6, c.getHeight()*6/10, mPaint);
                 break;
-        }
+        }*/
     }
 
 
