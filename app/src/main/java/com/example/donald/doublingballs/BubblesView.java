@@ -30,8 +30,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
     private volatile boolean gamestart = false;
 
-    //Leben
-    private int life = 0;
+    //GameContent
+    private int life = 0;  // Leben des Spielers
+    private int ammo = 3; // Munition des Spielers
 
     // Texte
     private double bonus_score = 0;
@@ -63,6 +64,11 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap life2;
     private Bitmap life3;
     private Bitmap life4;
+
+    private Bitmap ammo0;
+    private Bitmap ammo1;
+    private Bitmap ammo2;
+    private Bitmap ammo3;
 
     private ArrayList<Shot> shots = new ArrayList<>();
     ArrayList<Shot> shotsToBeRemoved = new ArrayList<>();
@@ -139,6 +145,13 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         life2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life2);
         life3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life3);
         life4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life4);
+
+        // Ammo
+
+        ammo0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ammo0);
+        ammo1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ammo1);
+        ammo2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ammo2);
+        ammo3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ammo3);
 
 
         // BallObjects
@@ -220,6 +233,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             else if (xPressed <= buttonShoot.right && xPressed >= buttonShoot.left && yPressed <= buttonShoot.bottom && yPressed >= buttonShoot.top) {
                 if (shots.toArray().length < 3) {
                     shots.add(new Shot(player.getxPos(), 0, shot, player));
+                    if(ammo > 0) ammo--;
                     player.setCurrentState(State.SHOOT);
                 }
 
@@ -284,27 +298,42 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         // Draw Time
         Paint timePaint = timePaint = new Paint();
         timePaint.setColor(Color.WHITE);
-        timePaint.setTextSize(80);
+        timePaint.setTextSize(50);
         String timeText = "Score: " + String.format("%.0f", getElapsedTime() + bonus_score);
-        //c.drawText(timeText, c.getWidth() * 2/6, c.getHeight() * 9/10, timePaint);
+        c.drawText(timeText, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10, timePaint);
 
         // Draw Life
-        Paint painttest123 = new Paint();
         switch (life){
             case 0:
-                c.drawBitmap(death, c.getWidth() * 2/6, c.getHeight()*6/10, mPaint);
+                c.drawBitmap(death, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10  , mPaint);
                 break;
             case 1:
-                c.drawBitmap(life1, c.getWidth() * 2/6, c.getHeight()*6/10, mPaint);
+                c.drawBitmap(life1, c.getWidth() * 2/6, c.getHeight()*82/100, mPaint);
                 break;
             case 2:
-                c.drawBitmap(life2,c.getWidth() * 2/6, c.getHeight()*6/10, mPaint);
+                c.drawBitmap(life2,c.getWidth() * 2/6, c.getHeight()*82/100, mPaint);
                 break;
             case 3:
-                c.drawBitmap(life3, c.getWidth() * 2/6, c.getHeight()*6/10, mPaint);
+                c.drawBitmap(life3, c.getWidth() * 2/6, c.getHeight()*82/100, mPaint);
                 break;
             case 4:
-                c.drawBitmap(life4, c.getWidth() * 2/6, c.getHeight()*6/10, mPaint);
+                c.drawBitmap(life4, c.getWidth() * 2/6, c.getHeight()*82/100, mPaint);
+                break;
+        }
+
+        // Draw Ammo
+        switch (ammo){
+            case 0:
+                c.drawBitmap(ammo0, backgroundBitmap.getWidth() * 4/6, backgroundBitmap.getHeight() * 8/10  , mPaint);
+                break;
+            case 1:
+                c.drawBitmap(ammo1, backgroundBitmap.getWidth() * 4/6, backgroundBitmap.getHeight() * 8/10  , mPaint);
+                break;
+            case 2:
+                c.drawBitmap(ammo2, backgroundBitmap.getWidth() * 4/6, backgroundBitmap.getHeight() * 8/10  , mPaint);
+                break;
+            case 3:
+                c.drawBitmap(ammo3, backgroundBitmap.getWidth() * 4/6, backgroundBitmap.getHeight() * 8/10  , mPaint);
                 break;
         }
     }
@@ -327,6 +356,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             shot.update(canvas, numberOfFrames);
             if(shot.outOfRange(canvas)) {
                 shotsToBeRemoved.add(shot);
+                ammo++;
             }
         }
 
