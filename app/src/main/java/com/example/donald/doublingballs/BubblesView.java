@@ -212,7 +212,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     }
     */
 
-
+/*
     public boolean onTouchEvent(MotionEvent event) {
         int activePointerID;
         if(!gamestart) gameLoop.startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
@@ -284,6 +284,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         }return true;
     }
+    */
 
     /****
      * drawScreen: Paints background and all bubbles
@@ -319,42 +320,42 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         // Draw Time
         Paint timePaint = timePaint = new Paint();
         timePaint.setColor(Color.WHITE);
-        timePaint.setTextSize(50);
-        String timeText = "Score: " + String.format("%.0f", getElapsedTime() + bonus_score);
-        c.drawText(timeText, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10, timePaint);
+        timePaint.setTextSize(80);
+        String timeText = String.format("%.0f", getElapsedTime() + bonus_score);
+        c.drawText(timeText, backgroundBitmap.getWidth() * 9/10, backgroundBitmap.getHeight() * 1/15, timePaint);
 
         // Draw Life
         switch (life){
             case 0:
-                c.drawBitmap(death, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10  , mPaint);
+                c.drawBitmap(death, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 81/100  , mPaint);
                 break;
             case 1:
-                c.drawBitmap(life1, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10, mPaint);
+                c.drawBitmap(life1, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 81/100 , mPaint);
                 break;
             case 2:
-                c.drawBitmap(life2,backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10, mPaint);
+                c.drawBitmap(life2,backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 81/100 , mPaint);
                 break;
             case 3:
-                c.drawBitmap(life3, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10, mPaint);
+                c.drawBitmap(life3, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 81/100 , mPaint);
                 break;
             case 4:
-                c.drawBitmap(life4, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 8/10, mPaint);
+                c.drawBitmap(life4, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 81/100 , mPaint);
                 break;
         }
 
         // Draw Ammo
         switch (ammo){
             case 0:
-                c.drawBitmap(ammo0, backgroundBitmap.getWidth() * 4/6, backgroundBitmap.getHeight() * 8/10  , mPaint);
+                c.drawBitmap(ammo0, backgroundBitmap.getWidth() * 77/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
                 break;
             case 1:
-                c.drawBitmap(ammo1, backgroundBitmap.getWidth() * 4/6, backgroundBitmap.getHeight() * 8/10  , mPaint);
+                c.drawBitmap(ammo1, backgroundBitmap.getWidth() * 77/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
                 break;
             case 2:
-                c.drawBitmap(ammo2, backgroundBitmap.getWidth() * 4/6, backgroundBitmap.getHeight() * 8/10  , mPaint);
+                c.drawBitmap(ammo2, backgroundBitmap.getWidth() * 77/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
                 break;
             case 3:
-                c.drawBitmap(ammo3, backgroundBitmap.getWidth() * 4/6, backgroundBitmap.getHeight() * 8/10  , mPaint);
+                c.drawBitmap(ammo3, backgroundBitmap.getWidth() * 77/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
                 break;
         }
     }
@@ -387,7 +388,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 if (areColliding(ballObject, shot)) {
                     ballObjectsToBeRemoved.add(ballObject);
                     shotsToBeRemoved.add(shot);
-                    bonus_score += 100; // 100 Punkte für den Ball
+                    bonus_score += 10; // 10 Punkte für den Ball
                 }
             }
         }
@@ -541,11 +542,12 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             timeThread = new Thread(new Runnable() {
                 public void run() {
                     while (runningTimeThread) {
-                        increaseElapsedTime(0.10);
+                        increaseElapsedTime(0.05);
 
                         try {
                             Thread.sleep(10);
                         } catch (InterruptedException ex) {
+
                             runningTimeThread=false;
                         }
                     }
