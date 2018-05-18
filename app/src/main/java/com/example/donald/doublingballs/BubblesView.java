@@ -31,7 +31,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private volatile boolean gamestart = false;
 
     //GameContent
-    private int life = 0;  // Leben des Spielers
+    private int life = 3;  // Leben des Spielers
     private int ammo = 3; // Munition des Spielers
 
     // Texte
@@ -157,10 +157,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         // BallObjects
         mPaint = new Paint();
         mPaint.setARGB(0xFF, 0x00, 0x80, 0xFF);
-
-        ballObjects.add(new BallObject(150, 70.0, 10, 10.0, 0.8, 100, 0.025, mPaint, this));
-        ballObjects.add(new BallObject(100, 50.0, 10, 13.0, 0.8, 60, 0.025, mPaint, this));
-        ballObjects.add(new BallObject(350, 90.0, 10, 15.0, 0.8, 20, 0.025, mPaint, this));
     }
 
     /*
@@ -292,8 +288,14 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      */
     private void drawScreen(Canvas c) {
         backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, c.getWidth(), c.getHeight(), true);
-        c.drawBitmap(backgroundBitmap, new Matrix(), null);
+        if(!gamestart) gameLoop.startTimeThread();
 
+        if (getElapsedTime() == 10) {
+            ballObjects.add(new BallObject(150, 70.0, 10, 15.0, 0.8, 100, 0.025, mPaint, this));
+            ballObjects.add(new BallObject(100, 50.0, 10, 13.0, 0.8, 50, 0.025, mPaint, this));
+        }
+        if (getElapsedTime() == 25) ballObjects.add(new BallObject(350, 90.0, 10, 10.0, 0.8, 25, 0.025, mPaint, this));
+        c.drawBitmap(backgroundBitmap, new Matrix(), null);
         player.draw(c);
 
         for (BallObject ballObject : ballObjects) {
@@ -327,19 +329,19 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         // Draw Life
         switch (life){
             case 0:
-                c.drawBitmap(death, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 81/100  , mPaint);
+                c.drawBitmap(death, backgroundBitmap.getWidth() * 22/60, backgroundBitmap.getHeight() * 81/100  , mPaint);
                 break;
             case 1:
-                c.drawBitmap(life1, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 81/100 , mPaint);
+                c.drawBitmap(life4, backgroundBitmap.getWidth() * 22/60, backgroundBitmap.getHeight() * 81/100 , mPaint);
                 break;
             case 2:
-                c.drawBitmap(life2,backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 81/100 , mPaint);
+                c.drawBitmap(life3,backgroundBitmap.getWidth() * 22/60, backgroundBitmap.getHeight() * 81/100 , mPaint);
                 break;
             case 3:
-                c.drawBitmap(life3, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 81/100 , mPaint);
+                c.drawBitmap(life2, backgroundBitmap.getWidth() * 22/60, backgroundBitmap.getHeight() * 81/100 , mPaint);
                 break;
             case 4:
-                c.drawBitmap(life4, backgroundBitmap.getWidth() * 2/6, backgroundBitmap.getHeight() * 81/100 , mPaint);
+                c.drawBitmap(life1, backgroundBitmap.getWidth() * 22/60, backgroundBitmap.getHeight() * 81/100 , mPaint);
                 break;
         }
 
@@ -383,7 +385,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         for (BallObject ballObject : ballObjects) {
-            if (areColliding(ballObject, player));
+            if (areColliding(ballObject, player)){
+                ballObjectsToBeRemoved.add(ballObject);
+                if(life > 0) life--;
+            }
             for (Shot shot : shots) {
                 if (areColliding(ballObject, shot)) {
                     ballObjectsToBeRemoved.add(ballObject);
