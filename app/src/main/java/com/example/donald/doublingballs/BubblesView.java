@@ -32,7 +32,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
     //GameContent
     private int life = 0;  // Leben des Spielers
-    private int ammo = 3; // Munition des Spielers
+    public int ammo = 3; // Munition des Spielers
 
     // Texte
     private double bonus_score = 0;
@@ -54,7 +54,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     //Certain paint properties and objects
     private Bitmap backgroundBitmap;
     private Bitmap bubbleBitmap;
-    private Bitmap shot;
+    public Bitmap shot;
     private Bitmap buttonLeftImage;
     private Bitmap buttonRightImage;
     private Bitmap buttonShootImage;
@@ -70,11 +70,11 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap ammo2;
     private Bitmap ammo3;
 
-    private ArrayList<Shot> shots = new ArrayList<>();
+    public ArrayList<Shot> shots = new ArrayList<>();
     ArrayList<Shot> shotsToBeRemoved = new ArrayList<>();
     ArrayList<BallObject> ballObjectsToBeRemoved = new ArrayList<>();
 
-    private Player player;
+    public Player player;
 
     private Paint mPaint;
     private ArrayList<BallObject> ballObjects = new ArrayList<>();
@@ -213,7 +213,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     */
 
 
-    public boolean onTouchEvent(MotionEvent event) {
+    /*public boolean onTouchEvent(MotionEvent event) {
         int activePointerID;
         if(!gamestart) gameLoop.startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
 
@@ -283,7 +283,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             case (MotionEvent.ACTION_MOVE): break;
 
         }return true;
-    }
+    }*/
 
     /****
      * drawScreen: Paints background and all bubbles
@@ -477,6 +477,36 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         }
         else if(distance <= b.getRadius()+p.getPlayerWidth()/2) return true;
         return false;*/
+    }
+
+    public void determineStateOnActionUp() {
+
+        switch (player.getCurrentState()) {
+
+            case RIGHT_STAND_STILL:
+                player.setCurrentState(State.RIGHT_STAND_STILL);
+                break;
+            case LEFT_STAND_STILL:
+                player.setCurrentState(State.LEFT_STAND_STILL);
+                break;
+            case RIGHT_START_WALK:
+                player.setCurrentState(State.RIGHT_STAND_STILL);
+                break;
+            case LEFT_START_WALK:
+                player.setCurrentState(State.LEFT_STAND_STILL);
+                break;
+            case WALK_RIGHT:
+                player.setCurrentState(State.RIGHT_STAND_STILL);
+                break;
+            case WALK_LEFT:
+                player.setCurrentState(State.LEFT_STAND_STILL);
+                break;
+            case SHOOT:
+                if (player.getDirection() == Direction.LEFT)
+                    player.setCurrentState(State.LEFT_STAND_STILL);
+                else player.setCurrentState(State.RIGHT_STAND_STILL);
+                break;
+        }
     }
 
     /****

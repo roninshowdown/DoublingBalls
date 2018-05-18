@@ -6,6 +6,7 @@
     android:layout_height="fill_parent">
 
     <com.example.donald.doublingballs.BubblesView
+        android:id="@+id/bubbleView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentStart="true"
