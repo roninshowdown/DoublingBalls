@@ -14,7 +14,7 @@ public class Sound {
         soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC,0);
         hitSound = soundPool.load(context, R.raw.hit, 1);
         deathSound = soundPool.load(context, R.raw.deathsound, 1);
-        bounceSound = soundPool.load(context, R.raw.bouncingBall, 1);
+        bounceSound = soundPool.load(context, R.raw.bouncingball, 1);
     }
     public void playHitSound(){
         // play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate)

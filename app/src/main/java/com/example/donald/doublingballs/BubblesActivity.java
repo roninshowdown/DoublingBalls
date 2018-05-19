@@ -12,24 +12,22 @@ import android.widget.ImageButton;
 
 public class BubblesActivity extends AppCompatActivity {
 
-    public MediaPlayer mediaPlayerBackground = MediaPlayer.create(getApplicationContext(), R.raw.test);
-    private Sound sound;
-    /*
-    private BubblesView bw;
+    //public MediaPlayer mediaPlayerBackground = MediaPlayer.create(getApplicationContext(), R.raw.gamemusic);
+
     private boolean moveLeftHeldDown = false;
     private boolean moveRightHeldDown = false;
     private boolean shootHeldDown = false;
 
-
+/*
     @Override
     protected void onPause(){
         super.onPause();
         mediaPlayerBackground.release();
     }
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sound = new Sound(this);
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -41,12 +39,8 @@ public class BubblesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bubble);
 
 
-        bw = findViewById(R.id.bubbleView);
-
-
-
-        mediaPlayerBackground.setLooping(true);
-        mediaPlayerBackground.start();
+        //mediaPlayerBackground.setLooping(true);
+        //mediaPlayerBackground.start();
 
 
 /*

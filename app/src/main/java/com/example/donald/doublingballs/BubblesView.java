@@ -96,7 +96,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     int rightButtonPointerID = -1;
     int shootButtonPointerID = -1;
 
-    public Sound sound;
+    //public Sound sound;
 
     /****
      * Constructor
@@ -106,7 +106,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public BubblesView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        sound = new Sound(context);
+        //sound = new Sound(context);
 
         getHolder().addCallback((Callback) this);	//Register this class as callback handler for the surface
         backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background2);
@@ -499,8 +499,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
 
-        buttonLeft = new Rect(50, c.getHeight()-270, 350, c.getHeight() - 20);
-        buttonRight = new Rect( 400,c.getHeight()-270, 700, c.getHeight() - 20);
+        buttonLeft = new Rect(backgroundBitmap.getWidth() * 5/200, backgroundBitmap.getHeight() * 82/100, backgroundBitmap.getWidth()*27/200, backgroundBitmap.getHeight() * 985/1000);
+        buttonRight = new Rect( backgroundBitmap.getWidth()* 32/200, backgroundBitmap.getHeight() * 82/100, backgroundBitmap.getWidth()*54/200, backgroundBitmap.getHeight() * 985/1000);
         buttonShoot = new Rect(c.getWidth()-400, c.getHeight()-270, c.getWidth()-100, c.getHeight()-50);
         /*
         c.drawRect(buttonLeft, paint);
@@ -521,19 +521,19 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         // Draw Life
         switch (life){
             case 0:
-                c.drawBitmap(death, backgroundBitmap.getWidth() * 22/60, backgroundBitmap.getHeight() * 81/100  , mPaint);
+                c.drawBitmap(death, backgroundBitmap.getWidth() * 19/60, backgroundBitmap.getHeight() * 80/100  , mPaint);
                 break;
             case 1:
-                c.drawBitmap(life4, backgroundBitmap.getWidth() * 22/60, backgroundBitmap.getHeight() * 81/100 , mPaint);
+                c.drawBitmap(life4, backgroundBitmap.getWidth() * 19/60, backgroundBitmap.getHeight() * 80/100  , mPaint);
                 break;
             case 2:
-                c.drawBitmap(life3,backgroundBitmap.getWidth() * 22/60, backgroundBitmap.getHeight() * 81/100 , mPaint);
+                c.drawBitmap(life3, backgroundBitmap.getWidth() * 19/60, backgroundBitmap.getHeight() * 80/100  , mPaint);
                 break;
             case 3:
-                c.drawBitmap(life2, backgroundBitmap.getWidth() * 22/60, backgroundBitmap.getHeight() * 81/100 , mPaint);
+                c.drawBitmap(life2, backgroundBitmap.getWidth() * 19/60, backgroundBitmap.getHeight() * 80/100 , mPaint);
                 break;
             case 4:
-                c.drawBitmap(life1, backgroundBitmap.getWidth() * 22/60, backgroundBitmap.getHeight() * 81/100 , mPaint);
+                c.drawBitmap(life1, backgroundBitmap.getWidth() * 19/60, backgroundBitmap.getHeight() * 80/100 , mPaint);
                 break;
         }
 
@@ -634,7 +634,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      * randomlyAddBubbles: Adds a bubble at random. Probability rises with the number of frames passed
      * @param screenWidth ...
      * @param screenHeight ...
-     * @param numFrames: No. of frames since last call
      */
     /*
     public void randomlyAddBubbles(int screenWidth, int screenHeight, float numFrames) {

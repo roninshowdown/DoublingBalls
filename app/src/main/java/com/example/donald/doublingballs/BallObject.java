@@ -24,7 +24,7 @@ public class BallObject {
     private double accy;
     private double friction;
     BallTypes ballTypes;
-    public BubblesView bw;
+    //public BubblesView bw;
 
     private double bounce;
     private double defbounce;
@@ -37,7 +37,7 @@ public class BallObject {
     public RectF rect = new RectF();
 
     public BallObject(double posx, double posy, double accx, double accy,
-                      double bounce, int radius,double friction, BallTypes ballTypes, Paint p, View v) {
+                      double bounce, int radius,double friction, BallTypes ballTypes, Paint p, BubblesView v) {
         this.ballTypes = ballTypes;
         this.posx = posx;
         this.posy = posy;
@@ -48,6 +48,9 @@ public class BallObject {
         this.radius = radius;
         this.friction = friction;
         this.p = p;
+        //bw = v;
+        audioManager = (AudioManager) v.getContext().getSystemService(
+                Context.AUDIO_SERVICE);
 
     }
 
@@ -120,7 +123,7 @@ public class BallObject {
                 accx += friction;
 
             if (posy >= ((height * 0.74) - radius)) { // prüft ob Ball am Boden ist
-                bw.sound.playBounceSound();
+                //bw.sound.playBounceSound();
                 accy = (Math.abs(accy) * bounce);
                 if (bounce > 0 && bounce != 1)
                     bounce -= 0.01;
@@ -129,18 +132,17 @@ public class BallObject {
 
 
             if (posy <= (radius)) { // prüft ob Ball an der Decke ist und wechselt Richtung !!!
-                //playsound();+
-                //Test123
+                //bw.sound.playBounceSound();
                 accy = 0 - Math.abs(accy) * bounce;
             }
 
             if (posx >= (width - radius)) { // prüft ob Ball rechts an der Wand ist
-                //playsound();
+                //bw.sound.playBounceSound();
                 accx = 0 - Math.abs(accx) * bounce;
             }
 
             if (posx <= (radius)) { // prüft ob Ball links an der Wand ist
-                //playsound();
+                //bw.sound.playBounceSound();
                 accx = Math.abs(accx) * bounce;
             }
         }
@@ -154,22 +156,22 @@ public class BallObject {
             posx += accx;
 
             if (posy >= ((height * 0.74) - radius)) { // prüft ob Ball am Boden ist
+                //bw.sound.playBounceSound();
                 accy = (Math.abs(accy) * bounce);
             }
 
             if (posy <= (radius)) { // prüft ob Ball an der Decke ist
-                //playsound();+
-                //Test123
+                //bw.sound.playBounceSound();
                 accy = 0 - Math.abs(accy) * bounce;
             }
 
             if (posx >= (width - radius)) { // prüft ob Ball rechts an der Wand ist
-                //playsound();
+                //bw.sound.playBounceSound();
                 accx = 0 - Math.abs(accx) * bounce;
             }
 
             if (posx <= (radius)) { // prüft ob Ball links an der Wand ist
-                //playsound();
+                //bw.sound.playBounceSound();
                 accx = Math.abs(accx) * bounce;
             }
         }
