@@ -54,7 +54,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     //Certain paint properties and objects
     private Bitmap backgroundBitmap;
     private Bitmap bubbleBitmap;
-    private Bitmap shot;
+    public Bitmap shot;
     private Bitmap buttonLeftImage;
     private Bitmap buttonRightImage;
     private Bitmap buttonShootImage;
@@ -70,11 +70,11 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap ammo2;
     private Bitmap ammo3;
 
-    private ArrayList<Shot> shots = new ArrayList<>();
+    public ArrayList<Shot> shots = new ArrayList<>();
     ArrayList<Shot> shotsToBeRemoved = new ArrayList<>();
     ArrayList<BallObject> ballObjectsToBeRemoved = new ArrayList<>();
 
-    private Player player;
+    public Player player;
 
     private Paint mPaint;
     private ArrayList<BallObject> ballObjects = new ArrayList<>();
@@ -296,6 +296,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         }
         if (getElapsedTime() == 25) ballObjects.add(new BallObject(350, 90.0, 10, 10.0, 0.8, 25, 0.025, mPaint, this));
         c.drawBitmap(backgroundBitmap, new Matrix(), null);
+
         player.draw(c);
 
         for (BallObject ballObject : ballObjects) {
@@ -483,6 +484,36 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         }
         else if(distance <= b.getRadius()+p.getPlayerWidth()/2) return true;
         return false;*/
+    }
+
+    public void determineStateOnActionUp() {
+
+        switch (player.getCurrentState()) {
+
+            case RIGHT_STAND_STILL:
+                player.setCurrentState(State.RIGHT_STAND_STILL);
+                break;
+            case LEFT_STAND_STILL:
+                player.setCurrentState(State.LEFT_STAND_STILL);
+                break;
+            case RIGHT_START_WALK:
+                player.setCurrentState(State.RIGHT_STAND_STILL);
+                break;
+            case LEFT_START_WALK:
+                player.setCurrentState(State.LEFT_STAND_STILL);
+                break;
+            case WALK_RIGHT:
+                player.setCurrentState(State.RIGHT_STAND_STILL);
+                break;
+            case WALK_LEFT:
+                player.setCurrentState(State.LEFT_STAND_STILL);
+                break;
+            case SHOOT:
+                if (player.getDirection() == Direction.LEFT)
+                    player.setCurrentState(State.LEFT_STAND_STILL);
+                else player.setCurrentState(State.RIGHT_STAND_STILL);
+                break;
+        }
     }
 
     /****
