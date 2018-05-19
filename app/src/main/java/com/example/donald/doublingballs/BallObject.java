@@ -5,9 +5,14 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.view.MotionEvent;
 import android.view.View;
+
+enum BallTypes{
+    SMALL,MEDIUM,LARGE;
+}
 
 public class BallObject {
 
@@ -18,10 +23,8 @@ public class BallObject {
     private double accx;
     private double accy;
     private double friction;
-
-    private SoundPool sounds;
-    private int bounceSound;
-    private int touchSound;
+    BallTypes ballTypes;
+    public BubblesView bw;
 
     private double bounce;
     private double defbounce;
@@ -34,7 +37,8 @@ public class BallObject {
     public RectF rect = new RectF();
 
     public BallObject(double posx, double posy, double accx, double accy,
-                      double bounce, int radius,double friction, Paint p, View v) {
+                      double bounce, int radius,double friction, BallTypes ballTypes, Paint p, View v) {
+        this.ballTypes = ballTypes;
         this.posx = posx;
         this.posy = posy;
         this.accx = accx;
@@ -45,8 +49,6 @@ public class BallObject {
         this.friction = friction;
         this.p = p;
 
-        audioManager = (AudioManager) v.getContext().getSystemService(
-                Context.AUDIO_SERVICE);
     }
 
     public double getPosx() {
@@ -118,11 +120,11 @@ public class BallObject {
                 accx += friction;
 
             if (posy >= ((height * 0.74) - radius)) { // prüft ob Ball am Boden ist
-                //playsound();
+                bw.sound.playBounceSound();
                 accy = (Math.abs(accy) * bounce);
                 if (bounce > 0 && bounce != 1)
                     bounce -= 0.01;
-                if (bounce == 0.77) bounce = 1;
+                if (bounce == 0.78) bounce = 1;
             }
 
 
@@ -175,13 +177,6 @@ public class BallObject {
 
     }
 
-
-    public void playsound() {
-        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / 15.0f;
-        sounds.play(bounceSound, (float) Math.abs(bounce * bounce)
-                * currentVolume, (float) Math.abs(bounce * bounce)
-                * currentVolume, 0, 0, 1.0f);
-    }
 
 
     public void draw(Canvas c) {

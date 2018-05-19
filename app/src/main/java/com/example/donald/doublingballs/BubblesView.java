@@ -31,8 +31,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private volatile boolean gamestart = false;
 
     //GameContent
-    private int life = 3;  // Leben des Spielers
-    private int ammo = 3; // Munition des Spielers
+    public int life = 3;  // Leben des Spielers
+    public int ammo = 3; // Munition des Spielers
+    public double difficulty_factor = 1; // Im Laufe des Spiels wird die Ballspawn-Rate erhöht.
 
     // Texte
     private double bonus_score = 0;
@@ -41,6 +42,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private Thread timeThread;
     private volatile boolean runningTimeThread=false;    // access to elementary data types (not double or long) are atomic and should be volatile to synchronize content
     private volatile double elapsedTime = 0.0;
+
     synchronized private void resetElapsedTime() { elapsedTime = 0.0;}
     synchronized private double getElapsedTime() { return elapsedTime; }
     synchronized private void increaseElapsedTime(double increment) { elapsedTime += increment; }
@@ -73,7 +75,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public ArrayList<Shot> shots = new ArrayList<>();
     ArrayList<Shot> shotsToBeRemoved = new ArrayList<>();
     ArrayList<BallObject> ballObjectsToBeRemoved = new ArrayList<>();
-
+    ArrayList<BallObject> ballObjectsToBeAdded = new ArrayList<>();
     public Player player;
 
     private Paint mPaint;
@@ -83,6 +85,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     Rect buttonRight;
     Rect buttonShoot;
 
+    public Sound sound;
+
     /****
      * Constructor
      * @param context
@@ -90,6 +94,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      */
     public BubblesView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        sound = new Sound(context);
+
         getHolder().addCallback((Callback) this);	//Register this class as callback handler for the surface
         backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background2);
         bubbleBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble);
@@ -157,6 +164,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         // BallObjects
         mPaint = new Paint();
         mPaint.setARGB(0xFF, 0x00, 0x80, 0xFF);
+
+        // StartBall
+
+        ballObjects.add(new BallObject(100, 50.0, 10, 10, 0.8, 100, 0.025, BallTypes.LARGE, mPaint, this)); // medium Ball
     }
 
     /*
@@ -288,13 +299,11 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      */
     private void drawScreen(Canvas c) {
         backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, c.getWidth(), c.getHeight(), true);
+
         if(!gamestart) gameLoop.startTimeThread();
 
-        if (getElapsedTime() == 10) {
-            ballObjects.add(new BallObject(150, 70.0, 10, 15.0, 0.8, 100, 0.025, mPaint, this));
-            ballObjects.add(new BallObject(100, 50.0, 10, 13.0, 0.8, 50, 0.025, mPaint, this));
-        }
-        if (getElapsedTime() == 25) ballObjects.add(new BallObject(350, 90.0, 10, 10.0, 0.8, 25, 0.025, mPaint, this));
+        randomlyAddBallObjects(backgroundBitmap.getWidth(),backgroundBitmap.getHeight());
+
         c.drawBitmap(backgroundBitmap, new Matrix(), null);
 
         player.draw(c);
@@ -381,40 +390,69 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             shot.update(canvas, numberOfFrames);
             if(shot.outOfRange(canvas)) {
                 shotsToBeRemoved.add(shot);
-                ammo++;
             }
         }
 
         for (BallObject ballObject : ballObjects) {
             if (areColliding(ballObject, player)){
                 ballObjectsToBeRemoved.add(ballObject);
-                if(life > 0) life--;
+                if(ballObject.ballTypes == BallTypes.LARGE) { // große Bälle ziehen 2 Leben ab
+                    if (life > 1) life-=2;
+                    else life = 0;
+                }
+                else if (life > 0) life--;
             }
             for (Shot shot : shots) {
                 if (areColliding(ballObject, shot)) {
-                    ballObjectsToBeRemoved.add(ballObject);
+                    double x = ballObject.getPosx();
+                    double y = ballObject.getPosy();
                     shotsToBeRemoved.add(shot);
-                    bonus_score += 10; // 10 Punkte für den Ball
+                    if (ballObject.ballTypes == BallTypes.LARGE){ // Large Balls
+                        bonus_score += 100;
+
+                        // Bei der Ballerzeugung könnte man ballObjects.getAccy + 30 für den Parameter accy eintragen
+                        // damit man die Schusskraft mit der Schwerkraft des Balls verrechnet: Bewusst nicht gemacht, weil das Spiel sonst zu schwer wird für den Spieler
+                        // Die Bälle sollen immer weit genug vom aktuellen Ball wegspringen !
+
+                        ballObjectsToBeAdded.add(new BallObject(ballObject.getPosx(), ballObject.getPosy(), 10, 30.0 , 0.8, 50, 0.025, BallTypes.MEDIUM, mPaint, this)); // small Ball
+                        ballObjectsToBeAdded.add(new BallObject(ballObject.getPosx(), ballObject.getPosy(), -10,30.0, 0.8, 50, 0.025, BallTypes.MEDIUM, mPaint, this)); // small Ball
+                    }
+                    if (ballObject.ballTypes == BallTypes.MEDIUM) { // Medium Balls
+                        bonus_score += 50;
+                        ballObjectsToBeAdded.add(new BallObject(ballObject.getPosx(),ballObject.getPosy(), 10, 5.0, 0.8, 25, 0.025, BallTypes.SMALL, mPaint, this)); // small Ball
+                        ballObjectsToBeAdded.add(new BallObject(ballObject.getPosx(), ballObject.getPosy(), -10, 30.0, 0.8, 25, 0.025, BallTypes.SMALL, mPaint, this)); // small Ball
+                    }
+                    else{
+                        // Small Balls
+                        bonus_score += 20;
+                    }
+                    ballObjectsToBeRemoved.add(ballObject); // wird 2 mal hinzugefügt? TODO
                 }
+
+                ballObjects.addAll(ballObjectsToBeAdded);
             }
         }
 
         for (Shot shot : shotsToBeRemoved) {
             shots.remove(shot);
+            if(ammo < 3)ammo++;
         }
         for (BallObject ballObject : ballObjectsToBeRemoved) {
             ballObjects.remove(ballObject);
         }
 
-        // TimeText
+        // Listen leeren
+        ballObjectsToBeAdded.clear();
+        ballObjectsToBeRemoved.clear();
+        shotsToBeRemoved.clear();
     }
 
     /****
      * randomlyAddBubbles: Adds a bubble at random. Probability rises with the number of frames passed
      * @param screenWidth ...
      * @param screenHeight ...
-     * @param numFrames: No. of frames since last call
      */
+    /*
     public void randomlyAddBubbles(int screenWidth, int screenHeight, float numFrames) {
         //Create a bubble every time the number of frame threshold is exceeded
         if (Math.random()>BUBBLE_FREQUENCY*numFrames)
@@ -424,6 +462,52 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 screenHeight+Bubble.RADIUS,						//y pos under bottom of screen
                 (int)((Bubble.MAX_SPEED-0.1)*Math.random()+0.1),	//This avoids bubbles of speed 0
                 bubbleBitmap));
+    }
+    */
+    public void randomlyAddBallObjects(int screenWidth, int screenHeight) {
+
+        if (elapsedTime > 20 && elapsedTime < 40 ) {
+            difficulty_factor = 2;
+        }
+        else if (elapsedTime > 40 && elapsedTime < 60){
+            difficulty_factor = 3;
+        }
+        else if (elapsedTime > 60 && elapsedTime < 100){
+            difficulty_factor = 4;
+        }
+        else if (elapsedTime > 100 && elapsedTime < 150){
+            difficulty_factor = 5;
+        }
+        else if (elapsedTime > 150 && elapsedTime < 200){
+            difficulty_factor = 6;
+        }
+        else if (elapsedTime > 200 && elapsedTime < 300){
+            difficulty_factor = 7;
+        }
+        difficulty_factor += 0.005; // Schwierigkeit wird nach 300 Sekunden einfach langsam linear erhöht
+
+        if ((int) (Math.random() * 1000) > difficulty_factor) // nur wenn die Zahl <= factor ist wird ein Ball gespawnt
+            return;
+        /*
+        bubbles.add(new Bubble((int)(screenWidth*Math.random()), 				//x pos at random
+                screenHeight+Bubble.RADIUS,						//y pos under bottom of screen
+                (int)((Bubble.MAX_SPEED-0.1)*Math.random()+0.1),	//This avoids bubbles of speed 0
+                bubbleBitmap));
+                */
+
+        double probability = Math.random();
+        // Lässt Balle mit unterschiedlichen Wahrscheinlichkeiten (L = 20%, M = 30 %, S = 50% ) spawnen
+        if (probability <= 0.1) {
+            ballObjects.add(new BallObject(100, 50.0, 10, 15.0, 0.8, 100, 0.025, BallTypes.LARGE, mPaint, this)); // large Ball
+        }
+        else if (probability > 0.1 && probability < 0.3 ) {
+            ballObjects.add(new BallObject(100, 50.0, 10, 13.0, 0.8, 50, 0.025, BallTypes.MEDIUM, mPaint, this)); // medium Ball
+
+        }
+        else if(probability >= 0.3 && probability <= 1){
+            ballObjects.add(new BallObject(100, 50.0, 10, 10.0, 0.8, 25, 0.025, BallTypes.SMALL, mPaint, this)); // small Ball
+        }
+
     }
 
     public boolean areColliding(BallObject b, Shot s) {
