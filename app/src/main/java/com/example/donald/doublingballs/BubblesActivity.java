@@ -14,10 +14,12 @@ public class BubblesActivity extends AppCompatActivity {
 
     public MediaPlayer mediaPlayerBackground = MediaPlayer.create(getApplicationContext(), R.raw.test);
     private Sound sound;
+    /*
     private BubblesView bw;
     private boolean moveLeftHeldDown = false;
     private boolean moveRightHeldDown = false;
     private boolean shootHeldDown = false;
+
 
     @Override
     protected void onPause(){
@@ -38,6 +40,7 @@ public class BubblesActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_bubble);
 
+
         bw = findViewById(R.id.bubbleView);
 
 
@@ -46,7 +49,7 @@ public class BubblesActivity extends AppCompatActivity {
         mediaPlayerBackground.start();
 
 
-
+/*
         final ImageButton moveLeft = findViewById(R.id.moveLeft);
         moveLeft.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -58,9 +61,11 @@ public class BubblesActivity extends AppCompatActivity {
                     case (MotionEvent.ACTION_DOWN):
                         bw.player.setCurrentState(State.WALK_LEFT);
                         bw.player.setDirection(Direction.LEFT);
+                        moveLeftHeldDown = true;
                         break;
                     case (MotionEvent.ACTION_UP):
                         bw.determineStateOnActionUp();
+                        moveLeftHeldDown = false;
                         break;
                     case (MotionEvent.ACTION_MOVE):
                         break;
@@ -78,9 +83,11 @@ public class BubblesActivity extends AppCompatActivity {
                     case (MotionEvent.ACTION_DOWN):
                         bw.player.setCurrentState(State.WALK_RIGHT);
                         bw.player.setDirection(Direction.RIGHT);
+                        moveRightHeldDown = true;
                         break;
                     case (MotionEvent.ACTION_UP):
                         bw.determineStateOnActionUp();
+                        moveRightHeldDown = false;
                 }
                 return true;
 
@@ -98,6 +105,8 @@ public class BubblesActivity extends AppCompatActivity {
                             bw.shots.add(new Shot(bw.player.getxPos(), 0, bw.shot, bw.player));
                             if(bw.ammo > 0) bw.ammo--;
                         }
+                        if (moveRightHeldDown) bw.player.setCurrentState(State.WALK_RIGHT);
+                        else if (moveLeftHeldDown) bw.player.setCurrentState((State.WALK_LEFT));
                         break;
                     case (MotionEvent.ACTION_UP):
                         bw.determineStateOnActionUp();
@@ -106,5 +115,7 @@ public class BubblesActivity extends AppCompatActivity {
 
             }
         });
+        */
+
     }
 }
