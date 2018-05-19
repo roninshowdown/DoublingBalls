@@ -11,10 +11,12 @@ import android.widget.ImageButton;
 
 public class BubblesActivity extends AppCompatActivity {
 
+    /*
     private BubblesView bw;
     private boolean moveLeftHeldDown = false;
     private boolean moveRightHeldDown = false;
     private boolean shootHeldDown = false;
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class BubblesActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_bubble);
 
+        /*
         bw = findViewById(R.id.bubbleView);
 
 
@@ -43,9 +46,11 @@ public class BubblesActivity extends AppCompatActivity {
                     case (MotionEvent.ACTION_DOWN):
                         bw.player.setCurrentState(State.WALK_LEFT);
                         bw.player.setDirection(Direction.LEFT);
+                        moveLeftHeldDown = true;
                         break;
                     case (MotionEvent.ACTION_UP):
                         bw.determineStateOnActionUp();
+                        moveLeftHeldDown = false;
                         break;
                     case (MotionEvent.ACTION_MOVE):
                         break;
@@ -63,9 +68,11 @@ public class BubblesActivity extends AppCompatActivity {
                     case (MotionEvent.ACTION_DOWN):
                         bw.player.setCurrentState(State.WALK_RIGHT);
                         bw.player.setDirection(Direction.RIGHT);
+                        moveRightHeldDown = true;
                         break;
                     case (MotionEvent.ACTION_UP):
                         bw.determineStateOnActionUp();
+                        moveRightHeldDown = false;
                 }
                 return true;
 
@@ -83,6 +90,8 @@ public class BubblesActivity extends AppCompatActivity {
                             bw.shots.add(new Shot(bw.player.getxPos(), 0, bw.shot, bw.player));
                             if(bw.ammo > 0) bw.ammo--;
                         }
+                        if (moveRightHeldDown) bw.player.setCurrentState(State.WALK_RIGHT);
+                        else if (moveLeftHeldDown) bw.player.setCurrentState((State.WALK_LEFT));
                         break;
                     case (MotionEvent.ACTION_UP):
                         bw.determineStateOnActionUp();
@@ -91,6 +100,7 @@ public class BubblesActivity extends AppCompatActivity {
 
             }
         });
+        */
 
     }
 }

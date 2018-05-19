@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.support.v4.graphics.BitmapCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -52,12 +53,18 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private LinkedList<Bubble> bubbles = new LinkedList<Bubble>(); //Our bubble objects
     private float BUBBLE_FREQUENCY = 0.3f; //Bubble generation rate
     //Certain paint properties and objects
+
     private Bitmap backgroundBitmap;
     private Bitmap bubbleBitmap;
     public Bitmap shot;
     private Bitmap buttonLeftImage;
     private Bitmap buttonRightImage;
     private Bitmap buttonShootImage;
+
+    public boolean leftButtonHeldDown = false;
+    public boolean rightButtonHeldDown = false;
+    public boolean shootButtonHeldDown = false;
+
 
     private Bitmap death;
     private Bitmap life1;
@@ -82,6 +89,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     Rect buttonLeft;
     Rect buttonRight;
     Rect buttonShoot;
+
+    int leftButtonPointerID = -1;
+    int rightButtonPointerID = -1;
+    int shootButtonPointerID = -1;
 
     /****
      * Constructor
@@ -213,77 +224,249 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     */
 
 
-    /*public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) {
+
         int activePointerID;
+        int activePointerIndex;
+
+
         if(!gamestart) gameLoop.startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
 
-        switch(event.getAction()) {
+        switch(event.getActionMasked()) {
 
             case (MotionEvent.ACTION_DOWN):
 
-                activePointerID = event.getActionIndex();
-                int xPressed = (int) event.getX();
-                int yPressed = (int) event.getY();
+                activePointerIndex = event.getActionIndex();
+                activePointerID = event.getPointerId(activePointerIndex);
 
-                if (buttonLeft.contains(xPressed, yPressed)) {
+
+                int xPos = (int) event.getX(activePointerIndex);
+                int yPos = (int) event.getY(activePointerIndex);
+
+                //ckeck if the initial touch is in a button
+                if (buttonLeft.contains(xPos, yPos)) {
+
                     player.setCurrentState(State.WALK_LEFT);
                     player.setDirection(Direction.LEFT);
-                } else if (buttonRight.contains(xPressed, yPressed)) {
+
+                    leftButtonPointerID = activePointerID;
+                    Log.d("test", "leftID:::activeID    "+Integer.toString(leftButtonPointerID)+":::"+Integer.toString(activePointerID));
+
+                    leftButtonHeldDown = true;
+
+                } else if (buttonRight.contains(xPos, yPos)) {
+
                     player.setCurrentState(State.WALK_RIGHT);
                     player.setDirection(Direction.RIGHT);
-                } else if (buttonShoot.contains(xPressed, yPressed)) {
+
+                    rightButtonPointerID = activePointerID;
+                    rightButtonHeldDown = true;
+
+                } else if (buttonShoot.contains(xPos, yPos)) {
+
                     if (shots.toArray().length < 3) {
+
+                        player.setCurrentState(State.SHOOT);
                         shots.add(new Shot(player.getxPos(), 0, shot, player));
                         if(ammo > 0) ammo--;
-                        player.setCurrentState(State.SHOOT);
+
+                        shootButtonPointerID = activePointerID;
+                        shootButtonHeldDown = true;
                     }
                 }
-                break;
+            break;
 
             case (MotionEvent.ACTION_POINTER_DOWN):
 
-                activePointerID = event.getActionIndex();
-                if (event.getPointerCount() == 2) {
-                    int xPressedSF = (int)event.getX(activePointerID);
-                    int yPressedSF = (int)event.getY(activePointerID);
+                if (event.getPointerCount() > 2) break;
+                activePointerIndex = event.getActionIndex();
+                activePointerID = event.getPointerId(activePointerIndex);
+
+
+                //check if second touch is in a button and set it as the current state, as it is the most recent interaction
+
+                int xPosPD = (int)event.getX(activePointerIndex);
+                int yPosPD = (int)event.getY(activePointerIndex);
+
+                if (buttonLeft.contains(xPosPD, yPosPD)) {
+
+                    player.setCurrentState(State.WALK_LEFT);
+                    player.setDirection(Direction.LEFT);
+
+                    leftButtonPointerID = activePointerID;
+                   // Log.d("test", "leftID:::activeID    "+Integer.toString(leftButtonPointerID)+":::"+Integer.toString(activePointerID));
+                    leftButtonHeldDown = true;
                 }
-                break;
+                else if (buttonRight.contains(xPosPD, yPosPD)) {
+
+                    player.setCurrentState(State.WALK_RIGHT);
+                    player.setDirection(Direction.RIGHT);
+
+                    rightButtonPointerID = activePointerID;
+                    //Log.d("test", "rightID:::activeID   "+Integer.toString(rightButtonPointerID)+":::"+Integer.toString(activePointerID));
+                    rightButtonHeldDown = true;
+                }
+                else if (buttonShoot.contains(xPosPD, yPosPD)) {
+
+                    if (shots.toArray().length < 3) {
+
+                        player.setCurrentState(State.SHOOT);
+                        shots.add(new Shot(player.getxPos(), 0, shot, player));
+                        if(ammo > 0) ammo--;
+
+                        shootButtonPointerID = activePointerID;
+                      //  Log.d("test", "shootID:::activeID   "+Integer.toString(shootButtonPointerID)+":::"+Integer.toString(activePointerID));
+                        shootButtonHeldDown = true;
+                    }
+                }
+            break;
+
+            case (MotionEvent.ACTION_MOVE):
+
+                if (event.getPointerCount() > 2) break;
+
+                activePointerIndex = event.getActionIndex();
+                activePointerID = event.getPointerId(activePointerIndex);
+
+                int currentXPos = (int) event.getX(activePointerIndex);
+                int currentYPos = (int) event.getY(activePointerIndex);
+
+
+                Log.d("test", "leftID:::activeID    " + Integer.toString(leftButtonPointerID) + ":::" + Integer.toString(activePointerID));
+                //Log.d("test", "rightID:::activeID" + Integer.toString(rightButtonPointerID) + ":::" + Integer.toString(activePointerID));
+                //Log.d("test", "shootID:::activeID" + Integer.toString(shootButtonPointerID) + ":::" + Integer.toString(activePointerID));
+
+                //check if a touch dragged out of a button
+
+                if (leftButtonPointerID == activePointerID && !buttonLeft.contains(currentXPos, currentYPos)) {
+
+                    leftButtonHeldDown = false;
+                    //if (shootButtonHeldDown) player.setCurrentState(State.SHOOT);
+                    //else if (rightButtonHeldDown) player.setCurrentState(State.WALK_RIGHT);
+                    determineStateOnActionUp();
+
+                } else if (rightButtonPointerID == activePointerID && !buttonRight.contains(currentXPos, currentYPos)) {
+
+                    rightButtonHeldDown = false;
+                    //if (shootButtonHeldDown) player.setCurrentState(State.SHOOT);
+                    //else if (leftButtonHeldDown) player.setCurrentState(State.WALK_LEFT);
+                    determineStateOnActionUp();
+
+                } else if (shootButtonPointerID == activePointerID && !buttonShoot.contains(currentXPos, currentYPos)) {
+
+                    shootButtonHeldDown = false;
+                    if (leftButtonHeldDown) player.setCurrentState(State.WALK_LEFT);
+                    else if (rightButtonHeldDown) player.setCurrentState(State.WALK_RIGHT);
+                    else determineStateOnActionUp();
+                }
+
+
+                //check if touch dragged into a button and set it as the current state, as it is the most recent interaction
+                if (buttonLeft.contains(currentXPos, currentYPos)) {
+
+                    player.setCurrentState(State.WALK_LEFT);
+                    player.setDirection(Direction.LEFT);
+
+                    leftButtonPointerID = activePointerID;
+                    leftButtonHeldDown = true;
+
+                } else if (buttonRight.contains(currentXPos, currentYPos)) {
+
+                    player.setCurrentState(State.WALK_RIGHT);
+                    player.setDirection(Direction.RIGHT);
+
+                    rightButtonPointerID = activePointerID;
+                    rightButtonHeldDown = true;
+
+                } else if (buttonShoot.contains(currentXPos, currentYPos)) {
+
+                    if (shots.toArray().length < 3) {
+
+                        player.setCurrentState(State.SHOOT);
+
+                        shootButtonPointerID = activePointerID;
+                        shootButtonHeldDown = true;
+                    }
+                }
+            break;
+
+            case (MotionEvent.ACTION_POINTER_UP):
+
+                if (event.getPointerCount() > 2) break;
+
+                activePointerIndex = event.getActionIndex();
+                activePointerID = event.getPointerId(activePointerIndex);
+
+                int xPosPU = (int)event.getX(activePointerIndex);
+                int yPosPU = (int)event.getY(activePointerIndex);
+
+                if (buttonLeft.contains(xPosPU, yPosPU)) {
+
+                    leftButtonHeldDown = false;
+                    if (rightButtonHeldDown) player.setCurrentState(State.WALK_RIGHT);
+                    else if (shootButtonHeldDown) player.setCurrentState(State.SHOOT);
+                    //if initial touch is not inside a button
+                    else determineStateOnActionUp();
+                }
+                else if (buttonRight.contains(xPosPU, yPosPU)) {
+
+                    rightButtonHeldDown = false;
+                    if (leftButtonHeldDown) player.setCurrentState(State.WALK_LEFT);
+                    else if (shootButtonHeldDown) player.setCurrentState(State.SHOOT);
+                    //if initial touch is not inside a button
+                    else determineStateOnActionUp();
+                }
+                else if (buttonRight.contains(xPosPU, yPosPU)) {
+
+                    shootButtonHeldDown = false;
+                    if (leftButtonHeldDown) player.setCurrentState(State.WALK_LEFT);
+                    else if (rightButtonHeldDown) player.setCurrentState(State.WALK_RIGHT);
+                    //if initial touch is not inside a button
+                    else determineStateOnActionUp();
+                }
+            break;
 
             case (MotionEvent.ACTION_UP):
 
-                switch (player.getCurrentState()) {
-
-                    case RIGHT_STAND_STILL:
-                        player.setCurrentState(State.RIGHT_STAND_STILL);
-                        break;
-                    case LEFT_STAND_STILL:
-                        player.setCurrentState(State.LEFT_STAND_STILL);
-                        break;
-                    case RIGHT_START_WALK:
-                        player.setCurrentState(State.RIGHT_STAND_STILL);
-                        break;
-                    case LEFT_START_WALK:
-                        player.setCurrentState(State.LEFT_STAND_STILL);
-                        break;
-                    case WALK_RIGHT:
-                        player.setCurrentState(State.RIGHT_STAND_STILL);
-                        break;
-                    case WALK_LEFT:
-                        player.setCurrentState(State.LEFT_STAND_STILL);
-                        break;
-                    case SHOOT:
-                        if (player.getDirection() == Direction.LEFT)
-                            player.setCurrentState(State.LEFT_STAND_STILL);
-                        else player.setCurrentState(State.RIGHT_STAND_STILL);
-                        break;
-                }
-                break;
-
-            case (MotionEvent.ACTION_POINTER_UP): break;
-            case (MotionEvent.ACTION_MOVE): break;
+                //initial touch released: default determination of state; no conflicts possible
+                determineStateOnActionUp();
+            break;
 
         }return true;
-    }*/
+    }
+
+    public void determineStateOnActionUp() {
+
+        switch (player.getCurrentState()) {
+
+            case RIGHT_STAND_STILL:
+                player.setCurrentState(State.RIGHT_STAND_STILL);
+                break;
+            case LEFT_STAND_STILL:
+                player.setCurrentState(State.LEFT_STAND_STILL);
+                break;
+            case RIGHT_START_WALK:
+                player.setCurrentState(State.RIGHT_STAND_STILL);
+                break;
+            case LEFT_START_WALK:
+                player.setCurrentState(State.LEFT_STAND_STILL);
+                break;
+            case WALK_RIGHT:
+                player.setCurrentState(State.RIGHT_STAND_STILL);
+                rightButtonHeldDown = false;
+                break;
+            case WALK_LEFT:
+                player.setCurrentState(State.LEFT_STAND_STILL);
+                leftButtonHeldDown = false;
+                break;
+            case SHOOT:
+                shootButtonHeldDown = false;
+                if (player.getDirection() == Direction.LEFT)
+                    player.setCurrentState(State.LEFT_STAND_STILL);
+                else player.setCurrentState(State.RIGHT_STAND_STILL);
+                break;
+        }
+    }
 
     /****
      * drawScreen: Paints background and all bubbles
@@ -304,17 +487,17 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
 
-       // buttonLeft = new Rect(50, c.getHeight()-270, 350, c.getHeight() - 20);
-        //buttonRight = new Rect( 400,c.getHeight()-270, 700, c.getHeight() - 20);
-        //buttonShoot = new Rect(c.getWidth()-400, c.getHeight()-270, c.getWidth()-100, c.getHeight()-50);
+        buttonLeft = new Rect(50, c.getHeight()-270, 350, c.getHeight() - 20);
+        buttonRight = new Rect( 400,c.getHeight()-270, 700, c.getHeight() - 20);
+        buttonShoot = new Rect(c.getWidth()-400, c.getHeight()-270, c.getWidth()-100, c.getHeight()-50);
         /*
         c.drawRect(buttonLeft, paint);
         c.drawRect(buttonRight, paint);
         c.drawRect(buttonShoot, paint);
         */
-       // c.drawBitmap(buttonLeftImage, null, buttonLeft, null);
-        //c.drawBitmap(buttonRightImage, null, buttonRight, null);
-        //c.drawBitmap(buttonShootImage, null, buttonShoot, null);
+        c.drawBitmap(buttonLeftImage, null, buttonLeft, null);
+        c.drawBitmap(buttonRightImage, null, buttonRight, null);
+        c.drawBitmap(buttonShootImage, null, buttonShoot, null);
 
         // Draw Time
         Paint timePaint = timePaint = new Paint();
@@ -398,8 +581,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         for (BallObject ballObject : ballObjectsToBeRemoved) {
             ballObjects.remove(ballObject);
         }
-
-        // TimeText
     }
 
     /****
@@ -479,35 +660,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         return false;*/
     }
 
-    public void determineStateOnActionUp() {
-
-        switch (player.getCurrentState()) {
-
-            case RIGHT_STAND_STILL:
-                player.setCurrentState(State.RIGHT_STAND_STILL);
-                break;
-            case LEFT_STAND_STILL:
-                player.setCurrentState(State.LEFT_STAND_STILL);
-                break;
-            case RIGHT_START_WALK:
-                player.setCurrentState(State.RIGHT_STAND_STILL);
-                break;
-            case LEFT_START_WALK:
-                player.setCurrentState(State.LEFT_STAND_STILL);
-                break;
-            case WALK_RIGHT:
-                player.setCurrentState(State.RIGHT_STAND_STILL);
-                break;
-            case WALK_LEFT:
-                player.setCurrentState(State.LEFT_STAND_STILL);
-                break;
-            case SHOOT:
-                if (player.getDirection() == Direction.LEFT)
-                    player.setCurrentState(State.LEFT_STAND_STILL);
-                else player.setCurrentState(State.RIGHT_STAND_STILL);
-                break;
-        }
-    }
 
     /****
      * Private display loop thread
