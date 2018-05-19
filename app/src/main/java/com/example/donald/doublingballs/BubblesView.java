@@ -501,7 +501,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         buttonLeft = new Rect(backgroundBitmap.getWidth() * 5/200, backgroundBitmap.getHeight() * 82/100, backgroundBitmap.getWidth()*27/200, backgroundBitmap.getHeight() * 985/1000);
         buttonRight = new Rect( backgroundBitmap.getWidth()* 32/200, backgroundBitmap.getHeight() * 82/100, backgroundBitmap.getWidth()*54/200, backgroundBitmap.getHeight() * 985/1000);
-        buttonShoot = new Rect(c.getWidth()-400, c.getHeight()-270, c.getWidth()-100, c.getHeight()-50);
+        buttonShoot = new Rect(backgroundBitmap.getWidth()* 85/100, backgroundBitmap.getHeight()*82/100, backgroundBitmap.getWidth()*95/100, backgroundBitmap.getHeight()*97/100);
         /*
         c.drawRect(buttonLeft, paint);
         c.drawRect(buttonRight, paint);
@@ -540,16 +540,16 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         // Draw Ammo
         switch (ammo){
             case 0:
-                c.drawBitmap(ammo0, backgroundBitmap.getWidth() * 77/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
+                c.drawBitmap(ammo0, backgroundBitmap.getWidth() * 72/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
                 break;
             case 1:
-                c.drawBitmap(ammo1, backgroundBitmap.getWidth() * 77/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
+                c.drawBitmap(ammo1, backgroundBitmap.getWidth() * 72/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
                 break;
             case 2:
-                c.drawBitmap(ammo2, backgroundBitmap.getWidth() * 77/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
+                c.drawBitmap(ammo2, backgroundBitmap.getWidth() * 72/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
                 break;
             case 3:
-                c.drawBitmap(ammo3, backgroundBitmap.getWidth() * 77/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
+                c.drawBitmap(ammo3, backgroundBitmap.getWidth() * 72/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
                 break;
         }
     }
