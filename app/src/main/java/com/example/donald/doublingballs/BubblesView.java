@@ -9,6 +9,9 @@ import java.util.Set;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v4.graphics.BitmapCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
@@ -52,9 +55,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
     private SurfaceHolder surfaceHolder = null; //Surface to hijack
     private GameLoop gameLoop; //Display refresh thread
-    private LinkedList<Bubble> bubbles = new LinkedList<Bubble>(); //Our bubble objects
-    private float BUBBLE_FREQUENCY = 0.3f; //Bubble generation rate
-    //Certain paint properties and objects
 
     private Bitmap backgroundBitmap;
     private Bitmap bubbleBitmap;
@@ -97,6 +97,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     int rightButtonPointerID = -1;
     int shootButtonPointerID = -1;
 
+    Vibrator vibrator;
+
     //public Sound sound;
 
     /****
@@ -112,6 +114,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback((Callback) this);	//Register this class as callback handler for the surface
         backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background2);
         bubbleBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble);
+        vibrator = context.getSystemService(Vibrator.class);
 
         Bitmap[] leftWalk = new Bitmap[10];
         leftWalk[0]	= BitmapFactory.decodeResource(context.getResources(), R.drawable.leftwalk1);
@@ -149,7 +152,25 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         shooting[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot3);
         shooting[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot4);
 
-        player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting);
+        Bitmap[] leftDeath = new Bitmap[7];
+        leftDeath[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftdeath1);
+        leftDeath[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftdeath1);
+        leftDeath[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftdeath1);
+        leftDeath[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftdeath2);
+        leftDeath[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftdeath2);
+        leftDeath[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftdeath2);
+        leftDeath[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftdeath3);
+
+        Bitmap[] rightDeath = new Bitmap[7];
+        rightDeath[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath1);
+        rightDeath[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath1);
+        rightDeath[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath1);
+        rightDeath[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath2);
+        rightDeath[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath2);
+        rightDeath[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath2);
+        rightDeath[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath3);
+
+        player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting, leftDeath, rightDeath);
 
         shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot1);
 
@@ -158,7 +179,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         buttonShootImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.weapon);
 
         // Life
-
         death = BitmapFactory.decodeResource(context.getResources(), R.drawable.death);
         life1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life1);
         life2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life2);
@@ -166,7 +186,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         life4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life4);
 
         // Ammo
-
         ammo0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ammo0);
         ammo1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ammo1);
         ammo2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ammo2);
@@ -178,7 +197,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         mPaint.setARGB(0xFF, 0x00, 0x80, 0xFF);
 
         // StartBall
-
         ballObjects.add(new BallObject(100, 50.0, 10, 10, 0.8, 100, 0.025, BallTypes.LARGE, mPaint, this)); // medium Ball
     }
 
@@ -234,6 +252,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     //ignoring 3 finger touch events; the game is meant to be played with two
     public boolean onTouchEvent(MotionEvent event) {
 
+        if (player.getCurrentState() == State.DIE) return false;
         int activePointerID;
         int activePointerIndex;
 
@@ -390,7 +409,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                     rightButtonPointerID = activePointerID;
                     rightButtonHeldDown = true;
 
-                } /*else if (buttonShoot.contains(currentXPos, currentYPos)) {
+                } else if (buttonShoot.contains(currentXPos, currentYPos)) {
 
                     if (shots.toArray().length < 3) {
                         //no new Shot added; Action_Move triggers to often, resulting in permanent shooting
@@ -400,7 +419,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                         shootButtonPointerID = activePointerID;
                         shootButtonHeldDown = true;
                     }
-                }*/
+                }
             break;
 
             case (MotionEvent.ACTION_POINTER_UP):
@@ -637,25 +656,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         ballObjectsToBeRemoved.clear();
         shotsToBeRemoved.clear();
 
+        if (life == 0) player.setCurrentState(State.DIE);
+
     }
 
-    /****
-     * randomlyAddBubbles: Adds a bubble at random. Probability rises with the number of frames passed
-     * @param screenWidth ...
-     * @param screenHeight ...
-     */
-    /*
-    public void randomlyAddBubbles(int screenWidth, int screenHeight, float numFrames) {
-        //Create a bubble every time the number of frame threshold is exceeded
-        if (Math.random()>BUBBLE_FREQUENCY*numFrames)
-            return;
-
-        bubbles.add(new Bubble((int)(screenWidth*Math.random()), 				//x pos at random
-                screenHeight+Bubble.RADIUS,						//y pos under bottom of screen
-                (int)((Bubble.MAX_SPEED-0.1)*Math.random()+0.1),	//This avoids bubbles of speed 0
-                bubbleBitmap));
-    }
-    */
     public void randomlyAddBallObjects(int screenWidth, int screenHeight) {
 
         if (elapsedTime > 20 && elapsedTime < 40 ) {
@@ -680,12 +684,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         if ((int) (Math.random() * 1000) > difficulty_factor) // nur wenn die Zahl <= factor ist wird ein Ball gespawnt
             return;
-        /*
-        bubbles.add(new Bubble((int)(screenWidth*Math.random()), 				//x pos at random
-                screenHeight+Bubble.RADIUS,						//y pos under bottom of screen
-                (int)((Bubble.MAX_SPEED-0.1)*Math.random()+0.1),	//This avoids bubbles of speed 0
-                bubbleBitmap));
-                */
 
         double probability = Math.random();
         // Lässt Balle mit unterschiedlichen Wahrscheinlichkeiten (L = 20%, M = 30 %, S = 50% ) spawnen
@@ -703,63 +701,17 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public boolean areColliding(BallObject b, Shot s) {
-
-       /* float bX = b.getxPos();
-        float bY = b.getyPos();
-        float bR = b.getRadius();
-        float sX = s.getxPos();
-        float sY = s.getyPos();
-        float sH = s.getShotHeigth();
-        float sW = s.getShotWidth();
-
-        float BallLeft = bX-bR;
-        float BallRight = bX+bR;
-
-        float BallTop = bY-bR;
-        float BallBottom = bY+bR;
-
-        float BallXHalfLeft = bX-0.5f*bR;
-        float BallXHalfRight = bX+0.5f*bR;
-
-        float BallYHalfLeftTop = bY-0.5f*bR;
-        float BallYHalfLeftBottom = bY+0.5f*bR;
-
-        float ShotLeft = sX-0.5f*sW;
-        float ShotRight = sX+0.5f*sW;
-        float ShotTop = sY-0.5f*sH;
-        float ShotBottom = sY+0.5f*sH;
-
-        if ((BallLeft == ShotRight || BallRight == ShotLeft) && bY == sY || //prüft ob der Ball links oder rechts getroffen wurde
-             BallBottom == ShotTop && bX == sX ||                           //prüft ob der Ball unten getroffen wurde
-                 (BallXHalfLeft == sX || BallXHalfRight == sX) && BallYHalfLeftBottom == ShotTop ||
-                 ) {}*/
-
         if (b.rect.intersect(s.rect)) return true;
         return false;
-        /*
-        double dX = b.getPosx() - s.getxPos();
-        double dY = b.getPosy() - s.getyPos();
-        double distance = Math.sqrt(dX*dX + dY*dY);
-        if (b.getPosy() >= s.getyPos()+s.getShotHeigth()/2) {
-            if (distance < b.getRadius() + s.getShotHeigth() / 2) return true;
-        }
-        else if (distance <= b.getRadius() + s.getShotWidth()/2) return true;
-        return false;*/
     }
 
     public boolean areColliding(BallObject b, Player p) {
-        if(b.rect.intersect(p.rect)) return true;
-        return false;
-        /*
-        double dX = b.getPosx()-p.getxPos();
-        double dY = b.getPosy()-p.getyPos();
-        double distance = Math.sqrt(dX*dX + dY*dY);
-
-        if (b.getPosy() >= p.getyPos()+p.getPlayerHeigth()/2) {
-            if (distance <= b.getRadius()+p.getPlayerHeigth()/2) return true;
+        if(b.rect.intersect(p.rect)) {
+            if (Build.VERSION.SDK_INT >= 26)vibrator.vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE));
+            else vibrator.vibrate(150);
+            return true;
         }
-        else if(distance <= b.getRadius()+p.getPlayerWidth()/2) return true;
-        return false;*/
+        return false;
     }
 
 
@@ -877,17 +829,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                     e.printStackTrace();
                 }
             }
-//			boolean retry = true;
-//			if (gameLoop != null) {			//Stop the loop
-//				gameLoop.running = false;
-//				while (retry) {
-//					try {
-//						gameLoop.join();	//Catch the thread
-//						retry = false;
-//					} catch (InterruptedException e) {
-//					}
-//				}
-//			}
             gameLoop = null;
         }
     }

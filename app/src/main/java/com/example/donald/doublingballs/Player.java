@@ -4,9 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 enum State {
-    LEFT_STAND_STILL, RIGHT_STAND_STILL, LEFT_START_WALK, RIGHT_START_WALK, WALK_LEFT, WALK_RIGHT, SHOOT
+    LEFT_STAND_STILL, RIGHT_STAND_STILL, LEFT_START_WALK, RIGHT_START_WALK, WALK_LEFT, WALK_RIGHT, SHOOT, DIE
 }
 
 enum Direction {
@@ -30,6 +31,9 @@ public class Player {
     private Bitmap[] leftWalk;
     private Bitmap[] rightWalk;
     private Bitmap[] shooting;
+    private Bitmap[] leftDeath;
+    private Bitmap[] rightDeath;
+
 
     private Bitmap leftStandStill;
     private Bitmap rightStandStill;
@@ -41,7 +45,8 @@ public class Player {
     public RectF rectBitmap = new RectF();
 
     public Player(Bitmap[] leftWalk, Bitmap[] rightWalk,
-                  Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting) {
+                  Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting,
+                  Bitmap[] leftDeath, Bitmap[] rightDeath) {
         this.xPos = Constants.SCREEN_WIDTH / 2;
         this.yPos = Constants.SCREEN_HEIGHT * 1.005F; // TODO Background.height * % Anteil
         this.leftWalk = leftWalk;
@@ -51,9 +56,12 @@ public class Player {
         this.leftStartWalk = leftStartWalk;
         this.rightStartWalk = rightStartWalk;
         this.shooting = shooting;
+        this.leftDeath = leftDeath;
+        this.rightDeath = rightDeath;
 
         playerWidth = leftStandStill.getWidth();
         playerHeigth = leftStandStill.getHeight();
+        Log.d("test", "PLAYER KONSTRUKTOR");
 
         pictureCount = 0;
     }
@@ -114,8 +122,7 @@ public class Player {
             }
         }
         rect.set(xPos-playerWidth/6, yPos-playerHeigth*1.9f, xPos+playerWidth/6, yPos-playerHeigth*1.1f);
-        rectBitmap = new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth);
-
+        rectBitmap.set(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth);
     }
 
     public void draw(Canvas canvas) {
@@ -146,6 +153,21 @@ public class Player {
                                     break;
             case SHOOT:             canvas.drawBitmap(shooting[3], null, rectBitmap, null); //TODO ANIMATION FIXEN
                                     break;
+
+            case DIE:
+                switch (direction) {
+                    case LEFT:
+                        canvas.drawBitmap(leftDeath[pictureCount], null, rectBitmap, null);
+                        if (pictureCount < 6) pictureCount++;
+                        break;
+
+                    case RIGHT:
+                        canvas.drawBitmap(rightDeath[pictureCount], null, rectBitmap, null);
+                        if (pictureCount < 6) pictureCount++;
+                        break;
+                }
+                break;
+
         }
     }
 
