@@ -1,6 +1,7 @@
 package com.example.donald.doublingballs;
 
 import android.media.MediaPlayer;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -12,21 +13,20 @@ import android.widget.ImageButton;
 
 public class BubblesActivity extends AppCompatActivity {
 
-    //public MediaPlayer mediaPlayerBackground = MediaPlayer.create(getApplicationContext(), R.raw.gamemusic);
 
     private boolean moveLeftHeldDown = false;
     private boolean moveRightHeldDown = false;
     private boolean shootHeldDown = false;
 
-/*
-    @Override
-    protected void onPause(){
-        super.onPause();
-        mediaPlayerBackground.release();
-    }
-    */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /*
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.gamemusic);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+        */
         super.onCreate(savedInstanceState);
 
         DisplayMetrics dm = new DisplayMetrics();
@@ -35,12 +35,9 @@ public class BubblesActivity extends AppCompatActivity {
         Constants.SCREEN_HEIGHT = dm.heightPixels;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.activity_bubble);
 
 
-        //mediaPlayerBackground.setLooping(true);
-        //mediaPlayerBackground.start();
 
 
 /*

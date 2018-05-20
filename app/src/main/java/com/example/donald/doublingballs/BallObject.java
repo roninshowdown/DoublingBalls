@@ -22,8 +22,9 @@ public class BallObject {
     private double posy;
     private double accx;
     private double accy;
-    private double friction;
-    BallTypes ballTypes;
+    public double friction;
+    public int points;
+    public BallTypes ballTypes;
     public BubblesView bw;
 
     private double bounce;
@@ -36,7 +37,8 @@ public class BallObject {
     private Paint p;
     public RectF rect = new RectF();
 
-    public BallObject(double posx, double posy, double accx, double accy,
+
+    public BallObject(int points, double posx, double posy, double accx, double accy,
                       double bounce, int radius,double friction, BallTypes ballTypes, Paint p, BubblesView v) {
         this.ballTypes = ballTypes;
         this.posx = posx;
@@ -48,11 +50,50 @@ public class BallObject {
         this.radius = radius;
         this.friction = friction;
         this.p = p;
+        this.points = points;
         bw = v;
         audioManager = (AudioManager) v.getContext().getSystemService(
                 Context.AUDIO_SERVICE);
 
     }
+/*
+    public BallObject(double posx, double posy, BallTypes ballTypes, BubblesView v) {
+        bw = v;
+        this.accx = 10;
+        this.friction = 0.025;
+        this.bounce = 0.8;
+        this.posx = 100;
+        this.posy = 50;
+        this.ballTypes = ballTypes;
+        if (ballTypes == BallTypes.LARGE){
+            this.ballTypes = BallTypes.LARGE;
+            this.points = 100;
+            this.accy = 15;
+            this.radius = 100;
+            Paint p = new Paint();
+            p.setARGB(0xFF, 0xFF, 0x00, 0x00); // rot
+            this.p = p;
+        }
+        else if (ballTypes == BallTypes.MEDIUM){
+            this.ballTypes = BallTypes.MEDIUM;
+            this.points = 50;
+            this.accy = 13;
+            this.radius = 50;
+            Paint p = new Paint();
+            p.setARGB(0xFF, 0xFF, 0xFF, 0x00); // gelb
+            this.p = p;
+        }
+        else if (ballTypes == BallTypes.SMALL){
+            this.ballTypes = BallTypes.SMALL;
+            this.points = 20;
+            this.accy = 10;
+            this.radius = 25;
+            Paint p = new Paint();
+            p.setARGB(0xFF, 0x00, 0xFF, 0x00); // grün
+            this.p = p;
+        }
+    }
+    */
 
     public double getPosx() {
         return posx;
@@ -132,7 +173,6 @@ public class BallObject {
 
 
             if (posy <= (radius)) { // prüft ob Ball an der Decke ist und wechselt Richtung !!!
-                bw.sound.playBounceSound();
                 accy = 0 - Math.abs(accy) * bounce;
             }
 
@@ -142,7 +182,6 @@ public class BallObject {
             }
 
             if (posx <= (radius)) { // prüft ob Ball links an der Wand ist
-                bw.sound.playBounceSound();
                 accx = Math.abs(accx) * bounce;
             }
         }

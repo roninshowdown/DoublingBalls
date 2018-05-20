@@ -144,7 +144,8 @@ public class Player {
                                     ++pictureCount;
                                     pictureCount %= 10;
                                     break;
-            case SHOOT:             canvas.drawBitmap(shooting[3], null, rectBitmap, null); //TODO ANIMATION FIXEN
+            case SHOOT:             canvas.drawBitmap(shooting[3], null, new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth - yPos/ 50), null); //TODO ANIMATION FIXEN
+
                                     break;
         }
     }
