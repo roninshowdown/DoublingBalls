@@ -47,9 +47,8 @@ public class Player {
     public Player(Bitmap[] leftWalk, Bitmap[] rightWalk,
                   Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting,
                   Bitmap[] leftDeath, Bitmap[] rightDeath) {
-        this.xPos = Constants.SCREEN_WIDTH / 2;
-        this.yPos = Constants.SCREEN_HEIGHT * 1.005F; // TODO Background.height * % Anteil
-        this.leftWalk = leftWalk;
+        this.xPos = scaling.getWidth()/3;
+        this.yPos = scaling.getHeight() * 283/400;        this.leftWalk = leftWalk;
         this.rightWalk = rightWalk;
         this.leftStandStill = leftStandStill;
         this.rightStandStill = rightStandStill;
@@ -151,7 +150,8 @@ public class Player {
                                     ++pictureCount;
                                     pictureCount %= 10;
                                     break;
-            case SHOOT:             canvas.drawBitmap(shooting[3], null, rectBitmap, null); //TODO ANIMATION FIXEN
+            case SHOOT:             canvas.drawBitmap(shooting[3], null, new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth - yPos/ 50), null); //TODO ANIMATION FIXEN
+
                                     break;
 
             case DIE:
