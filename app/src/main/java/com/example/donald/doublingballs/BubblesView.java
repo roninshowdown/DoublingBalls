@@ -79,14 +79,15 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap ammo2;
     private Bitmap ammo3;
 
-    public ArrayList<Shot> shots = new ArrayList<>();
-    ArrayList<Shot> shotsToBeRemoved = new ArrayList<>();
-    ArrayList<BallObject> ballObjectsToBeRemoved = new ArrayList<>();
-    ArrayList<BallObject> ballObjectsToBeAdded = new ArrayList<>();
+    public HashSet<Shot> shots = new HashSet<>();
+    private HashSet<BallObject> ballObjects = new HashSet<>();
+    HashSet<Shot> shotsToBeRemoved = new HashSet<>();
+    HashSet<BallObject> ballObjectsToBeRemoved = new HashSet<>();
+    HashSet<BallObject> ballObjectsToBeAdded = new HashSet<>();
+
     public Player player;
 
     private Paint mPaint;
-    private ArrayList<BallObject> ballObjects = new ArrayList<>();
 
     Rect buttonLeft;
     Rect buttonRight;
@@ -230,14 +231,17 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     }
     */
 
-
+    //ignoring 3 finger touch events; the game is meant to be played with two
     public boolean onTouchEvent(MotionEvent event) {
 
         int activePointerID;
         int activePointerIndex;
 
 
-        if(!gamestart) gameLoop.startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
+        if(!gamestart) {
+            gameLoop.startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
+            gamestart = true;
+        }
 
         switch(event.getActionMasked()) {
 
@@ -407,6 +411,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 int xPosPU = (int)event.getX(activePointerIndex);
                 int yPosPU = (int)event.getY(activePointerIndex);
 
+                //check if suplementary touch events ended
                 if (buttonLeft.contains(xPosPU, yPosPU)) {
 
                     leftButtonHeldDown = false;
@@ -481,8 +486,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      */
     private void drawScreen(Canvas c) {
         backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, c.getWidth(), c.getHeight(), true);
-
-        if(!gamestart) gameLoop.startTimeThread();
 
         randomlyAddBallObjects(backgroundBitmap.getWidth(),backgroundBitmap.getHeight());
 
@@ -578,8 +581,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         for (BallObject ballObject : ballObjects) {
             if (areColliding(ballObject, player)){
+
                 ballObjectsToBeRemoved.add(ballObject);
-                if(ballObject.ballTypes == BallTypes.LARGE) { // große Bälle ziehen 2 Leben ab
+                if(ballObject.ballTypes == BallTypes.LARGE)
+                { // große Bälle ziehen 2 Leben ab
                     if (life > 1) life-=2;
                     else life = 0;
                 }
@@ -587,34 +592,34 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             }
             for (Shot shot : shots) {
                 if (areColliding(ballObject, shot)) {
-                    double x = ballObject.getPosx();
-                    double y = ballObject.getPosy();
+
                     shotsToBeRemoved.add(shot);
+                    ballObjectsToBeRemoved.add(ballObject); // wird 2 mal hinzugefügt? TODO
+
                     if (ballObject.ballTypes == BallTypes.LARGE){ // Large Balls
                         bonus_score += 100;
 
                         // Bei der Ballerzeugung könnte man ballObjects.getAccy + 30 für den Parameter accy eintragen
                         // damit man die Schusskraft mit der Schwerkraft des Balls verrechnet: Bewusst nicht gemacht, weil das Spiel sonst zu schwer wird für den Spieler
-                        // Die Bälle sollen immer weit genug vom aktuellen Ball wegspringen !
+                        // Die Bälle sollen immer weit genug vom aktuellen Ball wegspringen!
 
                         ballObjectsToBeAdded.add(new BallObject(ballObject.getPosx(), ballObject.getPosy(), 10, 30.0 , 0.8, 50, 0.025, BallTypes.MEDIUM, mPaint, this)); // small Ball
                         ballObjectsToBeAdded.add(new BallObject(ballObject.getPosx(), ballObject.getPosy(), -10,30.0, 0.8, 50, 0.025, BallTypes.MEDIUM, mPaint, this)); // small Ball
                     }
                     if (ballObject.ballTypes == BallTypes.MEDIUM) { // Medium Balls
                         bonus_score += 50;
-                        ballObjectsToBeAdded.add(new BallObject(ballObject.getPosx(),ballObject.getPosy(), 10, 5.0, 0.8, 25, 0.025, BallTypes.SMALL, mPaint, this)); // small Ball
+                        ballObjectsToBeAdded.add(new BallObject(ballObject.getPosx(),ballObject.getPosy(), 10, 30.0, 0.8, 25, 0.025, BallTypes.SMALL, mPaint, this)); // small Ball
                         ballObjectsToBeAdded.add(new BallObject(ballObject.getPosx(), ballObject.getPosy(), -10, 30.0, 0.8, 25, 0.025, BallTypes.SMALL, mPaint, this)); // small Ball
                     }
                     else{
                         // Small Balls
                         bonus_score += 20;
                     }
-                    ballObjectsToBeRemoved.add(ballObject); // wird 2 mal hinzugefügt? TODO
                 }
-
-                ballObjects.addAll(ballObjectsToBeAdded);
             }
         }
+
+        ballObjects.addAll(ballObjectsToBeAdded);
 
         for (Shot shot : shotsToBeRemoved) {
             shots.remove(shot);
@@ -625,9 +630,11 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         // Listen leeren
+
         ballObjectsToBeAdded.clear();
         ballObjectsToBeRemoved.clear();
         shotsToBeRemoved.clear();
+
     }
 
     /****

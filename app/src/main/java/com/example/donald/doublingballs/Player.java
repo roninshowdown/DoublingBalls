@@ -57,9 +57,8 @@ public class Player {
 
         pictureCount = 0;
     }
-
     /*
-    public void determineState() {
+    public void determineStateOnMove() {
         if (direction == Direction.LEFT) {
             switch (getCurrentState()) {
                 case RIGHT_STAND_STILL: setCurrentState(State.LEFT_START_WALK);
@@ -100,19 +99,18 @@ public class Player {
     */
 
     public void update(Canvas c, float numberOfFrames)  {
-        //determineState();
+        //determineStateOnMove();
         float movedDistance = speed * numberOfFrames;
         if(currentState == State.WALK_LEFT || currentState == State.LEFT_START_WALK) {
             xPos -= movedDistance;
-            if (xPos - playerHeigth/2 < 0) { // Walking against a wall
-                xPos = playerHeigth/2;
+            if (xPos - playerHeigth/4 < 0) { // Walking against a wall
+                xPos = playerHeigth/4;
             }
         }
         else if (currentState == State.WALK_RIGHT || currentState == State.RIGHT_START_WALK) {
             xPos += movedDistance;
-            //Log.d("test", "xPos: "+Float.toString(xPos));
-            if (xPos + playerWidth/2 > c.getWidth()) {
-                xPos = c.getWidth()-playerWidth/2;
+            if (xPos + playerWidth/4 > c.getWidth()) {
+                xPos = c.getWidth()-playerWidth/4;
             }
         }
         rect.set(xPos-playerWidth/6, yPos-playerHeigth*1.9f, xPos+playerWidth/6, yPos-playerHeigth*1.1f);
@@ -121,30 +119,32 @@ public class Player {
     }
 
     public void draw(Canvas canvas) {
+
         canvas.drawRect(rect, new Paint());
+
         switch(currentState) {
             case LEFT_STAND_STILL:  canvas.drawBitmap(leftStandStill, null, rectBitmap, null);
-                                break;
+                                    break;
 
             case LEFT_START_WALK:   canvas.drawBitmap(leftStartWalk, null, rectBitmap, null);
-                break;
+                                    break;
 
             case WALK_LEFT:         canvas.drawBitmap(leftWalk[pictureCount], null, rectBitmap, null);
-                ++pictureCount;
-                pictureCount %= 10;
-                break;
+                                    ++pictureCount;
+                                    pictureCount %= 10;
+                                    break;
 
             case RIGHT_STAND_STILL: canvas.drawBitmap(rightStandStill, null, rectBitmap, null);
-                break;
+                                    break;
 
             case RIGHT_START_WALK:  canvas.drawBitmap(rightStartWalk, null, rectBitmap, null);
-                break;
+                                    break;
 
             case WALK_RIGHT:        canvas.drawBitmap(rightWalk[pictureCount], null, rectBitmap, null);
-                ++pictureCount;
-                pictureCount %= 10;
-                break;
-            case SHOOT: canvas.drawBitmap(shooting[3], null, rectBitmap, null);
+                                    ++pictureCount;
+                                    pictureCount %= 10;
+                                    break;
+            case SHOOT:             canvas.drawBitmap(shooting[3], null, rectBitmap, null);
         }
     }
 
