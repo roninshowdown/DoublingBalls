@@ -41,9 +41,9 @@ public class Player {
     public RectF rectBitmap = new RectF();
 
     public Player(Bitmap[] leftWalk, Bitmap[] rightWalk,
-                  Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting) {
-        this.xPos = Constants.SCREEN_WIDTH / 2;
-        this.yPos = Constants.SCREEN_HEIGHT * 1.005F; // TODO Background.height * % Anteil
+                  Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting, Bitmap scaling) {
+        this.xPos = scaling.getWidth()/3;
+        this.yPos = scaling.getHeight() * 283/400;
         this.leftWalk = leftWalk;
         this.rightWalk = rightWalk;
         this.leftStandStill = leftStandStill;

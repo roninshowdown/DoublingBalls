@@ -31,6 +31,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
     private volatile boolean gamestart = false;
 
+    // Sound
+    private boolean playSound;
+
     //GameContent
     public int life = 3;  // Leben des Spielers
     public int ammo = 3; // Munition des Spielers
@@ -97,7 +100,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     int rightButtonPointerID = -1;
     int shootButtonPointerID = -1;
 
-    //public Sound sound;
+    public Sound sound;
 
     /****
      * Constructor
@@ -107,7 +110,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public BubblesView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        //sound = new Sound(context);
+        sound = new Sound(context);
 
         getHolder().addCallback((Callback) this);	//Register this class as callback handler for the surface
         backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background2);
@@ -149,7 +152,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         shooting[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot3);
         shooting[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot4);
 
-        player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting);
+        player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting, backgroundBitmap);
 
         shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot1);
 
@@ -279,8 +282,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
                         player.setCurrentState(State.SHOOT);
                         shots.add(new Shot(player.getxPos(), 0, shot, player));
-                        if(ammo > 0) ammo--;
-
+                        sound.playLasergunSound();
                         shootButtonPointerID = activePointerID;
                         shootButtonHeldDown = true;
                     }
@@ -323,8 +325,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
                         player.setCurrentState(State.SHOOT);
                         shots.add(new Shot(player.getxPos(), 0, shot, player));
-                        if(ammo > 0) ammo--;
-
+                        sound.playLasergunSound();
                         shootButtonPointerID = activePointerID;
                       //  Log.d("test", "shootID:::activeID   "+Integer.toString(shootButtonPointerID)+":::"+Integer.toString(activePointerID));
                         shootButtonHeldDown = true;
@@ -485,6 +486,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      * @param c: Canvas to be drawn on
      */
     private void drawScreen(Canvas c) {
+
+
         backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, c.getWidth(), c.getHeight(), true);
 
         randomlyAddBallObjects(backgroundBitmap.getWidth(),backgroundBitmap.getHeight());
@@ -575,7 +578,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             shot.update(canvas, numberOfFrames);
             if(shot.outOfRange(canvas)) {
                 shotsToBeRemoved.add(shot);
-                ammo++;
             }
         }
 
@@ -623,8 +625,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         for (Shot shot : shotsToBeRemoved) {
             shots.remove(shot);
-            if(ammo < 3)ammo++;
         }
+        ammo = 3- shots.size();
+
         for (BallObject ballObject : ballObjectsToBeRemoved) {
             ballObjects.remove(ballObject);
         }
@@ -732,7 +735,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                  (BallXHalfLeft == sX || BallXHalfRight == sX) && BallYHalfLeftBottom == ShotTop ||
                  ) {}*/
 
-        if (b.rect.intersect(s.rect)) return true;
+        if (b.rect.intersect(s.rect)){
+            sound.playBlubbSound();
+            return true;
+        }
         return false;
         /*
         double dX = b.getPosx() - s.getxPos();
@@ -746,7 +752,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public boolean areColliding(BallObject b, Player p) {
-        if(b.rect.intersect(p.rect)) return true;
+        if(b.rect.intersect(p.rect)) {
+            sound.playHitSound();
+            return true;
+        }
         return false;
         /*
         double dX = b.getPosx()-p.getxPos();
