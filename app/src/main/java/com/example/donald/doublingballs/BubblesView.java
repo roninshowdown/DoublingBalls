@@ -428,7 +428,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                     //if initial touch is not inside a button
                     else determineStateOnActionUp();
                 }
-                else if (buttonRight.contains(xPosPU, yPosPU)) {
+                else if (buttonShoot.contains(xPosPU, yPosPU)) {
 
                     shootButtonHeldDown = false;
                     if (leftButtonHeldDown) player.setCurrentState(State.WALK_LEFT);
