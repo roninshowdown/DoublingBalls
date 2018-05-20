@@ -351,14 +351,15 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
                 if (leftButtonPointerID == activePointerID && !buttonLeft.contains(currentXPos, currentYPos)) {
 
-                    leftButtonHeldDown = false;
+
+                    //leftButtonHeldDown = false;
                     //if (shootButtonHeldDown) player.setCurrentState(State.SHOOT);
                     //else if (rightButtonHeldDown) player.setCurrentState(State.WALK_RIGHT);
                     determineStateOnActionUp();
 
                 } else if (rightButtonPointerID == activePointerID && !buttonRight.contains(currentXPos, currentYPos)) {
 
-                    rightButtonHeldDown = false;
+                    //rightButtonHeldDown = false;
                     //if (shootButtonHeldDown) player.setCurrentState(State.SHOOT);
                     //else if (leftButtonHeldDown) player.setCurrentState(State.WALK_LEFT);
                     determineStateOnActionUp();
@@ -389,16 +390,17 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                     rightButtonPointerID = activePointerID;
                     rightButtonHeldDown = true;
 
-                } else if (buttonShoot.contains(currentXPos, currentYPos)) {
+                } /*else if (buttonShoot.contains(currentXPos, currentYPos)) {
 
                     if (shots.toArray().length < 3) {
-
+                        //no new Shot added; Action_Move triggers to often, resulting in permanent shooting
                         player.setCurrentState(State.SHOOT);
+                        //if (!shootButtonHeldDown) shots.add(new Shot(player.getxPos(), 0, shot, player)); //TODO schuss beim reindraggen
 
                         shootButtonPointerID = activePointerID;
                         shootButtonHeldDown = true;
                     }
-                }
+                }*/
             break;
 
             case (MotionEvent.ACTION_POINTER_UP):
