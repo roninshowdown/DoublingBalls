@@ -32,7 +32,6 @@ public class Sound {
     }
     public void playBounceSound(){
         // play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate)
-        soundPool.setVolume();
         soundPool.play(bounceSound,1,1,1,0,1);
     }
     public void playLasergunSound(){
