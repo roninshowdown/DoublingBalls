@@ -23,7 +23,7 @@ public class Player {
     private Direction direction = Direction.RIGHT;
     private State currentState = State.RIGHT_STAND_STILL;
 
-    private int pictureCount;
+    private int pictureCount; // TODO PICTURECOUNT VERSTEHEN/OPTIMIEREN
 
     private float playerWidth;
     private float playerHeigth;
@@ -45,10 +45,11 @@ public class Player {
     public RectF rectBitmap = new RectF();
 
     public Player(Bitmap[] leftWalk, Bitmap[] rightWalk,
-                  Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting,
+                  Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting, Bitmap scaling,
                   Bitmap[] leftDeath, Bitmap[] rightDeath) {
         this.xPos = scaling.getWidth()/3;
-        this.yPos = scaling.getHeight() * 283/400;        this.leftWalk = leftWalk;
+        this.yPos = scaling.getHeight() * 283/400;
+        this.leftWalk = leftWalk;
         this.rightWalk = rightWalk;
         this.leftStandStill = leftStandStill;
         this.rightStandStill = rightStandStill;
@@ -126,7 +127,7 @@ public class Player {
 
     public void draw(Canvas canvas) {
 
-        canvas.drawRect(rect, new Paint());
+        //canvas.drawRect(rect, new Paint());
 
         switch(currentState) {
             case LEFT_STAND_STILL:  canvas.drawBitmap(leftStandStill, null, rectBitmap, null);
@@ -150,14 +151,14 @@ public class Player {
                                     ++pictureCount;
                                     pictureCount %= 10;
                                     break;
-            case SHOOT:             canvas.drawBitmap(shooting[3], null, new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth - yPos/ 50), null); //TODO ANIMATION FIXEN
+            case SHOOT:             canvas.drawBitmap(shooting[3], null, new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth - yPos/ 50), null); //TODO ANIMATIONSEQUENZ EINBAUEN
 
                                     break;
 
             case DIE:
                 switch (direction) {
                     case LEFT:
-                        canvas.drawBitmap(leftDeath[pictureCount], null, rectBitmap, null);
+                        canvas.drawBitmap(leftDeath[pictureCount], null, rectBitmap, null); // TODO ZU SCHNELLER ANIMATIONSABLAUF
                         if (pictureCount < 6) pictureCount++;
                         break;
 

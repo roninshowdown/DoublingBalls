@@ -4,6 +4,7 @@ import java.util.HashSet;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.os.VibrationEffect;
 import android.os.Build;
@@ -19,22 +20,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
-/****
- * bubblesView: Manages display handling of app. Implements SurfaceHolder.Callback to access certain display properties
- */
+enum GAME {
+    PENDING, START, OVER
+}
+
 public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
-
-    private volatile boolean gamestart = false;
+    private GAME gameMode = GAME.PENDING;
 
     // Colors
     public Paint red;
     public Paint yellow;
     public Paint green;
-
-    // Sound
-
-    private boolean playSound;
 
     //GameContent
     public int life = 3;  // Leben des Spielers
@@ -59,7 +56,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private GameLoop gameLoop; //Display refresh thread
 
     private Bitmap backgroundBitmap;
-    private Bitmap bubbleBitmap;
     public Bitmap shot;
     private Bitmap buttonLeftImage;
     private Bitmap buttonRightImage;
@@ -102,6 +98,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public Sound sound;
     Vibrator vibrator;
 
+    MediaPlayer backgroundMusic;
+
     /****
      * Constructor
      * @param context
@@ -110,11 +108,16 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public BubblesView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        sound = new Sound(context);
 
         getHolder().addCallback((Callback) this);	//Register this class as callback handler for the surface
         backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background2);
-        bubbleBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bubble);
+
+        sound = new Sound(context);
+
+        backgroundMusic = MediaPlayer.create(context, R.raw.gamemusic);
+        backgroundMusic.setLooping(true);
+        backgroundMusic.start();
+
         vibrator = context.getSystemService(Vibrator.class);
 
         Bitmap[] leftWalk = new Bitmap[10];
@@ -171,7 +174,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         rightDeath[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath2);
         rightDeath[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath3);
 
-        player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting, backgroundBitmap);
+        player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting, backgroundBitmap, leftDeath, rightDeath);
 
         shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot1);
 
@@ -207,11 +210,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         green = new Paint();
         green.setARGB(0xFF, 0x00, 0xFF, 0x00); // grün
 
-
-
-        // StartBall
-
-        ballObjects.add(new BallObject(100, 100, 50, 10, 30.0 , 0.8, 100, 0.025, BallTypes.LARGE, red, this)); // Large Ball
     }
 
     /*
@@ -266,15 +264,15 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     //ignoring 3 finger touch events; the game is meant to be played with two
     public boolean onTouchEvent(MotionEvent event) {
 
-        if (player.getCurrentState() == State.DIE) return false;
+        if (gameMode == GAME.OVER) return false;
+
+        if(gameMode == GAME.PENDING) {
+            gameMode = GAME.START;
+            gameLoop.startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
+        }
+
         int activePointerID;
         int activePointerIndex;
-
-
-        if(!gamestart) {
-            gameLoop.startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
-            gamestart = true;
-        }
 
         switch(event.getActionMasked()) {
 
@@ -519,11 +517,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
      */
     private void drawScreen(Canvas c) {
 
-
         backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, c.getWidth(), c.getHeight(), true);
-
-        randomlyAddBallObjects(backgroundBitmap.getWidth(),backgroundBitmap.getHeight());
-
         c.drawBitmap(backgroundBitmap, new Matrix(), null);
 
         player.draw(c);
@@ -535,7 +529,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         for (Shot shot : shots) {
             shot.draw(c);
         }
-
 
         buttonLeft = new Rect(backgroundBitmap.getWidth() * 5/200, backgroundBitmap.getHeight() * 82/100, backgroundBitmap.getWidth()*27/200, backgroundBitmap.getHeight() * 985/1000);
         buttonRight = new Rect( backgroundBitmap.getWidth()* 32/200, backgroundBitmap.getHeight() * 82/100, backgroundBitmap.getWidth()*54/200, backgroundBitmap.getHeight() * 985/1000);
@@ -590,6 +583,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 c.drawBitmap(ammo3, backgroundBitmap.getWidth() * 72/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
                 break;
         }
+
+        //draw GAMEOVER screen
     }
 
 
@@ -602,7 +597,12 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         player.update(canvas, numberOfFrames);
 
-        for (BallObject ballObject : ballObjects){
+
+        if (gameMode == GAME.START) {
+            randomlyAddBallObjects(backgroundBitmap.getWidth(),backgroundBitmap.getHeight());
+        }
+
+        for (BallObject ballObject : ballObjects) {
             ballObject.update();
         }
 
@@ -628,7 +628,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 if (areColliding(ballObject, shot)) {
                     bonus_score += ballObject.points;
                     shotsToBeRemoved.add(shot);
-                    ballObjectsToBeRemoved.add(ballObject); // wird 2 mal hinzugefügt? TODO
+                    ballObjectsToBeRemoved.add(ballObject); //TODO BEI GLEICHZEITIGER KOLLISION MIT SPIELER & SCHUSS WIR BALL ZWEIMAL IN DIE LOSTE GSCHRIEBEN, EVTL. EQUALS/HASH ÜBERSCHREIBEN
 
                     if (ballObject.ballTypes == BallTypes.LARGE){ // Large Balls
 
@@ -670,7 +670,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         ballObjectsToBeRemoved.clear();
         shotsToBeRemoved.clear();
 
-        if (life == 0) player.setCurrentState(State.DIE);
+        if (life == 0) {
+            gameMode = GAME.OVER;
+            player.setCurrentState(State.DIE);
+        }
 
     }
 
@@ -678,14 +681,14 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         if (elapsedTime > 20 && elapsedTime < 40 ) {
                 difficulty_factor = 2;
-            }
-            else if (elapsedTime > 40 && elapsedTime < 60){
+        }
+        else if (elapsedTime > 40 && elapsedTime < 60){
                 difficulty_factor = 3;
-            }
-            else if (elapsedTime > 60 && elapsedTime < 100){
+        }
+        else if (elapsedTime > 60 && elapsedTime < 100){
                 difficulty_factor = 4;
-            }
-            else if (elapsedTime > 100 && elapsedTime < 150){
+        }
+        else if (elapsedTime > 100 && elapsedTime < 150){
                 difficulty_factor = 5;
         }
         else if (elapsedTime > 150 && elapsedTime < 200){
@@ -722,7 +725,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         return false;
     }
 
-    public boolean areColliding(BallObject b, Player p) {
+    public boolean areColliding(BallObject b, Player p) {   //TODO KOLLISION MIT ZWEI BÄLLEN GLEICHZEITIG = ABSTURZ
+        if (gameMode != GAME.START) return false;
         if(b.rect.intersect(p.rect)) {
             sound.playHitSound();
             if (Build.VERSION.SDK_INT >= 26)vibrator.vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -808,7 +812,22 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             timeThread.start();
 
         }
+
+        public void stopTimeThread() {
+            synchronized (this) {				//Must be executed exclusively
+                if(timeThread != null) {
+                    try {
+                        timeThread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                timeThread = null;
+            }
+        }
+
     }
+
 
 /****
  * Interfcae implementation

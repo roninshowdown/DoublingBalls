@@ -40,11 +40,11 @@ public class Shot {
     }
     public void draw(Canvas canvas) {
 
-        canvas.drawRect(rect, new Paint());
-        canvas.drawBitmap(image, null, rectBitmap, null);
+        //canvas.drawRect(rect, new Paint());
+        canvas.drawBitmap(image, null, rectBitmap, null); //TODO ANIMATIONSSQUENZ EINBAUEN
     }
 
-    public boolean outOfRange(Canvas canvas) { return (yPos-shotHeigth<0); }
+    public boolean outOfRange(Canvas canvas) { return (yPos-shotHeigth/3<0); }
 
     public float getxPos() {
         return xPos;
