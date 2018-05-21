@@ -1,5 +1,6 @@
 package com.example.donald.doublingballs;
 
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -7,6 +8,8 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class BubblesActivity extends AppCompatActivity {
+
+    MediaPlayer backgroundMusic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +23,16 @@ public class BubblesActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_bubble);
+
+        backgroundMusic = MediaPlayer.create(getApplicationContext(), R.raw.gamemusic);
+        backgroundMusic.setLooping(true);
+        backgroundMusic.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        backgroundMusic.stop();
+        finish();
     }
 }

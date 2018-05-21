@@ -23,7 +23,8 @@ public class Player {
     private Direction direction = Direction.RIGHT;
     private State currentState = State.RIGHT_STAND_STILL;
 
-    private int pictureCount; // TODO PICTURECOUNT VERSTEHEN/OPTIMIEREN
+    private int pictureCount = 0;
+    private int dieCounter = 0;  // TODO PICTURECOUNT VERSTEHEN/OPTIMIEREN
 
     private float playerWidth;
     private float playerHeigth;
@@ -63,7 +64,6 @@ public class Player {
         playerHeigth = leftStandStill.getHeight();
         Log.d("test", "PLAYER KONSTRUKTOR");
 
-        pictureCount = 0;
     }
     /*
     public void determineStateOnMove() {
@@ -155,15 +155,16 @@ public class Player {
                                     break;
 
             case DIE:
+                dieCounter %= 7;
                 switch (direction) {
                     case LEFT:
-                        canvas.drawBitmap(leftDeath[pictureCount], null, rectBitmap, null); // TODO ZU SCHNELLER ANIMATIONSABLAUF
-                        if (pictureCount < 6) pictureCount++;
+                        canvas.drawBitmap(leftDeath[dieCounter], null, rectBitmap, null); // TODO ZU SCHNELLER ANIMATIONSABLAUF
+                        if (dieCounter < 6) dieCounter++;
                         break;
 
                     case RIGHT:
-                        canvas.drawBitmap(rightDeath[pictureCount], null, rectBitmap, null);
-                        if (pictureCount < 6) pictureCount++;
+                        canvas.drawBitmap(rightDeath[dieCounter], null, rectBitmap, null);
+                        if (dieCounter < 6) dieCounter++;
                         break;
                 }
                 break;
@@ -211,13 +212,6 @@ public class Player {
         this.direction = direction;
     }
 
-    public int getPictureCount() {
-        return pictureCount;
-    }
-
-    public void setPictureCount(int pictureCount) {
-        this.pictureCount = pictureCount;
-    }
 
     public float getPlayerWidth() {
         return playerWidth;

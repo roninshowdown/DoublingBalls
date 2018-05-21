@@ -28,8 +28,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
     private GAME gameMode = GAME.PENDING;
 
-    // Sound
-
     // Colors
     public Paint red;
     public Paint yellow;
@@ -100,7 +98,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public Sound sound;
     Vibrator vibrator;
 
-    MediaPlayer backgroundMusic;
 
     /****
      * Constructor
@@ -116,13 +113,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         sound = new Sound(context);
 
-        backgroundMusic = MediaPlayer.create(context, R.raw.gamemusic);
-        backgroundMusic.setLooping(true);
-        backgroundMusic.start();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            vibrator = context.getSystemService(Vibrator.class);
-        }
+        vibrator = context.getSystemService(Vibrator.class);
 
         Bitmap[] leftWalk = new Bitmap[10];
         leftWalk[0]	= BitmapFactory.decodeResource(context.getResources(), R.drawable.leftwalk1);
@@ -303,7 +294,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                     leftButtonPointerID = activePointerID;
                     Log.d("test", "leftID:::activeID    "+Integer.toString(leftButtonPointerID)+":::"+Integer.toString(activePointerID));
 
-                    leftButtonHeldDown = true;
+                    if (!leftButtonHeldDown) {
+                        leftButtonHeldDown = true;
+                        //sound.playWalkingSound();
+                    }
 
                 } else if (buttonRight.contains(xPos, yPos)) {
 
@@ -311,7 +305,11 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                     player.setDirection(Direction.RIGHT);
 
                     rightButtonPointerID = activePointerID;
-                    rightButtonHeldDown = true;
+
+                    if (!rightButtonHeldDown) {
+                        rightButtonHeldDown = true;
+                        //sound.playWalkingSound();
+                    }
 
                 } else if (buttonShoot.contains(xPos, yPos)) {
 
@@ -345,7 +343,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
                     leftButtonPointerID = activePointerID;
                    // Log.d("test", "leftID:::activeID    "+Integer.toString(leftButtonPointerID)+":::"+Integer.toString(activePointerID));
-                    leftButtonHeldDown = true;
+                    if (!leftButtonHeldDown) {
+                        leftButtonHeldDown = true;
+                        //sound.playWalkingSound();
+                    }
                 }
                 else if (buttonRight.contains(xPosPD, yPosPD)) {
 
@@ -354,7 +355,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
                     rightButtonPointerID = activePointerID;
                     //Log.d("test", "rightID:::activeID   "+Integer.toString(rightButtonPointerID)+":::"+Integer.toString(activePointerID));
-                    rightButtonHeldDown = true;
+                    if (!rightButtonHeldDown) {
+                        rightButtonHeldDown = true;
+                        //sound.playWalkingSound();
+                    }
                 }
                 else if (buttonShoot.contains(xPosPD, yPosPD)) {
 
@@ -390,14 +394,14 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 if (leftButtonPointerID == activePointerID && !buttonLeft.contains(currentXPos, currentYPos)) {
 
 
-                    //leftButtonHeldDown = false;
+                    leftButtonHeldDown = false;
                     //if (shootButtonHeldDown) player.setCurrentState(State.SHOOT);
                     //else if (rightButtonHeldDown) player.setCurrentState(State.WALK_RIGHT);
                     determineStateOnActionUp();
 
                 } else if (rightButtonPointerID == activePointerID && !buttonRight.contains(currentXPos, currentYPos)) {
 
-                    //rightButtonHeldDown = false;
+                    rightButtonHeldDown = false;
                     //if (shootButtonHeldDown) player.setCurrentState(State.SHOOT);
                     //else if (leftButtonHeldDown) player.setCurrentState(State.WALK_LEFT);
                     determineStateOnActionUp();
@@ -418,7 +422,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                     player.setDirection(Direction.LEFT);
 
                     leftButtonPointerID = activePointerID;
-                    leftButtonHeldDown = true;
+                    if (!leftButtonHeldDown) {
+                        leftButtonHeldDown = true;
+                        //sound.playWalkingSound();
+                    }
 
                 } else if (buttonRight.contains(currentXPos, currentYPos)) {
 
@@ -426,7 +433,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                     player.setDirection(Direction.RIGHT);
 
                     rightButtonPointerID = activePointerID;
-                    rightButtonHeldDown = true;
+                    if (!rightButtonHeldDown) {
+                        rightButtonHeldDown = true;
+                        //sound.playWalkingSound();
+                    }
 
                 } else if (buttonShoot.contains(currentXPos, currentYPos)) {
 
@@ -484,7 +494,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 determineStateOnActionUp();
             break;
 
-        }return true;
+        }
+        return true;
     }
 
     public void determineStateOnActionUp() {
@@ -506,10 +517,12 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             case WALK_RIGHT:
                 player.setCurrentState(State.RIGHT_STAND_STILL);
                 rightButtonHeldDown = false;
+                //Sound.soundPool.pause(Sound.walkingSound);
                 break;
             case WALK_LEFT:
                 player.setCurrentState(State.LEFT_STAND_STILL);
                 leftButtonHeldDown = false;
+                //Sound.soundPool.pause(Sound.walkingSound);
                 break;
             case SHOOT:
                 shootButtonHeldDown = false;
@@ -682,7 +695,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         if (life == 0) {
             gameMode = GAME.OVER;
             player.setCurrentState(State.DIE);
-
         }
 
     }

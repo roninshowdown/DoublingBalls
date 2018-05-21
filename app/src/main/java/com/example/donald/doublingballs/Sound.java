@@ -5,13 +5,14 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 
 public class Sound {
-    private static SoundPool soundPool;
+    public static SoundPool soundPool;
     private static int hitSound;
     private static int deathSound;
     private static int bounceSound;
     private static int laserSound;
     private static int blubbSound;
-    private static int walkingSound;
+    public static int walkingSound;
+    private static int backgroundSound;
 
     public Sound(Context context){
         soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC,0);
@@ -44,7 +45,7 @@ public class Sound {
     }
     public void playWalkingSound(){
         // play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate)
-        soundPool.play(walkingSound,1,1,1,0,1);
+         soundPool.play(walkingSound,1,1,1,1,1);
     }
 
 }
