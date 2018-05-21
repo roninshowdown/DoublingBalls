@@ -23,6 +23,9 @@
         <activity android:name=".BubblesActivity"
             android:screenOrientation="landscape">
         </activity>
+        <activity android:name=".Shop"
+            android:screenOrientation="landscape">
+        </activity>
     </application>
 
 </manifest>
