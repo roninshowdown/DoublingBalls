@@ -4,7 +4,7 @@ import java.util.HashSet;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.media.MediaPlayer;
+import android.graphics.RectF;
 import android.os.Vibrator;
 import android.os.VibrationEffect;
 import android.os.Build;
@@ -50,8 +50,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     synchronized private double getElapsedTime() { return elapsedTime; }
     synchronized private void increaseElapsedTime(double increment) { elapsedTime += increment; }
 
-
-
     private SurfaceHolder surfaceHolder = null; //Surface to hijack
     private GameLoop gameLoop; //Display refresh thread
 
@@ -77,6 +75,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap ammo2;
     private Bitmap ammo3;
 
+    private Bitmap gameOverImage;
+    private Bitmap gameOverHighScoreImage;
+
     public HashSet<Shot> shots = new HashSet<>();
     private HashSet<BallObject> ballObjects = new HashSet<>();
     HashSet<Shot> shotsToBeRemoved = new HashSet<>();
@@ -98,13 +99,15 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public Sound sound;
     Vibrator vibrator;
 
+    public boolean newHighScore = false;
+
 
     /****
      * Constructor
      * @param context
      * @param attrs
      */
-    public BubblesView(Context context, AttributeSet attrs) {
+    public BubblesView(Context context, AttributeSet attrs) { //TODO WALKINGSOUND
         super(context, attrs);
 
 
@@ -192,6 +195,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         ammo2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ammo2);
         ammo3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ammo3);
 
+        gameOverImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.gameover);
+        gameOverImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.gameoverwithhighscore);
 
         // BallObjects
         mPaint = new Paint();
@@ -607,6 +612,16 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         //draw GAMEOVER screen
+        if (gameMode == GAME.OVER) {
+            if (newHighScore) {
+                RectF gameOverRect = new RectF(backgroundBitmap.getWidth() * 2f / 10, 0f, backgroundBitmap.getWidth() * 8f / 10, backgroundBitmap.getHeight() * 4f / 10);
+                c.drawBitmap(gameOverHighScoreImage, null, gameOverRect, null);
+            }
+            else {
+                RectF gameOverRect = new RectF(backgroundBitmap.getWidth() * 2f / 10, 0f, backgroundBitmap.getWidth() * 8f / 10, backgroundBitmap.getHeight() * 4f / 10);
+                c.drawBitmap(gameOverImage, null, gameOverRect, null);
+            }
+        }
     }
 
 
