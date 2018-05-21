@@ -12,7 +12,6 @@ public class Sound {
     private static int laserSound;
     private static int blubbSound;
     private static int walkingSound;
-    private static int backgroundSound;
 
     public Sound(Context context){
         soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC,0);

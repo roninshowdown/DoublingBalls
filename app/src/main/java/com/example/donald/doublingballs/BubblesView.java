@@ -206,6 +206,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         mPaint = new Paint();
         mPaint.setARGB(0xFF, 0x00, 0x80, 0xFF);
 
+        //ballObjects.add(new BallObject(20,backgroundBitmap.getWidth() * 1/20,backgroundBitmap.getHeight()* 1/20, 10, 30.0 , 0.8, 25, 0.025, BallTypes.SMALL, green, this)); // small Ball
+        //ballObjects.add(new BallObject(20,100,100, 10, 30.0 , 0.8, 25, 0.025, BallTypes.SMALL, green, this)); // small Ball
+        //ballObjects.add(new BallObject(20,100,100, 10, 30.0 , 0.8, 25, 0.025, BallTypes.SMALL, green, this)); // small Ball
         // Colors
         red = new Paint();
         red.setARGB(0xFF, 0xFF, 0x00, 0x00); // rot
@@ -273,6 +276,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         if(gameMode == GAME.PENDING) {
             gameMode = GAME.START;
             gameLoop.startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
+            // Erster Ball
+            //ballObjects.add(new BallObject(50,100,100, 10, 30.0 , 0.8, 50, 0.025, BallTypes.MEDIUM, yellow, this)); // medium Ball
         }
 
         int activePointerID;
@@ -707,18 +712,46 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         if ((int) (Math.random() * 1000) > difficulty_factor) // nur wenn die Zahl <= factor ist wird ein Ball gespawnt
             return;
 
-        double probability = Math.random();
-        // Lässt Balle mit unterschiedlichen Wahrscheinlichkeiten (L = 20%, M = 30 %, S = 50% ) spawnen
-        if (probability <= 0.1) {
-            ballObjects.add(new BallObject(100,100,100, 10, 30.0 , 0.8, 100, 0.025, BallTypes.LARGE, red, this)); // large Ball
-        }
-        else if (probability > 0.1 && probability < 0.3 ) {
-            ballObjects.add(new BallObject(50,100,100, 10, 30.0 , 0.8, 50, 0.025, BallTypes.MEDIUM, yellow, this)); // medium Ball
+        if(difficulty_factor < 10) {
+            double probability = Math.random();
+            // Lässt Balle mit unterschiedlichen Wahrscheinlichkeiten (L = 20%, M = 30 %, S = 50% ) spawnen
+            if (probability <= 0.1) {
+                ballObjects.add(new BallObject(100, 100, 100, 10, 30.0, 0.8, 100, 0.025, BallTypes.LARGE, red, this)); // large Ball
+            } else if (probability > 0.1 && probability < 0.3) {
+                ballObjects.add(new BallObject(50, 100, 100, 10, 30.0, 0.8, 50, 0.025, BallTypes.MEDIUM, yellow, this)); // medium Ball
 
+            } else if (probability >= 0.3 && probability <= 1) {
+                ballObjects.add(new BallObject(20, 100, 100, 10, 30.0, 0.8, 25, 0.025, BallTypes.SMALL, green, this)); // small Ball
+            }
         }
-        else if(probability >= 0.3 && probability <= 1){
-            ballObjects.add(new BallObject(20,100,100, 10, 30.0 , 0.8, 25, 0.025, BallTypes.SMALL, green, this)); // small Ball
-        }
+        else {
+            double probability = Math.random();
+            int spawndirection = (int) (Math.random() * 2 ); // ab difficulty factor von 10 werden auch rechts Bälle spawnen
+
+            switch (spawndirection) {
+                case 0:
+                    if (probability <= 0.1) { // left spawn
+                        ballObjects.add(new BallObject(100, 100, 100, 10, 30.0, 0.8, 100, 0.025, BallTypes.LARGE, red, this)); // large Ball
+                    } else if (probability > 0.1 && probability < 0.3) {
+                        ballObjects.add(new BallObject(50, 100, 100, 10, 30.0, 0.8, 50, 0.025, BallTypes.MEDIUM, yellow, this)); // medium Ball
+
+                    } else if (probability >= 0.3 && probability <= 1) {
+                        ballObjects.add(new BallObject(20, 100, 100, 10, 30.0, 0.8, 25, 0.025, BallTypes.SMALL, green, this)); // small Ball
+                    }
+                    break;
+                case 1:
+                    if (probability <= 0.1) { // right spawn
+                        ballObjects.add(new BallObject(100, backgroundBitmap.getWidth() - 100, backgroundBitmap.getHeight() - 100, -10, 30.0, 0.8, 100, 0.025, BallTypes.LARGE, red, this)); // large Ball
+                    } else if (probability > 0.1 && probability < 0.3) {
+                        ballObjects.add(new BallObject(50, 100, 100, -10, 30.0, 0.8, 50, 0.025, BallTypes.MEDIUM, yellow, this)); // medium Ball
+
+                    } else if (probability >= 0.3 && probability <= 1) {
+                        ballObjects.add(new BallObject(20, 100, 100, -10, 30.0, 0.8, 25, 0.025, BallTypes.SMALL, green, this)); // small Ball
+
+                    }
+                    break;
+                }
+            }
 
     }
 
