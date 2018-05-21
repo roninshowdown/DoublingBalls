@@ -128,7 +128,6 @@ public class Player {
     public void draw(Canvas canvas) {
 
         //canvas.drawRect(rect, new Paint());
-
         switch(currentState) {
             case LEFT_STAND_STILL:  canvas.drawBitmap(leftStandStill, null, rectBitmap, null);
                                     break;

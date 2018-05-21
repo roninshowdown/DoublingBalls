@@ -28,6 +28,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
     private GAME gameMode = GAME.PENDING;
 
+    // Sound
+
     // Colors
     public Paint red;
     public Paint yellow;
@@ -118,7 +120,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         backgroundMusic.setLooping(true);
         backgroundMusic.start();
 
-        vibrator = context.getSystemService(Vibrator.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            vibrator = context.getSystemService(Vibrator.class);
+        }
 
         Bitmap[] leftWalk = new Bitmap[10];
         leftWalk[0]	= BitmapFactory.decodeResource(context.getResources(), R.drawable.leftwalk1);
@@ -647,7 +651,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
                     }
                     else{
-                        // Small Balls
+                        // Small Balls lassen keine neuen Bälle spawnen
                     }
                 }
             }
@@ -673,6 +677,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         if (life == 0) {
             gameMode = GAME.OVER;
             player.setCurrentState(State.DIE);
+
         }
 
     }
@@ -705,14 +710,14 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         double probability = Math.random();
         // Lässt Balle mit unterschiedlichen Wahrscheinlichkeiten (L = 20%, M = 30 %, S = 50% ) spawnen
         if (probability <= 0.1) {
-            ballObjects.add(new BallObject(100,100,50, 10, 30.0 , 0.8, 100, 0.025, BallTypes.LARGE, red, this)); // large Ball
+            ballObjects.add(new BallObject(100,100,100, 10, 30.0 , 0.8, 100, 0.025, BallTypes.LARGE, red, this)); // large Ball
         }
         else if (probability > 0.1 && probability < 0.3 ) {
-            ballObjects.add(new BallObject(50,100,50, 10, 30.0 , 0.8, 50, 0.025, BallTypes.MEDIUM, yellow, this)); // medium Ball
+            ballObjects.add(new BallObject(50,100,100, 10, 30.0 , 0.8, 50, 0.025, BallTypes.MEDIUM, yellow, this)); // medium Ball
 
         }
         else if(probability >= 0.3 && probability <= 1){
-            ballObjects.add(new BallObject(20,100,50, 10, 30.0 , 0.8, 20, 0.025, BallTypes.SMALL, green, this)); // small Ball
+            ballObjects.add(new BallObject(20,100,100, 10, 30.0 , 0.8, 25, 0.025, BallTypes.SMALL, green, this)); // small Ball
         }
 
     }
@@ -725,10 +730,11 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         return false;
     }
 
-    public boolean areColliding(BallObject b, Player p) {   //TODO KOLLISION MIT ZWEI BÄLLEN GLEICHZEITIG = ABSTURZ
+    public boolean areColliding(BallObject b, Player p) {
         if (gameMode != GAME.START) return false;
         if(b.rect.intersect(p.rect)) {
             sound.playHitSound();
+            if (life == 1) sound.playDeathSound(); // Nach Collision wird erst das Leben abgezogen
             if (Build.VERSION.SDK_INT >= 26)vibrator.vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE));
             else vibrator.vibrate(150);
             return true;
