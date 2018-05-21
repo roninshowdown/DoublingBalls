@@ -37,7 +37,6 @@ public class BallObject {
     private Paint p;
     public RectF rect = new RectF();
 
-
     public BallObject(int points, double posx, double posy, double accx, double accy,
                       double bounce, int radius,double friction, BallTypes ballTypes, Paint p, BubblesView v) {
         this.ballTypes = ballTypes;
@@ -56,6 +55,87 @@ public class BallObject {
                 Context.AUDIO_SERVICE);
 
     }
+
+    public void update() {
+
+        if (bounce != 1) {
+            posy -= accy;
+            accy -= 1.5;      // Geschwindigkeit des Balls in Y Richtung (Schwerkraft)
+            posx += accx;
+
+            if (accx > 0)
+                accx -= friction; // Friction bestimmt wie schnell der Ball sich nach X-Richtung bewegt
+            if (accx < 0)
+                accx += friction;
+
+            if (posy >= ((height * 0.74) - radius)) { // prüft ob Ball am Boden ist
+                bw.sound.playBounceSound();
+                accy = (Math.abs(accy) * bounce);
+                if (bounce > 0 && bounce != 1)
+                    bounce -= 0.01;
+                if (bounce == 0.78) bounce = 1;
+            }
+
+
+            if (posy <= (radius)) { // prüft ob Ball an der Decke ist und wechselt Richtung !!!
+                accy = 0 - Math.abs(accy) * bounce;
+            }
+
+            if (posx >= (width - radius)) { // prüft ob Ball rechts an der Wand ist
+                bw.sound.playBounceSound();
+                accx = 0 - Math.abs(accx) * bounce;
+            }
+
+            if (posx <= (radius)) { // prüft ob Ball links an der Wand ist
+                accx = Math.abs(accx) * bounce;
+            }
+        }
+        else{
+            friction = 0; // keine Reibung mehr
+            posy -= accy;
+            accy -= 1.0;
+            if (accy >= 30){
+                accy -= 1.0;
+            }
+            posx += accx;
+
+            if (posy >= ((height * 0.74) - radius)) { // prüft ob Ball am Boden ist
+                bw.sound.playBounceSound();
+                accy = (Math.abs(accy) * bounce);
+            }
+
+            if (posy <= (radius)) { // prüft ob Ball an der Decke ist
+                bw.sound.playBounceSound();
+                accy = 0 - Math.abs(accy) * bounce;
+            }
+
+            if (posx >= (width - radius)) { // prüft ob Ball rechts an der Wand ist
+                bw.sound.playBounceSound();
+                accx = 0 - Math.abs(accx) * bounce;
+            }
+
+            if (posx <= (radius)) { // prüft ob Ball links an der Wand ist
+                bw.sound.playBounceSound();
+                accx = Math.abs(accx) * bounce;
+            }
+        }
+        if (ballTypes == BallTypes.LARGE) rect.set((float)posx-radius*0.75f, (float)posy-radius*0.75f, (float)posx+radius*0.75f, (float)posy+radius*0.75f);
+        else rect.set((float)posx-radius, (float)posy-radius, (float)posx+radius, (float)posy+radius);
+
+
+    }
+
+
+
+    public void draw(Canvas c) {
+
+        height = c.getClipBounds().height();
+        width = c.getClipBounds().width();
+        //c.drawRect(rect, new Paint());
+        c.drawCircle((float) posx, (float) posy, (float) radius, p);
+
+    }
+
 /*
     public BallObject(double posx, double posy, BallTypes ballTypes, BubblesView v) {
         bw = v;
@@ -149,84 +229,6 @@ public class BallObject {
 
     public void setP(Paint p) {
         this.p = p;
-    }
-
-    public void update() {
-
-        if (bounce != 1) {
-            posy -= accy;
-            accy -= 1.5;      // Geschwindigkeit des Balls in Y Richtung (Schwerkraft)
-            posx += accx;
-
-            if (accx > 0)
-                accx -= friction; // Friction bestimmt wie schnell der Ball sich nach X-Richtung bewegt
-            if (accx < 0)
-                accx += friction;
-
-            if (posy >= ((height * 0.74) - radius)) { // prüft ob Ball am Boden ist
-                bw.sound.playBounceSound();
-                accy = (Math.abs(accy) * bounce);
-                if (bounce > 0 && bounce != 1)
-                    bounce -= 0.01;
-                if (bounce == 0.78) bounce = 1;
-            }
-
-
-            if (posy <= (radius)) { // prüft ob Ball an der Decke ist und wechselt Richtung !!!
-                accy = 0 - Math.abs(accy) * bounce;
-            }
-
-            if (posx >= (width - radius)) { // prüft ob Ball rechts an der Wand ist
-                bw.sound.playBounceSound();
-                accx = 0 - Math.abs(accx) * bounce;
-            }
-
-            if (posx <= (radius)) { // prüft ob Ball links an der Wand ist
-                accx = Math.abs(accx) * bounce;
-            }
-        }
-        else{
-            friction = 0; // keine Reibung mehr
-            posy -= accy;
-            accy -= 1.0;
-            if (accy >= 30){
-                accy -= 1.0;
-            }
-            posx += accx;
-
-            if (posy >= ((height * 0.74) - radius)) { // prüft ob Ball am Boden ist
-                bw.sound.playBounceSound();
-                accy = (Math.abs(accy) * bounce);
-            }
-
-            if (posy <= (radius)) { // prüft ob Ball an der Decke ist
-                bw.sound.playBounceSound();
-                accy = 0 - Math.abs(accy) * bounce;
-            }
-
-            if (posx >= (width - radius)) { // prüft ob Ball rechts an der Wand ist
-                bw.sound.playBounceSound();
-                accx = 0 - Math.abs(accx) * bounce;
-            }
-
-            if (posx <= (radius)) { // prüft ob Ball links an der Wand ist
-                bw.sound.playBounceSound();
-                accx = Math.abs(accx) * bounce;
-            }
-        }
-        rect.set((float)posx-radius, (float)posy-radius, (float)posx+radius, (float)posy+radius);
-
-    }
-
-
-
-    public void draw(Canvas c) {
-
-        height = c.getClipBounds().height();
-        width = c.getClipBounds().width();
-        c.drawRect(rect, new Paint());
-        c.drawCircle((float) posx, (float) posy, (float) radius, p);
-
     }
 
 

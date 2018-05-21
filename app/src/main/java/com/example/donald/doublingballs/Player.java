@@ -4,9 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 enum State {
-    LEFT_STAND_STILL, RIGHT_STAND_STILL, LEFT_START_WALK, RIGHT_START_WALK, WALK_LEFT, WALK_RIGHT, SHOOT
+    LEFT_STAND_STILL, RIGHT_STAND_STILL, LEFT_START_WALK, RIGHT_START_WALK, WALK_LEFT, WALK_RIGHT, SHOOT, DIE
 }
 
 enum Direction {
@@ -22,7 +23,7 @@ public class Player {
     private Direction direction = Direction.RIGHT;
     private State currentState = State.RIGHT_STAND_STILL;
 
-    private int pictureCount;
+    private int pictureCount; // TODO PICTURECOUNT VERSTEHEN/OPTIMIEREN
 
     private float playerWidth;
     private float playerHeigth;
@@ -30,6 +31,9 @@ public class Player {
     private Bitmap[] leftWalk;
     private Bitmap[] rightWalk;
     private Bitmap[] shooting;
+    private Bitmap[] leftDeath;
+    private Bitmap[] rightDeath;
+
 
     private Bitmap leftStandStill;
     private Bitmap rightStandStill;
@@ -41,7 +45,8 @@ public class Player {
     public RectF rectBitmap = new RectF();
 
     public Player(Bitmap[] leftWalk, Bitmap[] rightWalk,
-                  Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting, Bitmap scaling) {
+                  Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting, Bitmap scaling,
+                  Bitmap[] leftDeath, Bitmap[] rightDeath) {
         this.xPos = scaling.getWidth()/3;
         this.yPos = scaling.getHeight() * 283/400;
         this.leftWalk = leftWalk;
@@ -51,9 +56,12 @@ public class Player {
         this.leftStartWalk = leftStartWalk;
         this.rightStartWalk = rightStartWalk;
         this.shooting = shooting;
+        this.leftDeath = leftDeath;
+        this.rightDeath = rightDeath;
 
         playerWidth = leftStandStill.getWidth();
         playerHeigth = leftStandStill.getHeight();
+        Log.d("test", "PLAYER KONSTRUKTOR");
 
         pictureCount = 0;
     }
@@ -114,13 +122,12 @@ public class Player {
             }
         }
         rect.set(xPos-playerWidth/6, yPos-playerHeigth*1.9f, xPos+playerWidth/6, yPos-playerHeigth*1.1f);
-        rectBitmap = new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth);
-
+        rectBitmap.set(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth);
     }
 
     public void draw(Canvas canvas) {
 
-        canvas.drawRect(rect, new Paint());
+        //canvas.drawRect(rect, new Paint());
 
         switch(currentState) {
             case LEFT_STAND_STILL:  canvas.drawBitmap(leftStandStill, null, rectBitmap, null);
@@ -144,9 +151,24 @@ public class Player {
                                     ++pictureCount;
                                     pictureCount %= 10;
                                     break;
-            case SHOOT:             canvas.drawBitmap(shooting[3], null, new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth - yPos/ 50), null); //TODO ANIMATION FIXEN
+            case SHOOT:             canvas.drawBitmap(shooting[3], null, new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth - yPos/ 50), null); //TODO ANIMATIONSEQUENZ EINBAUEN
 
                                     break;
+
+            case DIE:
+                switch (direction) {
+                    case LEFT:
+                        canvas.drawBitmap(leftDeath[pictureCount], null, rectBitmap, null); // TODO ZU SCHNELLER ANIMATIONSABLAUF
+                        if (pictureCount < 6) pictureCount++;
+                        break;
+
+                    case RIGHT:
+                        canvas.drawBitmap(rightDeath[pictureCount], null, rectBitmap, null);
+                        if (pictureCount < 6) pictureCount++;
+                        break;
+                }
+                break;
+
         }
     }
 
