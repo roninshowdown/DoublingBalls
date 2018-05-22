@@ -36,8 +36,8 @@ public class Shot {
         yPos -= movedDistance;
 
         if (Shop.improvedShot){
-            rect.set(xPos-shotWidth,  yPos-shotHeigth, xPos+shotWidth, yPos+shotHeigth);
-            rectBitmap.set(xPos-shotWidth,  yPos-shotHeigth, xPos+shotWidth, yPos+shotHeigth);
+            rect.set(xPos-shotWidth,  yPos-shotHeigth*1.3f, xPos+shotWidth, yPos+shotHeigth*0.7f);
+            rectBitmap.set(xPos-shotWidth,  yPos-shotHeigth*1.3f, xPos+shotWidth, yPos+shotHeigth*0.7f);
         }
         else {
             rect.set(xPos-shotWidth/2,  yPos-shotHeigth/4, xPos+shotWidth/2, yPos+shotHeigth/4);

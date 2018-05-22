@@ -51,8 +51,10 @@ public class BallObject {
         this.p = p;
         this.points = points;
         bw = v;
-        audioManager = (AudioManager) v.getContext().getSystemService(
-                Context.AUDIO_SERVICE);
+        this.width = v.backgroundBitmap.getWidth();
+        this.height = v.backgroundBitmap.getHeight();
+
+        //audioManager = (AudioManager) v.getContext().getSystemService(Context.AUDIO_SERVICE);
 
     }
 
@@ -129,8 +131,8 @@ public class BallObject {
 
     public void draw(Canvas c) {
 
-        height = c.getClipBounds().height();
-        width = c.getClipBounds().width();
+        //height = c.getClipBounds().height();
+        //width = c.getClipBounds().width();
         //c.drawRect(rect, new Paint());
         c.drawCircle((float) posx, (float) posy, (float) radius, p);
 
