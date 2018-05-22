@@ -44,7 +44,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public int life = 3;  // Leben des Spielers
     public int ammo = 3; // Munition des Spielers
     public double difficulty_factor = 1; // Im Laufe des Spiels wird die Ballspawn-Rate erhöht.
-    public int reachedScore; // final Score
+    public int reachedScore = 0; // final Score
 
     // Texte
     private double bonus_score = 0;
@@ -281,7 +281,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         if (gameMode == GAME.OVER){ // Bei Gameover kommt man durch Klick ins Score Fenster
             Intent i = new Intent(getContext(), Score.class);
             i.putExtra("SCORE", reachedScore);
+            Log.d("Score: ", Integer.toString(reachedScore));
             getContext().startActivity(i);
+
 
         }
 
@@ -649,11 +651,12 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
                 highscoreSound = false;
             }
 
+            reachedScore = (int) (getElapsedTime() + bonus_score + 1); // + 1 wegen int cast -> Rundungsfehler
+
             if (newHighScore) {
                 RectF gameOverRect = new RectF(backgroundBitmap.getWidth() * 2f / 10, 0f, backgroundBitmap.getWidth() * 8f / 10, backgroundBitmap.getHeight() * 4f / 10);
                 c.drawBitmap(gameOverHighScoreImage, null, gameOverRect, null);
                 c.drawText(timeText, backgroundBitmap.getWidth() * 52/100, backgroundBitmap.getHeight() * 123/400, timePaint);
-                reachedScore = (int) (getElapsedTime() + bonus_score);
             }
             else {
                 RectF gameOverRect = new RectF(backgroundBitmap.getWidth() * 2f / 10, 0f, backgroundBitmap.getWidth() * 8f / 10, backgroundBitmap.getHeight() * 4f / 10);
