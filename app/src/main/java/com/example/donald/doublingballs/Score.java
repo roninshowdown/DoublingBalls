@@ -15,8 +15,9 @@ import android.widget.TextView;
 public class Score extends Activity {
 
     Button shareButton;
+    public static SharedPreferences settings;
     public int currentScore = 0;
-    public int highScore = 0;
+    public static int highScore = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +37,23 @@ public class Score extends Activity {
         currentscoreLabel.setText(currentScore + "");
 
         // saved Scores
+
         SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
-        highScore = settings.getInt("HIGH_SCORE", 0);
+        Score.highScore = settings.getInt("HIGH_SCORE", 0);
 
         if(currentScore > highScore) {
+            this.highScore = currentScore;
             highscoreLabel1.setText("HighScore : " + currentScore);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putInt("HIGH_SCORE", currentScore);
+            editor.commit();
+        }
+        else{
+            highscoreLabel1.setText("HighScore: " + highScore );
         }
 
             // Spielstand sichern
 
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("HIGH_SCORE", currentScore);
-        editor.commit();
 
 
             shareButton = (Button) findViewById(R.id.share);

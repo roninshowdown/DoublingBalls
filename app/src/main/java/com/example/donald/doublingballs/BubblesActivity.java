@@ -1,5 +1,7 @@
 package com.example.donald.doublingballs;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +31,13 @@ public class BubblesActivity extends AppCompatActivity {
         backgroundMusic = MediaPlayer.create(getApplicationContext(), R.raw.gamemusic);
         backgroundMusic.setLooping(true);
         backgroundMusic.start();
+
+        SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
+        Score.highScore = settings.getInt("HIGH_SCORE", 0);
+        Score.settings = settings;
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("HIGH_SCORE", Score.highScore);
+        editor.commit();
     }
 
     @Override

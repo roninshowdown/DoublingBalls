@@ -3,6 +3,7 @@ package com.example.donald.doublingballs;
 import java.util.HashSet;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.RectF;
@@ -31,8 +32,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     private GAME gameMode = GAME.PENDING;
 
     // Score
+
     public boolean highscoreSound = true;
-    Score score;
+
 
     // Colors
     public Paint red;
@@ -109,7 +111,6 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public Sound sound;
     Vibrator vibrator;
 
-    public boolean newHighScore = true;
 
 
     /****
@@ -131,6 +132,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         sound = new Sound(context);
 
         vibrator = context.getSystemService(Vibrator.class);
+
 
         Bitmap[] leftWalk = new Bitmap[10];
         leftWalk[0]	= BitmapFactory.decodeResource(context.getResources(), R.drawable.leftwalk1);
@@ -659,14 +661,14 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         if (gameMode == GAME.OVER) {
             runningTimeThread = false; // stoppt die Zeit
 
-            if (highscoreSound){
-                sound.playHighscoreSound();
-                highscoreSound = false;
-            }
 
             reachedScore = (int) (getElapsedTime() + bonus_score + 1); // + 1 wegen int cast -> Rundungsfehler
 
-            if (score.currentScore > score.highScore) {
+            if (reachedScore > Score.highScore) {
+                if (highscoreSound){
+                    sound.playHighscoreSound();
+                    highscoreSound = false;
+                }
                 RectF gameOverRect = new RectF(backgroundBitmap.getWidth() * 2f / 10, 0f, backgroundBitmap.getWidth() * 8f / 10, backgroundBitmap.getHeight() * 4f / 10);
                 c.drawBitmap(gameOverHighScoreImage, null, gameOverRect, null);
                 c.drawText(timeText, backgroundBitmap.getWidth() * 52/100, backgroundBitmap.getHeight() * 123/400, timePaint);
