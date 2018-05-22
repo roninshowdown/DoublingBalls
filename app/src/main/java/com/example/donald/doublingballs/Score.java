@@ -76,6 +76,13 @@ public class Score extends Activity {
         super.onPause();
         finish();
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
