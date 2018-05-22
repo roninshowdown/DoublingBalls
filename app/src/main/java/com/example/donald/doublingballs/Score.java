@@ -73,8 +73,8 @@ public class Score extends Activity {
 
 
     public void tryAgain(View view){
-        startActivity(new Intent(getApplicationContext(), BubblesActivity.class));
         finish();
+        startActivity(new Intent(getApplicationContext(), BubblesActivity.class));
     }
 
     @Override

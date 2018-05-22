@@ -54,10 +54,10 @@ public class BubblesActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        finish();
         super.onPause();
         //bv.surfaceDestroyed(bv.surfaceHolder);
         //onDestroy();
-        finish();
     }
 
     /**
