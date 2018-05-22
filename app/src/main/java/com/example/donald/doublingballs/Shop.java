@@ -1,7 +1,9 @@
 package com.example.donald.doublingballs;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,6 +21,13 @@ public class Shop extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.shop);
+    }
+
+    public void onButtonClickBack(View v) {
+        if (v.getId() == R.id.back) {
+            Intent i = new Intent(Shop.this, MainScreen.class);
+            startActivity(i);
+        }
     }
 
     public void onRadioButtonClicked(View v){

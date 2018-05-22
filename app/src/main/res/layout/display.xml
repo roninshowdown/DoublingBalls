@@ -12,23 +12,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="46dp"
+        android:layout_marginStart="46dip"
         android:background="@drawable/playicon"
         android:onClick="onButtonClickPlay" />
 
     <ImageButton
         android:id="@+id/imageButton3"
-        android:layout_width="120dp"
-        android:layout_height="133dp"
+        android:layout_width="120dip"
+        android:layout_height="133dip"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="54dp"
+        android:layout_marginEnd="54dip"
         android:background="@drawable/scoreicon" />
 
     <ImageButton
         android:id="@+id/shop"
-        android:layout_width="125dp"
-        android:layout_height="130dp"
+        android:layout_width="125dip"
+        android:layout_height="130dip"
         android:layout_centerInParent="true"
         android:background="@drawable/shopicon"
         android:onClick="onButtonClickShop" />
