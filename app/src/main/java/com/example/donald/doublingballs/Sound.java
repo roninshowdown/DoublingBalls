@@ -16,6 +16,7 @@ public class Sound {
     private static int backgroundSound;
     private static int radiobuttonSound;
     private static int highscoreSound;
+    private static int improvedShotSound;
 
     public Sound(Context context){
         soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC,0);
@@ -28,6 +29,7 @@ public class Sound {
         buttonSound = soundPool.load(context, R.raw.buttonsound, 1);
         radiobuttonSound = soundPool.load(context, R.raw.radiobuttonbeep, 1);
         highscoreSound = soundPool.load(context, R.raw.newhighscore, 1);
+        improvedShotSound = soundPool.load(context, R.raw.bigshot, 1);
     }
     public void playHitSound(){
         // play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate)
@@ -64,6 +66,10 @@ public class Sound {
     public void playHighscoreSound(){
         // play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate)
         soundPool.play(highscoreSound,1,1,1,0,1);
+    }
+    public void playBigShotSound(){
+        // play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate)
+        soundPool.play(improvedShotSound,1,1,1,0,1);
     }
 
 

@@ -10,6 +10,7 @@ import android.view.WindowManager;
 public class BubblesActivity extends AppCompatActivity {
 
     MediaPlayer backgroundMusic;
+    public static BubblesView bv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,9 @@ public class BubblesActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         backgroundMusic.stop();
+        //bv.surfaceDestroyed(bv.surfaceHolder);
         finish();
     }
+
+
 }

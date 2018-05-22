@@ -35,8 +35,14 @@ public class Shot {
         }
         yPos -= movedDistance;
 
-        rect.set(xPos-shotWidth/2,  yPos-shotHeigth/4, xPos+shotWidth/2, yPos+shotHeigth/4);
-        rectBitmap.set(xPos-shotWidth/2,  yPos-shotHeigth/2, xPos+shotWidth/2, yPos+shotHeigth/2);
+        if (Shop.improvedShot){
+            rect.set(xPos-shotWidth,  yPos-shotHeigth, xPos+shotWidth, yPos+shotHeigth);
+            rectBitmap.set(xPos-shotWidth,  yPos-shotHeigth, xPos+shotWidth, yPos+shotHeigth);
+        }
+        else {
+            rect.set(xPos-shotWidth/2,  yPos-shotHeigth/4, xPos+shotWidth/2, yPos+shotHeigth/4);
+            rectBitmap.set(xPos-shotWidth/2,  yPos-shotHeigth/2, xPos+shotWidth/2, yPos+shotHeigth/2);
+        }
     }
     public void draw(Canvas canvas) {
 

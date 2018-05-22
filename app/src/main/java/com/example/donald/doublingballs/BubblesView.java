@@ -41,7 +41,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public Paint green;
 
     //GameContent
-    public int life = 3;  // Leben des Spielers
+    public int life;  // Leben des Spielers
     public int ammo = 3; // Munition des Spielers
     public double difficulty_factor = 1; // Im Laufe des Spiels wird die Ballspawn-Rate erhöht.
     public int reachedScore; // final Score
@@ -58,7 +58,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     synchronized private double getElapsedTime() { return elapsedTime; }
     synchronized private void increaseElapsedTime(double increment) { elapsedTime += increment; }
 
-    private SurfaceHolder surfaceHolder = null; //Surface to hijack
+    public SurfaceHolder surfaceHolder = null; //Surface to hijack
     private GameLoop gameLoop; //Display refresh thread
 
     private Bitmap backgroundBitmap;
@@ -120,9 +120,12 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public BubblesView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-
         getHolder().addCallback((Callback) this);	//Register this class as callback handler for the surface
-        backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background2);
+
+        if (Shop.background) backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background3);
+        else backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background2);
+
+        BubblesActivity.bv = this;
 
         sound = new Sound(context);
 
@@ -184,7 +187,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting, backgroundBitmap, leftDeath, rightDeath);
 
-        shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot1);
+        if (Shop.improvedShot) shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.improvedshot);
+        else shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot);
 
         buttonLeftImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftbutton);
         buttonRightImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightbutton);
@@ -224,6 +228,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         green.setARGB(0xFF, 0x00, 0xFF, 0x00); // grün
 
 
+        if (Shop.shield) life = 4;
+        else life = 3;
     }
 
     /*
@@ -338,7 +344,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
                         player.setCurrentState(State.SHOOT);
                         shots.add(new Shot(player.getxPos(), 0, shot, player));
-                        sound.playLasergunSound();
+
+                        if (Shop.improvedShot) sound.playBigShotSound();
+                        else sound.playLasergunSound();
+
                         shootButtonPointerID = activePointerID;
                         shootButtonHeldDown = true;
                     }
@@ -387,7 +396,10 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
                         player.setCurrentState(State.SHOOT);
                         shots.add(new Shot(player.getxPos(), 0, shot, player));
-                        sound.playLasergunSound();
+
+                        if (Shop.improvedShot) sound.playBigShotSound();
+                        else sound.playLasergunSound();
+
                         shootButtonPointerID = activePointerID;
                       //  Log.d("test", "shootID:::activeID   "+Integer.toString(shootButtonPointerID)+":::"+Integer.toString(activePointerID));
                         shootButtonHeldDown = true;

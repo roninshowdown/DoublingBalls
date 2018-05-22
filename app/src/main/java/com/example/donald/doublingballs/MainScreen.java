@@ -44,4 +44,9 @@ public class MainScreen extends Activity {
             startActivity(i);
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }

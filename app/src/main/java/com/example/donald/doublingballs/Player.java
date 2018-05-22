@@ -63,7 +63,7 @@ public class Player {
         playerWidth = leftStandStill.getWidth();
         playerHeigth = leftStandStill.getHeight();
 
-        if (true) speed = 40f; // TODO Turbotreter
+        if (Shop.speed) speed = 40f; // TODO Turbotreter
         else speed = 20f;
     }
     /*
