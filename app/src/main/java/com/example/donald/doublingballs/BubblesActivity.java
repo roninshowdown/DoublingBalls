@@ -13,11 +13,12 @@ public class BubblesActivity extends AppCompatActivity {
 
     MediaPlayer backgroundMusic;
     public static BubblesView bv;
+    Bundle savedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.savedInstanceState = savedInstanceState;
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         Constants.SCREEN_WIDTH = dm.widthPixels;
@@ -28,6 +29,11 @@ public class BubblesActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_bubble);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         backgroundMusic = MediaPlayer.create(getApplicationContext(), R.raw.gamemusic);
         backgroundMusic.setLooping(true);
         backgroundMusic.start();
@@ -41,10 +47,16 @@ public class BubblesActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        backgroundMusic.stop();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-        backgroundMusic.stop();
         //bv.surfaceDestroyed(bv.surfaceHolder);
+        //onDestroy();
         finish();
     }
 
@@ -60,6 +72,6 @@ public class BubblesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        //onCreate(savedInstanceState);
     }
 }

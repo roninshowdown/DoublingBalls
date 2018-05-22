@@ -801,11 +801,11 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             double probability = Math.random();
             // Lässt Balle mit unterschiedlichen Wahrscheinlichkeiten (L = 20%, M = 30 %, S = 50% ) spawnen
             if (probability <= 0.1) {
-                ballObjects.add(new BallObject(100, backgroundBitmap.getWidth() / 17.05, backgroundBitmap.getHeight() / 3.42857, 10, 30.0, 0.8, 100, 0.025, BallTypes.LARGE, red, this)); // large Ball
+                ballObjects.add(new BallObject(100, 150, backgroundBitmap.getHeight() / 3.42857, 10, 30.0, 0.8, 100, 0.025, BallTypes.LARGE, red, this)); // large Ball
             } else if (probability > 0.1 && probability < 0.3) {
-                ballObjects.add(new BallObject(50, backgroundBitmap.getWidth() / 17.05, backgroundBitmap.getHeight() / 3.42857, 10, 30.0, 0.8, 50, 0.025, BallTypes.MEDIUM, yellow, this)); // medium Ball            }
+                ballObjects.add(new BallObject(50, 75, backgroundBitmap.getHeight() / 3.42857, 10, 30.0, 0.8, 50, 0.025, BallTypes.MEDIUM, yellow, this)); // medium Ball            }
             } else if (probability >= 0.3 && probability <= 1) {
-                ballObjects.add(new BallObject(20, backgroundBitmap.getWidth() / 17.05, backgroundBitmap.getHeight() / 3.42857, 10, 30.0, 0.8, 25, 0.025, BallTypes.SMALL, green, this)); // small Ball
+                ballObjects.add(new BallObject(20, 32.5, backgroundBitmap.getHeight() / 3.42857, 10, 30.0, 0.8, 25, 0.025, BallTypes.SMALL, green, this)); // small Ball
             }
         }
         else {
