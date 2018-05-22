@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="48dp"
         android:layout_marginStart="48dp"
+        android:checked="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -43,7 +44,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <RadioButton
-        android:id="@+id/shot"
+        android:id="@+id/improvedShot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="48dp"

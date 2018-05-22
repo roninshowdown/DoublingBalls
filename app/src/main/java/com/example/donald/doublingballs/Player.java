@@ -18,7 +18,7 @@ public class Player {
 
     private float xPos;
     private float yPos;
-    private float speed = 20f; // TODO Turbotreter
+    private float speed;
 
     private Direction direction = Direction.RIGHT;
     private State currentState = State.RIGHT_STAND_STILL;
@@ -62,8 +62,9 @@ public class Player {
 
         playerWidth = leftStandStill.getWidth();
         playerHeigth = leftStandStill.getHeight();
-        Log.d("test", "PLAYER KONSTRUKTOR");
 
+        if (true) speed = 40f; // TODO Turbotreter
+        else speed = 20f;
     }
     /*
     public void determineStateOnMove() {
@@ -158,7 +159,7 @@ public class Player {
                 dieCounter %= 7;
                 switch (direction) {
                     case LEFT:
-                        canvas.drawBitmap(leftDeath[dieCounter], null, rectBitmap, null); // TODO ZU SCHNELLER ANIMATIONSABLAUF
+                        canvas.drawBitmap(leftDeath[dieCounter], null, rectBitmap, null);
                         if (dieCounter < 6) dieCounter++;
                         break;
 

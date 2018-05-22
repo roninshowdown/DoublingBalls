@@ -79,6 +79,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Bitmap gameOverImage;
     private Bitmap gameOverHighScoreImage;
+    private Bitmap einleitung;
 
     public HashSet<Shot> shots = new HashSet<>();
     private HashSet<BallObject> ballObjects = new HashSet<>();
@@ -200,6 +201,8 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         gameOverImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.gameover);
         gameOverImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.gameoverwithhighscore);
+
+        einleitung = BitmapFactory.decodeResource(context.getResources(), R.drawable.einleitung);
 
         // BallObjects
         mPaint = new Paint();
@@ -613,6 +616,17 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
             case 3:
                 c.drawBitmap(ammo3, backgroundBitmap.getWidth() * 72/100, backgroundBitmap.getHeight() * 81/100  , mPaint);
                 break;
+        }
+
+        if (gameMode == GAME.PENDING) {
+
+            //RectF einleitungRect = new RectF(0,0, backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
+            //c.drawBitmap(einleitung, null, einleitungRect, null);
+
+            //c.drawBitmap(einleitung, -c.getWidth()/3, 0, null);
+
+            einleitung = Bitmap.createScaledBitmap(einleitung, backgroundBitmap.getWidth(), backgroundBitmap.getHeight(), true);
+            c.drawBitmap(einleitung, new Matrix(), null);
         }
 
         //draw GAMEOVER screen

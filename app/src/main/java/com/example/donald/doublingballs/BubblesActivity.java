@@ -19,6 +19,7 @@ public class BubblesActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         Constants.SCREEN_WIDTH = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
