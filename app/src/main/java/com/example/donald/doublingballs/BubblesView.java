@@ -2,6 +2,7 @@ package com.example.donald.doublingballs;
 
 import java.util.HashSet;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SyncStatusObserver;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -12,6 +13,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -276,7 +278,12 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     //ignoring 3 finger touch events; the game is meant to be played with two
     public boolean onTouchEvent(MotionEvent event) {
 
-        if (gameMode == GAME.OVER) return false;
+        if (gameMode == GAME.OVER){ // Bei Gameover kommt man durch Klick ins Score Fenster
+            Intent i = new Intent(getContext(), Score.class);
+            i.putExtra("SCORE", reachedScore);
+            getContext().startActivity(i);
+
+        }
 
         if(gameMode == GAME.PENDING) {
             gameMode = GAME.START;
