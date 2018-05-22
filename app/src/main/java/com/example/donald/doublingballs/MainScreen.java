@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 public class MainScreen extends Activity {
     @Override
@@ -12,9 +13,15 @@ public class MainScreen extends Activity {
         setContentView(R.layout.display);
     }
 
-    public void onButtonClick(View v){
+    public void onButtonClickPlay(View v){
         if(v.getId() == R.id.play){
             Intent i = new Intent(MainScreen.this, BubblesActivity.class);
+            startActivity(i);
+        }
+    }
+    public void onButtonClickShop(View v){
+        if(v.getId() == R.id.shop){
+            Intent i = new Intent(MainScreen.this, Shop.class);
             startActivity(i);
         }
     }
