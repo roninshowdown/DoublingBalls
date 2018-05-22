@@ -15,8 +15,8 @@ import android.widget.TextView;
 public class Score extends Activity {
 
     Button shareButton;
-    public int currentScore;
-    public int highScore;
+    public int currentScore = 0;
+    public int highScore = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
