@@ -12,14 +12,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-
 public class Score extends Activity {
 
     Button shareButton;
+    public int currentScore;
+    public int highScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,22 +31,22 @@ public class Score extends Activity {
         TextView highscoreLabel1 = (TextView) findViewById(R.id.highscoreLabel1);
 
 
-        int currentscore = getIntent().getIntExtra("SCORE", 0);
-        Log.d("currentScore: ", Integer.toString(currentscore));
-        currentscoreLabel.setText(currentscore + "");
+        currentScore = getIntent().getIntExtra("SCORE", 0);
+        Log.d("currentScore: ", Integer.toString(currentScore));
+        currentscoreLabel.setText(currentScore + "");
 
         // saved Scores
         SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
-        final int highscore = settings.getInt("HIGH_SCORE", 0);
+        highScore = settings.getInt("HIGH_SCORE", 0);
 
-        if(currentscore > highscore) {
-            highscoreLabel1.setText("HighScore : " + currentscore);
+        if(currentScore > highScore) {
+            highscoreLabel1.setText("HighScore : " + currentScore);
         }
 
             // Spielstand sichern
 
         SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("HIGH_SCORE", currentscore);
+        editor.putInt("HIGH_SCORE", currentScore);
         editor.commit();
 
 
@@ -59,7 +56,7 @@ public class Score extends Activity {
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_SEND);
                     i.setType("text/plain");
-                    String shareBody = "Highscore Doubling Balls: " + highscore + " Punkte !";
+                    String shareBody = "Highscore Doubling Balls: " + highScore + " Punkte !";
                     String shareSub = "Doubling Balls Highscore";
                     i.putExtra(Intent.EXTRA_SUBJECT, shareBody);
                     i.putExtra(Intent.EXTRA_TEXT, shareBody);

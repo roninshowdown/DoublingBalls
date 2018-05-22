@@ -3,7 +3,6 @@ package com.example.donald.doublingballs;
 import java.util.HashSet;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SyncStatusObserver;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.RectF;
@@ -13,7 +12,6 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -32,8 +30,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
     private GAME gameMode = GAME.PENDING;
 
-    // Sound
+    // Score
     public boolean highscoreSound = true;
+    Score score;
 
     // Colors
     public Paint red;
@@ -665,7 +664,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
             reachedScore = (int) (getElapsedTime() + bonus_score + 1); // + 1 wegen int cast -> Rundungsfehler
 
-            if (newHighScore) {
+            if (score.currentScore > score.highScore) {
                 RectF gameOverRect = new RectF(backgroundBitmap.getWidth() * 2f / 10, 0f, backgroundBitmap.getWidth() * 8f / 10, backgroundBitmap.getHeight() * 4f / 10);
                 c.drawBitmap(gameOverHighScoreImage, null, gameOverRect, null);
                 c.drawText(timeText, backgroundBitmap.getWidth() * 52/100, backgroundBitmap.getHeight() * 123/400, timePaint);
