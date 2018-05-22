@@ -6,53 +6,53 @@
     android:layout_height="match_parent"
     android:background="@drawable/shopactivity">
 
-    <RadioButton
+    <Switch
         android:id="@+id/music"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="41dp"
-        android:layout_marginStart="49dp"
-        android:checked="false" />
+        android:layout_marginBottom="48dp"
+        android:layout_marginStart="46dp" />
 
-    <RadioButton
+    <Switch
         android:id="@+id/shield"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/music"
-        android:layout_marginStart="164dp" />
+        android:layout_marginStart="166dp" />
 
-    <RadioButton
+    <Switch
         android:id="@+id/background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/music"
         android:layout_centerHorizontal="true" />
 
-    <RadioButton
+    <Switch
         android:id="@+id/speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/music"
-        android:layout_marginEnd="171dp" />
+        android:layout_marginEnd="164dp" />
 
-    <RadioButton
-        android:id="@+id/improvedShot"
+    <Switch
+        android:id="@+id/shot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/music"
-        android:layout_marginEnd="52dp" />
+        android:layout_marginEnd="45dp"
+        android:checked="false" />
 
     <ImageButton
         android:id="@+id/back"
         android:layout_width="67dp"
         android:layout_height="49dp"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/improvedShot"
+        android:layout_alignStart="@+id/shot"
         android:layout_marginStart="-2dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/backicon"
