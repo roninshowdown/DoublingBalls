@@ -26,6 +26,9 @@
         <activity android:name=".Shop"
             android:screenOrientation="landscape">
         </activity>
+        <activity android:name=".Score"
+            android:screenOrientation="landscape">
+        </activity>
     </application>
 
 </manifest>

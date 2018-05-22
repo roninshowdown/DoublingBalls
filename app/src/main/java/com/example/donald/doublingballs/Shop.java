@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 public class Shop extends Activity {
 
     public static boolean music, background, shield, speed, improvedShot;
+    public Sound sound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,17 +22,20 @@ public class Shop extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.shop);
+        sound = new Sound(this);
     }
 
     public void onButtonClickBack(View v) {
         if (v.getId() == R.id.back) {
             Intent i = new Intent(Shop.this, MainScreen.class);
             startActivity(i);
+            sound.playButtonSound();
         }
     }
 
     public void onRadioButtonClicked(View v){
         boolean checked = ((RadioButton) v).isChecked();
+        sound.playRadiobuttonbeepSound();
 
         switch(v.getId()) {
             case R.id.music:

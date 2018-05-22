@@ -30,6 +30,9 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
     private GAME gameMode = GAME.PENDING;
 
+    // Sound
+    public boolean highscoreSound = true;
+
     // Colors
     public Paint red;
     public Paint yellow;
@@ -39,6 +42,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public int life = 3;  // Leben des Spielers
     public int ammo = 3; // Munition des Spielers
     public double difficulty_factor = 1; // Im Laufe des Spiels wird die Ballspawn-Rate erhöht.
+    public int reachedScore; // final Score
 
     // Texte
     private double bonus_score = 0;
@@ -102,7 +106,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public Sound sound;
     Vibrator vibrator;
 
-    public boolean newHighScore = false;
+    public boolean newHighScore = true;
 
 
     /****
@@ -200,7 +204,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
         ammo3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ammo3);
 
         gameOverImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.gameover);
-        gameOverImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.gameoverwithhighscore);
+        gameOverHighScoreImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.gameoverwithhighscore);
 
         einleitung = BitmapFactory.decodeResource(context.getResources(), R.drawable.einleitung);
 
@@ -631,13 +635,23 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
 
         //draw GAMEOVER screen
         if (gameMode == GAME.OVER) {
+            runningTimeThread = false; // stoppt die Zeit
+
+            if (highscoreSound){
+                sound.playHighscoreSound();
+                highscoreSound = false;
+            }
+
             if (newHighScore) {
                 RectF gameOverRect = new RectF(backgroundBitmap.getWidth() * 2f / 10, 0f, backgroundBitmap.getWidth() * 8f / 10, backgroundBitmap.getHeight() * 4f / 10);
                 c.drawBitmap(gameOverHighScoreImage, null, gameOverRect, null);
+                c.drawText(timeText, backgroundBitmap.getWidth() * 52/100, backgroundBitmap.getHeight() * 123/400, timePaint);
+                reachedScore = (int) (getElapsedTime() + bonus_score);
             }
             else {
                 RectF gameOverRect = new RectF(backgroundBitmap.getWidth() * 2f / 10, 0f, backgroundBitmap.getWidth() * 8f / 10, backgroundBitmap.getHeight() * 4f / 10);
                 c.drawBitmap(gameOverImage, null, gameOverRect, null);
+                c.drawText(timeText, backgroundBitmap.getWidth() * 52/100, backgroundBitmap.getHeight() * 123/400, timePaint);
             }
         }
     }
