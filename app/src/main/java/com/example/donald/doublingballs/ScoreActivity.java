@@ -1,4 +1,4 @@
-package com.example.donald.doublingballs.activities;
+package com.example.donald.doublingballs;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,24 +9,19 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.donald.doublingballs.R;
-import com.example.donald.doublingballs.Sound;
 
 public class ScoreActivity extends Activity {
 
-    ImageButton shareButton;
+    Button shareButton;
     public static SharedPreferences settings;
     public int currentScore = 0;
     public static int highScore = 0;
-    private Sound sound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sound = new Sound(this);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -61,11 +56,10 @@ public class ScoreActivity extends Activity {
 
 
 
-            shareButton = (ImageButton) findViewById(R.id.share);
+            shareButton = (Button) findViewById(R.id.share);
             shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sound.playButtonSound();
                     Intent i = new Intent(Intent.ACTION_SEND);
                     i.setType("text/plain");
                     String shareBody = "Highscore Doubling Balls: " + highScore + " Punkte !";
@@ -78,11 +72,9 @@ public class ScoreActivity extends Activity {
         }
 
 
-    public void onButtonClickBack(View v) {
-        if (v.getId() == R.id.back) {
-            sound.playButtonSound();
-            finish();
-        }
+    public void tryAgain(View view){
+        finish();
+        startActivity(new Intent(getApplicationContext(), GameActivity.class));
     }
 
     @Override
