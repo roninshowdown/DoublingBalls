@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="46dip"
+        android:layout_marginStart="64dp"
         android:background="@drawable/playicon"
         android:onClick="onButtonClickPlay" />
 
@@ -22,7 +22,7 @@
         android:layout_height="133dip"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="54dip"
+        android:layout_marginEnd="75dp"
         android:background="@drawable/scoreicon"
         android:onClick="onButtonClickScore" />
 
