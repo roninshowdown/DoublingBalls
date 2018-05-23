@@ -1,23 +1,20 @@
 package com.example.donald.doublingballs;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
-import android.widget.RadioButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
-public class Shop extends Activity {
+public class ShopActivity extends Activity {
 
     public static boolean music, background, shield, speed, improvedShot;
     private Switch musicSW, backgroundSW, shieldSW, speedSW, improvedShotSW;
     public Sound sound;
-    private String switchOff = "inaktiv";
-    private String switchOn = "aktiv";
+    private TextView textViewScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,23 +32,17 @@ public class Shop extends Activity {
         speedSW = (Switch) findViewById(R.id.speed);
         improvedShotSW = (Switch)findViewById(R.id.shot);
 
+        textViewScore = (TextView) findViewById(R.id.textViewScore);
+        textViewScore.setText(Integer.toString(ScoreActivity.highScore));
+
         musicSW.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
                 if (bChecked) {
-                    music = true;
+                    if (ScoreActivity.highScore >= 500) music = true;
+                    else musicSW.setChecked(false);
                 } else {
                     music = false;
-                }
-            }
-        });
-        backgroundSW.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
-                if (bChecked) {
-                    background = true;
-                } else {
-                    background = false;
                 }
             }
         });
@@ -59,9 +50,21 @@ public class Shop extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
                 if (bChecked) {
-                    shield = true;
+                    if (ScoreActivity.highScore >= 800) shield = true;
+                    else shieldSW.setChecked(false);
                 } else {
                     shield = false;
+                }
+            }
+        });
+        backgroundSW.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
+                if (bChecked) {
+                    if (ScoreActivity.highScore >= 1300) background = true;
+                    else backgroundSW.setChecked(false);
+                } else {
+                    background = false;
                 }
             }
         });
@@ -69,7 +72,8 @@ public class Shop extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
                 if (bChecked) {
-                    speed = true;
+                    if (ScoreActivity.highScore >= 2000) speed = true;
+                    else speedSW.setChecked(false);
                 } else {
                     speed = false;
                 }
@@ -79,7 +83,8 @@ public class Shop extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
                 if (bChecked) {
-                    improvedShot = true;
+                    if (ScoreActivity.highScore >= 3000) improvedShot = true;
+                    else improvedShotSW.setChecked(false);
                 } else {
                     improvedShot = false;
                 }

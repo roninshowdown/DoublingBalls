@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:label= "Doubling Balls"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".MainScreen"
+        <activity android:name=".activities.MainActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,13 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BubblesActivity"
+        <activity android:name=".activities.GameActivity"
             android:screenOrientation="landscape">
         </activity>
-        <activity android:name=".Shop"
+        <activity android:name=".activities.ShopActivity"
             android:screenOrientation="landscape">
         </activity>
-        <activity android:name=".Score"
+        <activity android:name=".activities.ScoreActivity"
             android:screenOrientation="landscape">
         </activity>
     </application>
