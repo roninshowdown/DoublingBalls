@@ -32,7 +32,7 @@ public class ScoreActivity extends Activity {
         setContentView(R.layout.score);
 
 
-        TextView currentscoreLabel = (TextView) findViewById(R.id.highscoreLabel1);
+        TextView currentscoreLabel = (TextView) findViewById(R.id.currentscoreLabel);
         TextView highscoreLabel1 = (TextView) findViewById(R.id.highscoreLabel1);
 
 

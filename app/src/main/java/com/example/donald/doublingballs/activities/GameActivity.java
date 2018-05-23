@@ -23,10 +23,12 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
+        /*
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         Constants.SCREEN_WIDTH = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
+        */
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -36,7 +38,12 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        backgroundMusic = MediaPlayer.create(getApplicationContext(), R.raw.gamemusic);
+        if (ShopActivity.music) {
+            backgroundMusic = MediaPlayer.create(getApplicationContext(), R.raw.gamemusic2);
+        }
+        else{
+            backgroundMusic = MediaPlayer.create(getApplicationContext(), R.raw.gamemusic);
+        }
         backgroundMusic.setLooping(true);
         backgroundMusic.start();
         super.onStart();
