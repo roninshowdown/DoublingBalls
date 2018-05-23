@@ -58,4 +58,15 @@
         android:background="@drawable/backicon"
         android:onClick="onButtonClickBack" />
 
+    <TextView
+        android:id="@+id/textViewScore"
+        android:layout_width="112dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/back"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="154dp"
+        android:text="hallo"
+        android:textColor="@android:color/background_light"
+        android:textSize="30sp" />
+
 </RelativeLayout>

@@ -2,9 +2,9 @@ package com.example.donald.doublingballs;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
+
+import com.example.donald.doublingballs.activities.ShopActivity;
 
 enum State {
     LEFT_STAND_STILL, RIGHT_STAND_STILL, LEFT_START_WALK, RIGHT_START_WALK, WALK_LEFT, WALK_RIGHT, SHOOT, DIE
@@ -63,7 +63,7 @@ public class Player {
         playerWidth = leftStandStill.getWidth();
         playerHeigth = leftStandStill.getHeight();
 
-        if (Shop.speed) speed = 40f; // TODO Turbotreter
+        if (ShopActivity.speed) speed = 40f; // TODO Turbotreter
         else speed = 20f;
     }
     /*

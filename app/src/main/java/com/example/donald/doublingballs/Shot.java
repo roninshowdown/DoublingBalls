@@ -2,8 +2,9 @@ package com.example.donald.doublingballs;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.RectF;
+
+import com.example.donald.doublingballs.activities.ShopActivity;
 
 public class Shot {
     private float xPos;
@@ -35,7 +36,7 @@ public class Shot {
         }
         yPos -= movedDistance;
 
-        if (Shop.improvedShot){
+        if (ShopActivity.improvedShot){
             rect.set(xPos-shotWidth,  yPos-shotHeigth*1.3f, xPos+shotWidth, yPos+shotHeigth*0.7f);
             rectBitmap.set(xPos-shotWidth,  yPos-shotHeigth*1.3f, xPos+shotWidth, yPos+shotHeigth*0.7f);
         }

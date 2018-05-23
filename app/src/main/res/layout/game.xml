@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <com.example.donald.doublingballs.BubblesView
+    <com.example.donald.doublingballs.GameView
         android:id="@+id/bubbleView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
