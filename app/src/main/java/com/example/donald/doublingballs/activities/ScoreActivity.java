@@ -43,8 +43,8 @@ public class ScoreActivity extends Activity {
 
         // saved Scores
 
-        SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
-        ScoreActivity.highScore = settings.getInt("HIGH_SCORE", 0);
+        //SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
+        //ScoreActivity.highScore = settings.getInt("HIGH_SCORE", 0);
 
         if(currentScore > highScore) {
             this.highScore = currentScore;
@@ -56,11 +56,7 @@ public class ScoreActivity extends Activity {
         else{
             highscoreLabel1.setText("HighScore: " + highScore );
         }
-
             // Spielstand sichern
-
-
-
             shareButton = (ImageButton) findViewById(R.id.share);
             shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -83,6 +79,10 @@ public class ScoreActivity extends Activity {
             sound.playButtonSound();
             finish();
         }
+    }
+
+    public static void loadHighScore() {
+
     }
 
     @Override

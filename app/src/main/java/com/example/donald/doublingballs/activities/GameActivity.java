@@ -40,19 +40,11 @@ public class GameActivity extends AppCompatActivity {
         backgroundMusic = MediaPlayer.create(getApplicationContext(), R.raw.gamemusic);
         backgroundMusic.setLooping(true);
         backgroundMusic.start();
-
-        SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
-        ScoreActivity.highScore = settings.getInt("HIGH_SCORE", 0);
-        ScoreActivity.settings = settings;
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("HIGH_SCORE", ScoreActivity.highScore);
-        editor.commit();
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        backgroundMusic.stop();
         finish();
         super.onStop();
     }
@@ -60,6 +52,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         //bv.gameLoop.interrupt();
+        backgroundMusic.stop();
         finish();
         Log.d("onPause()", "isFinishing(): "+Boolean.toString(isFinishing()));
         //bv.surfaceDestroyed(bv.surfaceHolder);

@@ -1,7 +1,9 @@
 package com.example.donald.doublingballs.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -23,6 +25,13 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.main);
         sound = new Sound(this);
+
+        SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
+        ScoreActivity.highScore = settings.getInt("HIGH_SCORE", 0);
+        ScoreActivity.settings = settings;
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("HIGH_SCORE", ScoreActivity.highScore);
+        editor.commit();
     }
 
     public void onButtonClickPlay(View v){
