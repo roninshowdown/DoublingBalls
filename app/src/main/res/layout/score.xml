@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     android:background="@drawable/scoreactivity">
 
+    <TextView
+        android:id="@+id/currentscoreLabel"
+        android:layout_width="205dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/highscoreLabel1"
+        android:layout_marginBottom="105dip"
+        android:layout_marginEnd="140dip"
+        android:text="4000"
+        android:textColor="@android:color/background_light"
+        android:textSize="30sp" />
+
     <ImageButton
         android:id="@+id/back"
         android:layout_width="67dp"
@@ -17,31 +29,25 @@
         android:background="@drawable/backicon"
         android:onClick="onButtonClickBack" />
 
-    <TextView
-        android:id="@+id/highscoreLabel1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="116dp"
-        android:text="Highscore1" />
-
-    <TextView
-        android:id="@+id/currentscoreLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="126dp"
-        android:text="currentscore" />
-
     <ImageButton
         android:id="@+id/share"
         android:layout_width="64dp"
         android:layout_height="77dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/shareicon" />
+
+    <TextView
+        android:id="@+id/highscoreLabel1"
+        android:layout_width="205dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="140dip"
+        android:layout_marginTop="100dip"
+        android:text="4000"
+        android:textColor="@android:color/background_light"
+        android:textSize="30sp" />
 
 </RelativeLayout>

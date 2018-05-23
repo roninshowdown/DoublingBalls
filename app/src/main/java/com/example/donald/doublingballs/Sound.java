@@ -4,6 +4,8 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
 
+import com.example.donald.doublingballs.activities.R;
+
 public class Sound {
     public static SoundPool soundPool;
     private static int hitSound;

@@ -12,7 +12,6 @@ import android.view.WindowManager;
 
 import com.example.donald.doublingballs.Constants;
 import com.example.donald.doublingballs.GameView;
-import com.example.donald.doublingballs.R;
 
 public class GameActivity extends AppCompatActivity {
 

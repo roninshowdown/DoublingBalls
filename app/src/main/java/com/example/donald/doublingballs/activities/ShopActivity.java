@@ -9,7 +9,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.example.donald.doublingballs.R;
+
 import com.example.donald.doublingballs.Sound;
 import com.example.donald.doublingballs.activities.ScoreActivity;
 
