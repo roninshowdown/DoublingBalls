@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.example.donald.doublingballs.R;
 import com.example.donald.doublingballs.Sound;
 
 public class MainActivity extends Activity {

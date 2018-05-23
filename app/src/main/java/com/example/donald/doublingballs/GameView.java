@@ -24,6 +24,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
 import com.example.donald.doublingballs.activities.GameActivity;
+import com.example.donald.doublingballs.activities.R;
 import com.example.donald.doublingballs.activities.ScoreActivity;
 import com.example.donald.doublingballs.activities.ShopActivity;
 

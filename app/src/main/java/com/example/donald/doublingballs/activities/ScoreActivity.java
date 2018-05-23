@@ -12,7 +12,6 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.donald.doublingballs.R;
 import com.example.donald.doublingballs.Sound;
 
 public class ScoreActivity extends Activity {
@@ -33,7 +32,7 @@ public class ScoreActivity extends Activity {
         setContentView(R.layout.score);
 
 
-        TextView currentscoreLabel = (TextView) findViewById(R.id.currentscoreLabel);
+        TextView currentscoreLabel = (TextView) findViewById(R.id.highscoreLabel1);
         TextView highscoreLabel1 = (TextView) findViewById(R.id.highscoreLabel1);
 
 
@@ -48,13 +47,13 @@ public class ScoreActivity extends Activity {
 
         if(currentScore > highScore) {
             this.highScore = currentScore;
-            highscoreLabel1.setText("HighScore : " + currentScore);
+            highscoreLabel1.setText(currentScore+"");
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt("HIGH_SCORE", currentScore);
             editor.commit();
         }
         else{
-            highscoreLabel1.setText("HighScore: " + highScore );
+            highscoreLabel1.setText(highScore+"");
         }
 
             // Spielstand sichern
@@ -68,7 +67,7 @@ public class ScoreActivity extends Activity {
                     sound.playButtonSound();
                     Intent i = new Intent(Intent.ACTION_SEND);
                     i.setType("text/plain");
-                    String shareBody = "Highscore Doubling Balls: " + highScore + " Punkte !";
+                    String shareBody = "Mein HighScore in der App Doubling Balls beträgt " + highScore + " Punkte. Versuche das erstmal zu toppen!";
                     String shareSub = "Doubling Balls Highscore";
                     i.putExtra(Intent.EXTRA_SUBJECT, shareBody);
                     i.putExtra(Intent.EXTRA_TEXT, shareBody);
