@@ -48,6 +48,7 @@ public class BubblesActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        finish();
         super.onStop();
         backgroundMusic.stop();
     }

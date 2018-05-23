@@ -34,7 +34,7 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     // Score
 
     public boolean highscoreSound = true;
-
+    public boolean scoreActivity = true;
 
     // Colors
     public Paint red;
@@ -288,10 +288,14 @@ public class BubblesView extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onTouchEvent(MotionEvent event) {
 
         if (gameMode == GAME.OVER){ // Bei Gameover kommt man durch Klick ins Score Fenster
-            Intent i = new Intent(getContext(), Score.class);
-            i.putExtra("SCORE", reachedScore);
-            Log.d("Score: ", Integer.toString(reachedScore));
-            getContext().startActivity(i);
+            if (scoreActivity){
+                scoreActivity = false;
+                Intent i = new Intent(getContext(), Score.class);
+                i.putExtra("SCORE", reachedScore);
+                Log.d("Score: ", Integer.toString(reachedScore));
+                getContext().startActivity(i);
+
+            }
 
 
         }
