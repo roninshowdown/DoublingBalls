@@ -624,7 +624,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // Draw Time
         Paint timePaint = timePaint = new Paint();
         timePaint.setColor(Color.WHITE);
-        timePaint.setTextSize(14 * getResources().getDisplayMetrics().density);
+        timePaint.setTextSize(18 * getResources().getDisplayMetrics().density);
         String timeText = String.format("%.0f", getElapsedTime() + bonus_score);
         c.drawText(timeText, backgroundBitmap.getWidth() * 9/10, backgroundBitmap.getHeight() * 1/15, timePaint);
 
