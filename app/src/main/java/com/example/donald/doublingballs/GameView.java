@@ -316,7 +316,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             gameMode = GAME.START;
             gameLoop.startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
             // Erster Ball
-            balls.add(new Ball(50,backgroundBitmap.getWidth() / 17.06,backgroundBitmap.getHeight() / 3.42857, 10, 30.0 , 0.8, 50, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
+            balls.add(new Ball(50,backgroundBitmap.getWidth() / 17.06f,backgroundBitmap.getHeight() / 3.42857f, 10, 30.0 , 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
         }
 
         int activePointerID;
@@ -743,13 +743,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         // Die Bälle sollen immer weit genug vom aktuellen Ball wegspringen!
 
 
-                        ballObjectsToBeAdded.add(new Ball(50, ball.getPosx(), ball.getPosy(), 10, 30.0 , 0.8, 50, 0.025, BallType.MEDIUM, yellow, this)); // Medium Ball
-                        ballObjectsToBeAdded.add(new Ball(50, ball.getPosx(), ball.getPosy(), -10,30.0, 0.8, 50, 0.025, BallType.MEDIUM, yellow, this)); // Medium Ball
+                        ballObjectsToBeAdded.add(new Ball(50, ball.posx, ball.posy, 10, 30.0 , 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // Medium Ball
+                        ballObjectsToBeAdded.add(new Ball(50, ball.posx, ball.posy, -10,30.0, 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // Medium Ball
                     }
                     else if (ball.ballType == BallType.MEDIUM) { // Medium Balls
 
-                        ballObjectsToBeAdded.add(new Ball(20, ball.getPosx(), ball.getPosy(), 10, 30.0, 0.8, 25, 0.025, BallType.SMALL, green, this)); // small Ball
-                        ballObjectsToBeAdded.add(new Ball(20, ball.getPosx(), ball.getPosy(), -10, 30.0, 0.8, 25, 0.025, BallType.SMALL, green, this)); // small Ball
+                        ballObjectsToBeAdded.add(new Ball(20, ball.posx, ball.posy, 10, 30.0, 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
+                        ballObjectsToBeAdded.add(new Ball(20, ball.posx, ball.posy, -10, 30.0, 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
 
                     }
                     else{
@@ -816,11 +816,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             double probability = Math.random();
             // Lässt Balle mit unterschiedlichen Wahrscheinlichkeiten (L = 20%, M = 30 %, S = 50% ) spawnen
             if (probability <= 0.1) {
-                balls.add(new Ball(100, 150, backgroundBitmap.getHeight() / 3.42857, 10, 30.0, 0.8, 100, 0.025, BallType.LARGE, red, this)); // large Ball
+                balls.add(new Ball(100, backgroundBitmap.getWidth() / 17.05f, backgroundBitmap.getHeight() / 3.42857f, 10, 30.0, 0.8, backgroundBitmap.getWidth()/25.6f, 0.025, BallType.LARGE, red, this)); // large Ball
             } else if (probability > 0.1 && probability < 0.3) {
-                balls.add(new Ball(50, 75, backgroundBitmap.getHeight() / 3.42857, 10, 30.0, 0.8, 50, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball            }
+                balls.add(new Ball(50, backgroundBitmap.getWidth() / 17.05f, backgroundBitmap.getHeight() / 3.42857f, 10, 30.0, 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball            }
             } else if (probability >= 0.3 && probability <= 1) {
-                balls.add(new Ball(20, 32.5, backgroundBitmap.getHeight() / 3.42857, 10, 30.0, 0.8, 25, 0.025, BallType.SMALL, green, this)); // small Ball
+                balls.add(new Ball(20, backgroundBitmap.getWidth() / 17.05f, backgroundBitmap.getHeight() / 3.42857f, 10, 30.0, 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
             }
         }
         else {
@@ -830,20 +830,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             switch (spawndirection) {
                 case 0:
                     if (probability <= 0.1) { // left spawn
-                        balls.add(new Ball(100, 150,backgroundBitmap.getHeight() / 3.42857, 10, 30.0, 0.8, 100, 0.025, BallType.LARGE, red, this)); // large Ball
+                        balls.add(new Ball(100, backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, 10, 30.0, 0.8, backgroundBitmap.getWidth()/25.6f, 0.025, BallType.LARGE, red, this)); // large Ball
                     } else if (probability > 0.1 && probability < 0.3) {
-                        balls.add(new Ball(50,75,backgroundBitmap.getHeight() / 3.42857, 10, 30.0 , 0.8, 50, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
+                        balls.add(new Ball(50,backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, 10, 30.0 , 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
                     } else if (probability >= 0.3 && probability <= 1) {
-                        balls.add(new Ball(20, 32.5,backgroundBitmap.getHeight() / 3.42857, 10, 30.0, 0.8, 25, 0.025, BallType.SMALL, green, this)); // small Ball
+                        balls.add(new Ball(20, backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, 10, backgroundBitmap.getWidth()/102.4f, 0.8, 25, 0.025, BallType.SMALL, green, this)); // small Ball
                     }
                     break;
                 case 1:
                     if (probability <= 0.1) { // right spawn
-                        balls.add(new Ball(100, screenWidth-150,backgroundBitmap.getHeight() / 3.42857, -10, 30.0, 0.8, 100, 0.025, BallType.LARGE, red, this)); // large Ball
+                        balls.add(new Ball(100, backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, -10, 30.0, 0.8, backgroundBitmap.getWidth()/25.6f, 0.025, BallType.LARGE, red, this)); // large Ball
                     } else if (probability > 0.1 && probability < 0.3) {
-                        balls.add(new Ball(50,screenWidth-75,backgroundBitmap.getHeight() / 3.42857, -10, 30.0 , 0.8, 50, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
+                        balls.add(new Ball(50,backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, -10, 30.0 , 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
                     } else if (probability >= 0.3 && probability <= 1) {
-                        balls.add(new Ball(20, screenWidth-32.5,backgroundBitmap.getHeight() / 3.42857, -10, 30.0, 0.8, 25, 0.025, BallType.SMALL, green, this)); // small Ball
+                        balls.add(new Ball(20, backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, -10, 30.0, 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
 
                     }
                     break;
@@ -980,7 +980,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     /****
      * Called before main will be brought down
      */
-    @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.d("onPause()", "surfaceDestroyed");
         synchronized (this) {				//Must be executed exclusively
@@ -993,6 +992,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         Log.e("onPause()", "thread is buggy");
                     }
                     if (!gameLoop.isAlive()) Log.e("onPause()", "thread working as intended");
+                    Log.d("onPause()", "runningSD: "+Boolean.toString(gameLoop.running));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

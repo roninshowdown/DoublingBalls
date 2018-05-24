@@ -13,8 +13,8 @@ public class Ball {
 
     private double height;
     private double width;
-    private double posx;
-    private double posy;
+    public float posx;
+    public float posy;
     private double accx;
     private double accy;
     public double friction;
@@ -28,12 +28,12 @@ public class Ball {
     AudioManager audioManager;
     float currentVolume;
 
-    private int radius;
+    public float radius;
     private Paint p;
     public RectF rect = new RectF();
 
-    public Ball(int points, double posx, double posy, double accx, double accy,
-                double bounce, int radius, double friction, BallType ballType, Paint p, GameView v) {
+    public Ball(int points, float posx, float posy, double accx, double accy,
+                double bounce, float radius, double friction, BallType ballType, Paint p, GameView v) {
         this.ballType = ballType;
         this.posx = posx;
         this.posy = posy;
@@ -129,7 +129,7 @@ public class Ball {
         //height = c.getClipBounds().height();
         //width = c.getClipBounds().width();
         //c.drawRect(rect, new Paint());
-        c.drawCircle((float) posx, (float) posy, (float) radius, p);
+        c.drawCircle( posx, posy, radius, p);
 
     }
 
@@ -192,21 +192,11 @@ public class Ball {
         return bounce;
     }
 
-    public int getRadius() {
-        return radius;
-    }
 
     public Paint getP() {
         return p;
     }
 
-    public void setPosx(double posx) {
-        this.posx = posx;
-    }
-
-    public void setPosy(double posy) {
-        this.posy = posy;
-    }
 
     public void setAccx(double accx) {
         this.accx = accx;
