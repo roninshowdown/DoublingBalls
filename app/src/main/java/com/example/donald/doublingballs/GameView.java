@@ -12,6 +12,7 @@ import android.os.VibrationEffect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder.Callback;
@@ -623,7 +624,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // Draw Time
         Paint timePaint = timePaint = new Paint();
         timePaint.setColor(Color.WHITE);
-        timePaint.setTextSize(80);
+        timePaint.setTextSize(14 * getResources().getDisplayMetrics().density);
         String timeText = String.format("%.0f", getElapsedTime() + bonus_score);
         c.drawText(timeText, backgroundBitmap.getWidth() * 9/10, backgroundBitmap.getHeight() * 1/15, timePaint);
 
