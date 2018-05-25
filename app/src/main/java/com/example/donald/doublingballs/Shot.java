@@ -53,35 +53,4 @@ public class Shot {
 
     public boolean outOfRange(Canvas canvas) { return (yPos-shotHeigth/3<0); }
 
-    public float getxPos() {
-        return xPos;
-    }
-
-    public void setxPos(float xPos) {
-        this.xPos = xPos;
-    }
-
-    public float getyPos() {
-        return yPos;
-    }
-
-    public void setyPos(float yPos) {
-        this.yPos = yPos;
-    }
-
-    public float getShotWidth() {
-        return shotWidth;
-    }
-
-    public void setShotWidth(float shotWidth) {
-        this.shotWidth = shotWidth;
-    }
-
-    public float getShotHeigth() {
-        return shotHeigth;
-    }
-
-    public void setShotHeigth(float shotHeigth) {
-        this.shotHeigth = shotHeigth;
-    }
 }

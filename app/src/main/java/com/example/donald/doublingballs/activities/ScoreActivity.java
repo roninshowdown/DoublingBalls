@@ -41,7 +41,6 @@ public class ScoreActivity extends Activity {
         currentscoreLabel.setText(currentScore + "");
 
         // saved Scores
-
         //SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
         //ScoreActivity.highScore = settings.getInt("HIGH_SCORE", 0);
 
@@ -78,10 +77,6 @@ public class ScoreActivity extends Activity {
             sound.playButtonSound();
             finish();
         }
-    }
-
-    public static void loadHighScore() {
-
     }
 
     @Override

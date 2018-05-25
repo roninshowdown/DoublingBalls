@@ -23,10 +23,7 @@ public class Ball {
     public GameView bw;
 
     private double bounce;
-    private double defbounce;
-
-    AudioManager audioManager;
-    float currentVolume;
+    //private double defbounce;
 
     public float radius;
     private Paint p;
@@ -40,7 +37,7 @@ public class Ball {
         this.accx = accx;
         this.accy = accy;
         this.bounce = bounce;
-        this.defbounce = bounce;
+        //this.defbounce = bounce;
         this.radius = radius;
         this.friction = friction;
         this.p = p;
