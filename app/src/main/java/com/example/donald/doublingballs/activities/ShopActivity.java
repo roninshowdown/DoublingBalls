@@ -43,7 +43,10 @@ public class ShopActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
                 if (bChecked) {
-                    if (ScoreActivity.highScore >= 500) music = true;
+                    if (ScoreActivity.highScore >= 500){
+                        sound.playRadiobuttonbeepSound();
+                        music = true;
+                    }
                     else musicSW.setChecked(false);
                 } else {
                     music = false;
@@ -54,7 +57,10 @@ public class ShopActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
                 if (bChecked) {
-                    if (ScoreActivity.highScore >= 800) shield = true;
+                    if (ScoreActivity.highScore >= 800){
+                        sound.playRadiobuttonbeepSound();
+                        shield = true;
+                    }
                     else shieldSW.setChecked(false);
                 } else {
                     shield = false;
@@ -64,8 +70,12 @@ public class ShopActivity extends Activity {
         backgroundSW.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
+                sound.playRadiobuttonbeepSound();
                 if (bChecked) {
-                    if (ScoreActivity.highScore >= 1300) background = true;
+                    if (ScoreActivity.highScore >= 1300) {
+                        sound.playRadiobuttonbeepSound();
+                        background = true;
+                    }
                     else backgroundSW.setChecked(false);
                 } else {
                     background = false;
@@ -76,7 +86,10 @@ public class ShopActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
                 if (bChecked) {
-                    if (ScoreActivity.highScore >= 2000) speed = true;
+                    if (ScoreActivity.highScore >= 2000){
+                        sound.playRadiobuttonbeepSound();
+                        speed = true;
+                    }
                     else speedSW.setChecked(false);
                 } else {
                     speed = false;
@@ -87,7 +100,10 @@ public class ShopActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
                 if (bChecked) {
-                    if (ScoreActivity.highScore >= 3000) improvedShot = true;
+                    if (ScoreActivity.highScore >= 3000) {
+                        sound.playRadiobuttonbeepSound();
+                        improvedShot = true;
+                    }
                     else improvedShotSW.setChecked(false);
                 } else {
                     improvedShot = false;

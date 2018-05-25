@@ -1,46 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/menuactivity"
-    tools:layout_editor_absoluteY="25dp">
+    android:background="@drawable/menuactivity">
 
     <ImageButton
         android:id="@+id/play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="149dp"
-        android:layout_marginStart="119dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="64dp"
         android:background="@drawable/playicon"
-        android:onClick="onButtonClickPlay"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/shop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:onClick="onButtonClickPlay" />
 
     <ImageButton
         android:id="@+id/score"
-        android:layout_width="0dp"
+        android:layout_width="122dp"
         android:layout_height="132dp"
-        android:layout_marginEnd="119dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="75dp"
         android:background="@drawable/scoreicon"
-        android:onClick="onButtonClickScore"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/shop"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:onClick="onButtonClickScore" />
 
     <ImageButton
         android:id="@+id/shop"
-        android:layout_width="0dp"
+        android:layout_width="116dp"
         android:layout_height="143dp"
-        android:layout_marginEnd="142dp"
+        android:layout_centerInParent="true"
         android:background="@drawable/shopicon"
-        android:onClick="onButtonClickShop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/score"
-        app:layout_constraintStart_toEndOf="@+id/play"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        android:onClick="onButtonClickShop" />
+</RelativeLayout>

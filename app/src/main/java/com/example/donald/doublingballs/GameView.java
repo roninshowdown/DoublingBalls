@@ -624,7 +624,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // Draw Time
         Paint timePaint = timePaint = new Paint();
         timePaint.setColor(Color.WHITE);
-        timePaint.setTextSize(18 * getResources().getDisplayMetrics().density);
+        timePaint.setTextSize(16 * getResources().getDisplayMetrics().density);
         String timeText = String.format("%.0f", getElapsedTime() + bonus_score);
         c.drawText(timeText, backgroundBitmap.getWidth() * 9/10, backgroundBitmap.getHeight() * 1/15, timePaint);
 
@@ -687,11 +687,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
                 RectF gameOverRect = new RectF(backgroundBitmap.getWidth() * 2f / 10, 0f, backgroundBitmap.getWidth() * 8f / 10, backgroundBitmap.getHeight() * 4f / 10);
                 c.drawBitmap(gameOverHighScoreImage, null, gameOverRect, null);
+                timePaint.setTextSize(26 * getResources().getDisplayMetrics().density);
                 c.drawText(timeText, backgroundBitmap.getWidth() * 52/100, backgroundBitmap.getHeight() * 123/400, timePaint);
             }
             else {
                 RectF gameOverRect = new RectF(backgroundBitmap.getWidth() * 2f / 10, 0f, backgroundBitmap.getWidth() * 8f / 10, backgroundBitmap.getHeight() * 4f / 10);
                 c.drawBitmap(gameOverImage, null, gameOverRect, null);
+                timePaint.setTextSize(26 * getResources().getDisplayMetrics().density);
                 c.drawText(timeText, backgroundBitmap.getWidth() * 52/100, backgroundBitmap.getHeight() * 123/400, timePaint);
             }
         }
@@ -937,7 +939,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             timeThread = new Thread(new Runnable() {
                 public void run() {
                     while (runningTimeThread) {
-                        increaseElapsedTime(0.05);
+                        increaseElapsedTime(0.05); // 5 Punkte pro Sekunde
 
                         try {
                             Thread.sleep(10);
