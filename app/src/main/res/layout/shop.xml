@@ -21,14 +21,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/music"
-        android:layout_marginStart="187dp" />
+        android:layout_marginStart="179dp" />
 
     <Switch
         android:id="@+id/background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/music"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginStart="298dp" />
 
     <Switch
         android:id="@+id/speed"
@@ -36,15 +37,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/music"
-        android:layout_marginEnd="194dp" />
+        android:layout_marginEnd="173dp" />
 
     <Switch
         android:id="@+id/shot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_alignStart="@+id/back"
         android:layout_alignTop="@+id/music"
-        android:layout_marginEnd="57dp"
         android:checked="false" />
 
     <ImageButton

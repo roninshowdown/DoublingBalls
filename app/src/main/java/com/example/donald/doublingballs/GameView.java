@@ -191,7 +191,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         rightDeath[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath2);
         rightDeath[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath3);
 
-        player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting, backgroundBitmap, leftDeath, rightDeath);
+        player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting,leftDeath, rightDeath);
 
         if (ShopActivity.improvedShot) shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.improvedshot);
         else shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot);

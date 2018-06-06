@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.example.donald.doublingballs.Sound;
 
@@ -22,7 +24,20 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        /*
+        RelativeLayout ll =(RelativeLayout) findViewById(R.id.realtiveLayout);
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT, 20);
+
+        layoutParams.setMarginStart(60);
+
+        ViewGroup.MarginLayoutParams s =(ViewGroup.MarginLayoutParams)layoutParams;
+        s.setMarginStart(60);
+        */
+
         setContentView(R.layout.main);
+
         sound = new Sound(this);
 
         SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);

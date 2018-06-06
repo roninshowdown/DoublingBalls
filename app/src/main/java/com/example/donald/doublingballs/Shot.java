@@ -25,7 +25,7 @@ public class Shot {
         shotHeigth = image.getHeight();
         shotWidth = image.getWidth();
         this.player = player;
-        speed = 12f;
+        speed = Constants.SCREEN_HEIGHT / 120f;
     }
 
     public void update(Canvas c, float numberOfFrames){

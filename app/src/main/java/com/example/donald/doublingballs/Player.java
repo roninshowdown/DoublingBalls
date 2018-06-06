@@ -46,10 +46,9 @@ public class Player {
     public RectF rectBitmap = new RectF();
 
     public Player(Bitmap[] leftWalk, Bitmap[] rightWalk,
-                  Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting, Bitmap scaling,
-                  Bitmap[] leftDeath, Bitmap[] rightDeath) {
-        this.xPos = scaling.getWidth()/3;
-        this.yPos = scaling.getHeight() * 283/400;
+                  Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting, Bitmap[] leftDeath, Bitmap[] rightDeath) {
+        this.xPos = Constants.SCREEN_WIDTH / 2;
+        this.yPos = Constants.SCREEN_HEIGHT;
         this.leftWalk = leftWalk;
         this.rightWalk = rightWalk;
         this.leftStandStill = leftStandStill;
@@ -63,8 +62,8 @@ public class Player {
         playerWidth = leftStandStill.getWidth();
         playerHeigth = leftStandStill.getHeight();
 
-        if (ShopActivity.speed) speed = 40f; // TODO Turbotreter
-        else speed = 20f;
+        if (ShopActivity.speed) speed = Constants.SCREEN_HEIGHT / 36f;
+        else speed = Constants.SCREEN_HEIGHT / 72f;
     }
     /*
     public void determineStateOnMove() {
@@ -122,8 +121,10 @@ public class Player {
                 xPos = c.getWidth()-playerWidth/4;
             }
         }
+
         rect.set(xPos-playerWidth/6, yPos-playerHeigth*1.9f, xPos+playerWidth/6, yPos-playerHeigth*1.1f);
         rectBitmap.set(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth);
+
     }
 
     public void draw(Canvas canvas) {
