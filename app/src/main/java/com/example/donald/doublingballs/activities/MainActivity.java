@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 
 import com.example.donald.doublingballs.Sound;
 
@@ -24,47 +22,34 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        /*
-        RelativeLayout ll =(RelativeLayout) findViewById(R.id.realtiveLayout);
-
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT, 20);
-
-        layoutParams.setMarginStart(60);
-
-        ViewGroup.MarginLayoutParams s =(ViewGroup.MarginLayoutParams)layoutParams;
-        s.setMarginStart(60);
-        */
-
         setContentView(R.layout.main);
-
-        sound = new Sound(this);
+        sound = Sound.getInstance(getApplicationContext());
 
         SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
         ScoreActivity.highScore = settings.getInt("HIGH_SCORE", 0);
         ScoreActivity.settings = settings;
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("HIGH_SCORE", ScoreActivity.highScore);
-        editor.commit();
+        editor.apply();
     }
 
     public void onButtonClickPlay(View v){
-        sound.playButtonSound();
         if(v.getId() == R.id.play){
+            sound.playButtonSound();
             Intent i = new Intent(MainActivity.this, GameActivity.class);
             startActivity(i);
         }
     }
     public void onButtonClickShop(View v){
-        sound.playButtonSound();
         if(v.getId() == R.id.shop){
+            sound.playButtonSound();
             Intent i = new Intent(MainActivity.this, ShopActivity.class);
             startActivity(i);
         }
     }
     public void onButtonClickScore(View v){
-        sound.playButtonSound();
         if(v.getId() == R.id.score){
+            sound.playButtonSound();
             Intent i = new Intent(MainActivity.this, ScoreActivity.class);
             startActivity(i);
         }

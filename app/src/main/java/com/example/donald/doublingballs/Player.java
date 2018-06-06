@@ -24,7 +24,7 @@ public class Player {
     private State currentState = State.RIGHT_STAND_STILL;
 
     private int pictureCount = 0;
-    private int dieCounter = 0;  // TODO PICTURECOUNT VERSTEHEN/OPTIMIEREN
+    private int dieCounter = 0;
 
     private float playerWidth;
     private float playerHeigth;
@@ -111,8 +111,8 @@ public class Player {
         float movedDistance = speed * numberOfFrames;
         if(currentState == State.WALK_LEFT || currentState == State.LEFT_START_WALK) {
             xPos -= movedDistance;
-            if (xPos - playerHeigth/4 < 0) { // Walking against a wall
-                xPos = playerHeigth/4;
+            if (xPos - playerWidth/4 < 0) { // Walking against a wall
+                xPos = playerWidth/4;
             }
         }
         else if (currentState == State.WALK_RIGHT || currentState == State.RIGHT_START_WALK) {
@@ -121,10 +121,8 @@ public class Player {
                 xPos = c.getWidth()-playerWidth/4;
             }
         }
-
         rect.set(xPos-playerWidth/6, yPos-playerHeigth*1.9f, xPos+playerWidth/6, yPos-playerHeigth*1.1f);
         rectBitmap.set(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth);
-
     }
 
     public void draw(Canvas canvas) {

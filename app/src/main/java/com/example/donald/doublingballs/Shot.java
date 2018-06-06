@@ -16,7 +16,7 @@ public class Shot {
     private Bitmap image;
     private boolean newlyInstantiated = true;
     RectF rect = new RectF();
-    RectF rectBitmap = new RectF();
+    private RectF rectBitmap = new RectF();
 
     public Shot(float xPos, float yPos, Bitmap image, Player player) {
         this.xPos = xPos;
@@ -51,37 +51,6 @@ public class Shot {
         canvas.drawBitmap(image, null, rectBitmap, null); //TODO ANIMATIONSSQUENZ EINBAUEN
     }
 
-    public boolean outOfRange(Canvas canvas) { return (yPos-shotHeigth/3<0); }
+    public boolean outOfRange() { return (yPos-shotHeigth/3<0); }
 
-    public float getxPos() {
-        return xPos;
-    }
-
-    public void setxPos(float xPos) {
-        this.xPos = xPos;
-    }
-
-    public float getyPos() {
-        return yPos;
-    }
-
-    public void setyPos(float yPos) {
-        this.yPos = yPos;
-    }
-
-    public float getShotWidth() {
-        return shotWidth;
-    }
-
-    public void setShotWidth(float shotWidth) {
-        this.shotWidth = shotWidth;
-    }
-
-    public float getShotHeigth() {
-        return shotHeigth;
-    }
-
-    public void setShotHeigth(float shotHeigth) {
-        this.shotHeigth = shotHeigth;
-    }
 }

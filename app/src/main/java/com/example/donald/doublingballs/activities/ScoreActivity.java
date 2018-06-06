@@ -1,7 +1,6 @@
 package com.example.donald.doublingballs.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,38 +24,39 @@ public class ScoreActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sound = new Sound(this);
+        sound = Sound.getInstance(getApplicationContext());
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.score);
 
 
-        TextView currentscoreLabel = (TextView) findViewById(R.id.currentscoreLabel);
-        TextView highscoreLabel1 = (TextView) findViewById(R.id.highscoreLabel1);
+        TextView currentscoreLabel = findViewById(R.id.currentscoreLabel);
+        TextView highscoreLabel1 = findViewById(R.id.highscoreLabel1);
 
 
         currentScore = getIntent().getIntExtra("SCORE", 0);
         Log.d("currentScore: ", Integer.toString(currentScore));
-        currentscoreLabel.setText(currentScore + "");
+        String currentScoreText = currentScore+"";
+        currentscoreLabel.setText(currentScoreText);
 
         // saved Scores
-
         //SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
         //ScoreActivity.highScore = settings.getInt("HIGH_SCORE", 0);
 
         if(currentScore > highScore) {
-            this.highScore = currentScore;
-            highscoreLabel1.setText(currentScore+"");
+            highScore = currentScore;
+            highscoreLabel1.setText(currentScoreText);
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt("HIGH_SCORE", currentScore);
-            editor.commit();
+            editor.apply();
         }
         else{
-            highscoreLabel1.setText(highScore+"");
+            String hightScoreText = highScore+"";
+            highscoreLabel1.setText(hightScoreText);
         }
             // Spielstand sichern
-            shareButton = (ImageButton) findViewById(R.id.share);
+            shareButton = findViewById(R.id.share);
             shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -80,25 +80,5 @@ public class ScoreActivity extends Activity {
         }
     }
 
-    public static void loadHighScore() {
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        finish();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        finish();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 }
 

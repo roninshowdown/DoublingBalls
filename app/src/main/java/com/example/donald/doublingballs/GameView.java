@@ -119,21 +119,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
 
-    /****
-     * Constructor
-     * @param context
-     * @param attrs
-     */
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        getHolder().addCallback((Callback) this);	//Register this class as callback handler for the surface
+        getHolder().addCallback(this);	//Register this class as callback handler for the surface
 
         if (ShopActivity.background) backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background3);
         else backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background2);
 
-        sound = new Sound(context);
+        sound = Sound.getInstance(context);
 
         vibrator = context.getSystemService(Vibrator.class);
 
@@ -164,14 +160,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap leftStandStill = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftstandstill1);
         Bitmap rightStandStill = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightstandstill1);
 
-        Bitmap leftStartWalk = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftstart1);
-        Bitmap rightStartWalk = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightstart1);
-
-        Bitmap[] shooting = new Bitmap[4];
-        shooting[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot1); // TODO quatsch
-        shooting[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot1);
-        shooting[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot1);
-        shooting[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot1);
+        Bitmap shooting = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot1);
 
         Bitmap[] leftDeath = new Bitmap[7];
         leftDeath[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftdeath1);
@@ -191,7 +180,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         rightDeath[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath2);
         rightDeath[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath3);
 
-        player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting,leftDeath, rightDeath);
+        player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, shooting, backgroundBitmap, leftDeath, rightDeath);
 
         if (ShopActivity.improvedShot) shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.improvedshot);
         else shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot);
@@ -236,65 +225,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         if (ShopActivity.shield) life = 4;
         else life = 3;
-
-        GameActivity.bv = this;
     }
 
-    /*
+
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            float xPressed = event.getX();
-            float yPressed = event.getY();
-            //while(event.getAction() == MotionEvent.ACTION_BUTTON_PRESS) Log.d("test", "working");
-            if (xPressed <= buttonLeft.right && xPressed >= buttonLeft.left && yPressed <= buttonLeft.bottom && yPressed >= buttonLeft.top) {
-                player.setCurrentState(State.WALK_LEFT);
-                player.setDirection(Direction.LEFT);
-            }
-            else if (xPressed <= buttonRight.right && xPressed >= buttonRight.left && yPressed <= buttonRight.bottom && yPressed >= buttonRight.top) {
-                player.setCurrentState(State.WALK_RIGHT);
-                player.setDirection(Direction.RIGHT);
-            }
-            else if (xPressed <= buttonShoot.right && xPressed >= buttonShoot.left && yPressed <= buttonShoot.bottom && yPressed >= buttonShoot.top) {
-                if (shots.toArray().length < 3) {
-                    shots.add(new Shot(player.getxPos(), 0, shot, player));
-                    player.setCurrentState(State.SHOOT);
-                }
-
-            }
-            return true;
-        }
-        else if (event.getAction() == MotionEvent.ACTION_POINTER_UP) {
-            switch(player.getCurrentState()) {
-                case RIGHT_STAND_STILL: player.setCurrentState(State.RIGHT_STAND_STILL);
-                    break;
-                case LEFT_STAND_STILL:	player.setCurrentState(State.LEFT_STAND_STILL);
-                    break;
-                case RIGHT_START_WALK: 	player.setCurrentState(State.RIGHT_STAND_STILL);
-                    break;
-                case LEFT_START_WALK: 	player.setCurrentState(State.LEFT_STAND_STILL);
-                    break;
-                case WALK_RIGHT:		player.setCurrentState(State.RIGHT_STAND_STILL);
-                    break;
-                case WALK_LEFT:			player.setCurrentState(State.LEFT_STAND_STILL);
-                    break;
-                case SHOOT:				if (player.getDirection() == Direction.LEFT) player.setCurrentState(State.LEFT_STAND_STILL);
-                else player.setCurrentState(State.RIGHT_STAND_STILL);
-
-                    break;
-            }
-            return true;
-        }
-        return false;
+    public boolean performClick() {
+        return super.performClick();
     }
-    */
 
     //ignoring 3 finger touch events; the game is meant to be played with two
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         if (gameMode == GAME.OVER) {
             if (!scoreActivity) return false;
-            if (scoreActivity) {
                 scoreActivity = false;
                 new CountDownTimer(1000, 1000) {
 
@@ -310,14 +254,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         getContext().startActivity(i);
                     }
                 }.start();
-            }
+
         }
 
         if(gameMode == GAME.PENDING) {
             gameMode = GAME.START;
             gameLoop.startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
             // Erster Ball
-            balls.add(new Ball(50,backgroundBitmap.getWidth() / 17.06f,backgroundBitmap.getHeight() / 3.42857f, 10, 30.0 , 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
+            balls.add(new Ball(50,backgroundBitmap.getWidth() / 17.06f,backgroundBitmap.getHeight() / 3.42857f, backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48 , 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
         }
 
         int activePointerID;
@@ -612,11 +556,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         buttonLeft = new Rect(backgroundBitmap.getWidth() * 5/200, backgroundBitmap.getHeight() * 82/100, backgroundBitmap.getWidth()*27/200, backgroundBitmap.getHeight() * 985/1000);
         buttonRight = new Rect( backgroundBitmap.getWidth()* 32/200, backgroundBitmap.getHeight() * 82/100, backgroundBitmap.getWidth()*54/200, backgroundBitmap.getHeight() * 985/1000);
         buttonShoot = new Rect(backgroundBitmap.getWidth()* 85/100, backgroundBitmap.getHeight()*82/100, backgroundBitmap.getWidth()*95/100, backgroundBitmap.getHeight()*97/100);
-        /*
-        c.drawRect(buttonLeft, paint);
-        c.drawRect(buttonRight, paint);
-        c.drawRect(buttonShoot, paint);
-        */
+
         c.drawBitmap(buttonLeftImage, null, buttonLeft, null);
         c.drawBitmap(buttonRightImage, null, buttonRight, null);
         c.drawBitmap(buttonShootImage, null, buttonShoot, null);
@@ -717,7 +657,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         for (Shot shot : shots) {
             shot.update(canvas, numberOfFrames);
-            if(shot.outOfRange(canvas)) {
+            if(shot.outOfRange()) {
                 shotsToBeRemoved.add(shot);
             }
         }
@@ -746,13 +686,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         // Die Bälle sollen immer weit genug vom aktuellen Ball wegspringen!
 
 
-                        ballObjectsToBeAdded.add(new Ball(50, ball.posx, ball.posy, 10, 30.0 , 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // Medium Ball
-                        ballObjectsToBeAdded.add(new Ball(50, ball.posx, ball.posy, -10,30.0, 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // Medium Ball
+                        ballObjectsToBeAdded.add(new Ball(50, ball.posx, ball.posy, backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48  , 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // Medium Ball
+                        ballObjectsToBeAdded.add(new Ball(50, ball.posx, ball.posy, -backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48 , 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // Medium Ball
                     }
                     else if (ball.ballType == BallType.MEDIUM) { // Medium Balls
 
-                        ballObjectsToBeAdded.add(new Ball(20, ball.posx, ball.posy, 10, 30.0, 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
-                        ballObjectsToBeAdded.add(new Ball(20, ball.posx, ball.posy, -10, 30.0, 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
+                        ballObjectsToBeAdded.add(new Ball(20, ball.posx, ball.posy, backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48 , 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
+                        ballObjectsToBeAdded.add(new Ball(20, ball.posx, ball.posy, -backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48 , 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
 
                     }
                     else{
@@ -767,11 +707,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         for (Shot shot : shotsToBeRemoved) {
             shots.remove(shot);
+            shot = null;
         }
         ammo = 3- shots.size();
 
         for (Ball ball : ballObjectsToBeRemoved) {
             balls.remove(ball);
+            ball = null;
         }
 
         // Listen leeren
@@ -810,20 +752,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
         difficulty_factor += 0.005; // Schwierigkeit wird nach 300 Sekunden einfach langsam linear erhöht
 
-        if ((int) (Math.random() * 500
-        ) > difficulty_factor) // nur wenn die Zahl <= factor ist wird ein Ball gespawnt
-            return;
+        if ((int) (Math.random() * 500) > difficulty_factor) return;// nur wenn die Zahl <= factor ist wird ein Ball gespawnt
         //backgroundBitmap.getWidth() / 17.05 = x
         //backgroundBitmap.getHeight() / 3.42857 = y
         if(difficulty_factor < 7) {
             double probability = Math.random();
             // Lässt Balle mit unterschiedlichen Wahrscheinlichkeiten (L = 20%, M = 30 %, S = 50% ) spawnen
             if (probability <= 0.1) {
-                balls.add(new Ball(100, backgroundBitmap.getWidth() / 17.05f, backgroundBitmap.getHeight() / 3.42857f, 10, 30.0, 0.8, backgroundBitmap.getWidth()/25.6f, 0.025, BallType.LARGE, red, this)); // large Ball
+                balls.add(new Ball(100, backgroundBitmap.getWidth() / 17.05f, backgroundBitmap.getHeight() / 3.42857f, backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48, 0.8, backgroundBitmap.getWidth()/25.6f, 0.025, BallType.LARGE, red, this)); // large Ball
             } else if (probability > 0.1 && probability < 0.3) {
-                balls.add(new Ball(50, backgroundBitmap.getWidth() / 17.05f, backgroundBitmap.getHeight() / 3.42857f, 10, 30.0, 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball            }
+                balls.add(new Ball(50, backgroundBitmap.getWidth() / 17.05f, backgroundBitmap.getHeight() / 3.42857f, backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48, 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball            }
             } else if (probability >= 0.3 && probability <= 1) {
-                balls.add(new Ball(20, backgroundBitmap.getWidth() / 17.05f, backgroundBitmap.getHeight() / 3.42857f, 10, 30.0, 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
+                balls.add(new Ball(20, backgroundBitmap.getWidth() / 17.05f, backgroundBitmap.getHeight() / 3.42857f, backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48, 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
             }
         }
         else {
@@ -833,20 +773,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             switch (spawndirection) {
                 case 0:
                     if (probability <= 0.1) { // left spawn
-                        balls.add(new Ball(100, backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, 10, 30.0, 0.8, backgroundBitmap.getWidth()/25.6f, 0.025, BallType.LARGE, red, this)); // large Ball
+                        balls.add(new Ball(100, backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48, 0.8, backgroundBitmap.getWidth()/25.6f, 0.025, BallType.LARGE, red, this)); // large Ball
                     } else if (probability > 0.1 && probability < 0.3) {
-                        balls.add(new Ball(50,backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, 10, 30.0 , 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
+                        balls.add(new Ball(50,backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48, 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
                     } else if (probability >= 0.3 && probability <= 1) {
-                        balls.add(new Ball(20, backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, 10, backgroundBitmap.getWidth()/102.4f, 0.8, 25, 0.025, BallType.SMALL, green, this)); // small Ball
+                        balls.add(new Ball(20, backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48, 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
                     }
                     break;
                 case 1:
                     if (probability <= 0.1) { // right spawn
-                        balls.add(new Ball(100, backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, -10, 30.0, 0.8, backgroundBitmap.getWidth()/25.6f, 0.025, BallType.LARGE, red, this)); // large Ball
+                        balls.add(new Ball(100, backgroundBitmap.getWidth() - backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, -backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48, 0.8, backgroundBitmap.getWidth()/25.6f, 0.025, BallType.LARGE, red, this)); // large Ball
                     } else if (probability > 0.1 && probability < 0.3) {
-                        balls.add(new Ball(50,backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, -10, 30.0 , 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
+                        balls.add(new Ball(50,backgroundBitmap.getWidth() - backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, -backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48, 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
                     } else if (probability >= 0.3 && probability <= 1) {
-                        balls.add(new Ball(20, backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, -10, 30.0, 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
+                        balls.add(new Ball(20, backgroundBitmap.getWidth() - backgroundBitmap.getWidth() / 17.05f,backgroundBitmap.getHeight() / 3.42857f, -backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48, 0.8, backgroundBitmap.getWidth()/102.4f, 0.025, BallType.SMALL, green, this)); // small Ball
 
                     }
                     break;
@@ -909,7 +849,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     canvas.drawText(String.format("FPS: %f", fps), 10, 10, new Paint());
 
                     calculateDisplay(canvas, framesSinceLastFrame);	//update positions of bubbles
-                    Log.d("test", Float.toString(framesSinceLastFrame));
+                    //Log.d("test", Float.toString(framesSinceLastFrame));
 
                     thisFrameTime = System.currentTimeMillis();
                     int timeDelta = (int) (thisFrameTime - lastFrameTime);
@@ -927,8 +867,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }catch(InterruptedException e){
 
                 }finally {
-                    if (canvas != null)
-                        surfaceHolder.unlockCanvasAndPost(canvas);
+                    if (canvas != null) surfaceHolder.unlockCanvasAndPost(canvas);
                 }
             }
         }
@@ -1001,6 +940,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
             gameLoop = null;
+
+            if(timeThread != null) {
+                runningTimeThread = false;
+                try {
+                    timeThread.interrupt();
+                    timeThread.join(500);
+                    if (timeThread.isAlive()) {
+                        Log.e("onPause()", "thread is buggy");
+                    }
+                    if (!timeThread.isAlive()) Log.e("onPause()", "thread working as intended");
+                    Log.d("onPause()", "runningSD: "+Boolean.toString(runningTimeThread));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            timeThread = null;
         }
     }
 }

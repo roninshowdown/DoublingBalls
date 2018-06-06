@@ -28,7 +28,7 @@ public class ShopActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.shop);
-        sound = new Sound(this);
+        sound = Sound.getInstance(getApplicationContext());
 
         musicSW = (Switch) findViewById(R.id.music);
         backgroundSW = (Switch) findViewById(R.id.background);

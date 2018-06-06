@@ -7,21 +7,29 @@ import android.media.SoundPool;
 import com.example.donald.doublingballs.activities.R;
 
 public class Sound {
-    public static SoundPool soundPool;
-    private static int hitSound;
-    private static int deathSound;
-    private static int bounceSound;
-    private static int laserSound;
-    private static int blubbSound;
-    public static int walkingSound;
-    private static int buttonSound;
-    private static int backgroundSound;
-    private static int radiobuttonSound;
-    private static int highscoreSound;
-    private static int improvedShotSound;
 
-    public Sound(Context context){
-        soundPool = new SoundPool(6, AudioManager.STREAM_MUSIC,0);
+    private static Sound instance = null;
+
+    public SoundPool soundPool;
+    private int hitSound;
+    private int deathSound;
+    private int bounceSound;
+    private int laserSound;
+    private int blubbSound;
+    private int walkingSound;
+    private int buttonSound;
+    private int radiobuttonSound;
+    private int highscoreSound;
+    private int improvedShotSound;
+
+
+    public static Sound getInstance(Context c) {
+        if (instance == null) instance = new Sound(c);
+        return instance;
+    }
+
+    private Sound(Context context){
+        soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC,0);
         hitSound = soundPool.load(context, R.raw.hit, 1);
         deathSound = soundPool.load(context, R.raw.deathsound, 1);
         bounceSound = soundPool.load(context, R.raw.bouncingball, 1);
