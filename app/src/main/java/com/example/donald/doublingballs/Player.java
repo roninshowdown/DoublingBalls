@@ -31,7 +31,7 @@ public class Player {
 
     private Bitmap[] leftWalk;
     private Bitmap[] rightWalk;
-    private Bitmap[] shooting;
+    private Bitmap shooting;
     private Bitmap[] leftDeath;
     private Bitmap[] rightDeath;
 
@@ -39,14 +39,11 @@ public class Player {
     private Bitmap leftStandStill;
     private Bitmap rightStandStill;
 
-    private Bitmap leftStartWalk;
-    private Bitmap rightStartWalk;
-
     public RectF rect = new RectF();
     public RectF rectBitmap = new RectF();
 
     public Player(Bitmap[] leftWalk, Bitmap[] rightWalk,
-                  Bitmap leftStandStill, Bitmap rightStandStill, Bitmap leftStartWalk, Bitmap rightStartWalk, Bitmap[] shooting, Bitmap scaling,
+                  Bitmap leftStandStill, Bitmap rightStandStill, Bitmap shooting, Bitmap scaling,
                   Bitmap[] leftDeath, Bitmap[] rightDeath) {
         this.xPos = scaling.getWidth()/3;
         this.yPos = scaling.getHeight() * 283/400;
@@ -54,8 +51,6 @@ public class Player {
         this.rightWalk = rightWalk;
         this.leftStandStill = leftStandStill;
         this.rightStandStill = rightStandStill;
-        this.leftStartWalk = leftStartWalk;
-        this.rightStartWalk = rightStartWalk;
         this.shooting = shooting;
         this.leftDeath = leftDeath;
         this.rightDeath = rightDeath;
@@ -66,46 +61,6 @@ public class Player {
         if (ShopActivity.speed) speed = 40f;
         else speed = 20f;
     }
-    /*
-    public void determineStateOnMove() {
-        if (direction == Direction.LEFT) {
-            switch (getCurrentState()) {
-                case RIGHT_STAND_STILL: setCurrentState(State.LEFT_START_WALK);
-                    break;
-                case LEFT_STAND_STILL:  setCurrentState(State.LEFT_START_WALK);
-                    break;
-                case RIGHT_START_WALK:  setCurrentState(State.LEFT_START_WALK);
-                    break;
-                case LEFT_START_WALK:   setCurrentState(State.WALK_LEFT);
-                    break;
-                case WALK_RIGHT:        setCurrentState(State.LEFT_START_WALK);
-                    break;
-                case WALK_LEFT:         setCurrentState(State.WALK_LEFT);
-                    break;
-                case SHOOT:             setCurrentState(State.LEFT_START_WALK);
-                    break;
-            }
-        }
-        else if (direction == Direction.RIGHT) {
-            switch(getCurrentState()) {
-                case RIGHT_STAND_STILL: setCurrentState(State.RIGHT_START_WALK);
-                    break;
-                case LEFT_STAND_STILL:  setCurrentState(State.RIGHT_START_WALK);
-                    break;
-                case RIGHT_START_WALK: 	setCurrentState(State.WALK_RIGHT);
-                    break;
-                case LEFT_START_WALK: 	setCurrentState(State.RIGHT_START_WALK);
-                    break;
-                case WALK_RIGHT:		setCurrentState(State.WALK_RIGHT);
-                    break;
-                case WALK_LEFT:			setCurrentState(State.RIGHT_START_WALK);
-                    break;
-                case SHOOT:				setCurrentState(State.RIGHT_START_WALK);
-                    break;
-            }
-        }
-    }
-    */
 
     public void update(Canvas c, float numberOfFrames)  {
         //determineStateOnMove();
@@ -133,9 +88,6 @@ public class Player {
             case LEFT_STAND_STILL:  canvas.drawBitmap(leftStandStill, null, rectBitmap, null);
                                     break;
 
-            case LEFT_START_WALK:   canvas.drawBitmap(leftStartWalk, null, rectBitmap, null);
-                                    break;
-
             case WALK_LEFT:         canvas.drawBitmap(leftWalk[pictureCount], null, rectBitmap, null);
                                     ++pictureCount;
                                     pictureCount %= 10;
@@ -144,14 +96,11 @@ public class Player {
             case RIGHT_STAND_STILL: canvas.drawBitmap(rightStandStill, null, rectBitmap, null);
                                     break;
 
-            case RIGHT_START_WALK:  canvas.drawBitmap(rightStartWalk, null, rectBitmap, null);
-                                    break;
-
             case WALK_RIGHT:        canvas.drawBitmap(rightWalk[pictureCount], null, rectBitmap, null);
                                     ++pictureCount;
                                     pictureCount %= 10;
                                     break;
-            case SHOOT:             canvas.drawBitmap(shooting[3], null, new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth - yPos/ 50), null); //TODO ANIMATIONSEQUENZ EINBAUEN
+            case SHOOT:             canvas.drawBitmap(shooting, null, new RectF(xPos-playerWidth/2, yPos-playerHeigth*2, xPos+playerWidth/2, yPos-playerHeigth - yPos/ 50), null); //TODO ANIMATIONSEQUENZ EINBAUEN
 
                                     break;
 

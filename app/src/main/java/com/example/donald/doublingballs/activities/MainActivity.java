@@ -23,33 +23,33 @@ public class MainActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.main);
-        sound = new Sound(this);
+        sound = Sound.getInstance(getApplicationContext());
 
         SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
         ScoreActivity.highScore = settings.getInt("HIGH_SCORE", 0);
         ScoreActivity.settings = settings;
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("HIGH_SCORE", ScoreActivity.highScore);
-        editor.commit();
+        editor.apply();
     }
 
     public void onButtonClickPlay(View v){
-        sound.playButtonSound();
         if(v.getId() == R.id.play){
+            sound.playButtonSound();
             Intent i = new Intent(MainActivity.this, GameActivity.class);
             startActivity(i);
         }
     }
     public void onButtonClickShop(View v){
-        sound.playButtonSound();
         if(v.getId() == R.id.shop){
+            sound.playButtonSound();
             Intent i = new Intent(MainActivity.this, ShopActivity.class);
             startActivity(i);
         }
     }
     public void onButtonClickScore(View v){
-        sound.playButtonSound();
         if(v.getId() == R.id.score){
+            sound.playButtonSound();
             Intent i = new Intent(MainActivity.this, ScoreActivity.class);
             startActivity(i);
         }
