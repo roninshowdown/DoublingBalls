@@ -27,9 +27,8 @@
         android:id="@+id/background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/music"
-        android:layout_marginStart="298dp" />
+        android:layout_centerHorizontal="true" />
 
     <Switch
         android:id="@+id/speed"
@@ -37,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/music"
-        android:layout_marginEnd="173dp" />
+        android:layout_marginEnd="166dp" />
 
     <Switch
         android:id="@+id/shot"
@@ -49,8 +48,8 @@
 
     <ImageButton
         android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="67dp"
+        android:layout_height="49dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_marginEnd="24dp"
@@ -60,7 +59,7 @@
 
     <TextView
         android:id="@+id/textViewScore"
-        android:layout_width="wrap_content"
+        android:layout_width="205dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/back"

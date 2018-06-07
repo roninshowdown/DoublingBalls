@@ -41,15 +41,15 @@ public class MainActivity extends Activity {
         }
     }
     public void onButtonClickShop(View v){
+        sound.playButtonSound();
         if(v.getId() == R.id.shop){
-            sound.playButtonSound();
             Intent i = new Intent(MainActivity.this, ShopActivity.class);
             startActivity(i);
         }
     }
     public void onButtonClickScore(View v){
+        sound.playButtonSound();
         if(v.getId() == R.id.score){
-            sound.playButtonSound();
             Intent i = new Intent(MainActivity.this, ScoreActivity.class);
             startActivity(i);
         }

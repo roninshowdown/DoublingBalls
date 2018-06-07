@@ -66,7 +66,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     synchronized private void increaseElapsedTime(double increment) { elapsedTime += increment; }
 
     public SurfaceHolder surfaceHolder = null; //Surface to hijack
-    public GameLoop gameLoop; //Display refresh thread
+    private MainThread thread; //Display refresh thread
 
     public Bitmap backgroundBitmap;
     public Bitmap shot;
@@ -126,6 +126,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         getHolder().addCallback(this);	//Register this class as callback handler for the surface
 
+        thread = new MainThread(getHolder(), this);
+
         if (ShopActivity.background) backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background3);
         else backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background2);
 
@@ -160,7 +162,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap leftStandStill = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftstandstill1);
         Bitmap rightStandStill = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightstandstill1);
 
-        Bitmap shooting = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot1);
+        Bitmap leftStartWalk = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftstart1);
+        Bitmap rightStartWalk = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightstart1);
+
+        Bitmap[] shooting = new Bitmap[4];
+        shooting[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot1);
+        shooting[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot1);
+        shooting[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot1);
+        shooting[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.shoot1);
 
         Bitmap[] leftDeath = new Bitmap[7];
         leftDeath[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.leftdeath1);
@@ -180,7 +189,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         rightDeath[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath2);
         rightDeath[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.rightdeath3);
 
-        player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, shooting, backgroundBitmap, leftDeath, rightDeath);
+        player = new Player(leftWalk, rightWalk, leftStandStill, rightStandStill, leftStartWalk, rightStartWalk, shooting ,leftDeath, rightDeath);
 
         if (ShopActivity.improvedShot) shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.improvedshot);
         else shot = BitmapFactory.decodeResource(context.getResources(), R.drawable.shot);
@@ -240,6 +249,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if (gameMode == GAME.OVER) {
             if (!scoreActivity) return false;
                 scoreActivity = false;
+
+                runningTimeThread = false; // stoppt die Zeit
+                if (timeThread != null){
+                    timeThread.interrupt();
+                    timeThread = null;
+                }
+
                 new CountDownTimer(1000, 1000) {
 
                     public void onTick(long millisUntilFinished) {
@@ -255,11 +271,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     }
                 }.start();
 
+
         }
 
         if(gameMode == GAME.PENDING) {
             gameMode = GAME.START;
-            gameLoop.startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
+            startTimeThread(); // startet die Zeit nach dem ersten Button-Klick, if Abfrage sorgt dafür das nur ein Zeit-Thread existiert.
             // Erster Ball
             balls.add(new Ball(50,backgroundBitmap.getWidth() / 17.06f,backgroundBitmap.getHeight() / 3.42857f, backgroundBitmap.getHeight()/144, backgroundBitmap.getHeight()/48 , 0.8, backgroundBitmap.getWidth()/51.2f, 0.025, BallType.MEDIUM, yellow, this)); // medium Ball
         }
@@ -536,8 +553,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * drawScreen: Paints background and all bubbles
      * @param c: Canvas to be drawn on
      */
-    private void drawScreen(Canvas c) {
+    @Override
+    public void draw(Canvas c) {
 
+        super.draw(c);
         backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, c.getWidth(), c.getHeight(), true);
         // 2560
         // 1440
@@ -640,7 +659,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
 
-    private void calculateDisplay(Canvas canvas, float numberOfFrames) {
+    public void calculateDisplay(Canvas canvas, float numberOfFrames) {
 
         player.update(canvas, numberOfFrames);
 
@@ -816,84 +835,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
 
-    /****
-     * Private main loop thread
-     */
-    public class GameLoop extends Thread {
-        private long msPerFrame = 1000/30;	//Frame rate
-        public boolean running = true;		//Control flag for start / stop mechanism
-        private int fpsSamples[] = new int[50];
-        private int samplePos = 0;
-        private int samplesSum = 0;
-        /****
-         * run is the standard routine called, when a thread is started via the start() method
-         */
-        public void run() {
-            Canvas canvas = null;
-            long thisFrameTime;
-            long lastFrameTime = System.currentTimeMillis();
-            float framesSinceLastFrame;
-            final SurfaceHolder surfaceHolder = GameView.this.surfaceHolder;
+    public  void startTimeThread() {
+        if(runningTimeThread) return;
+        runningTimeThread = true;
+        resetElapsedTime();
+        timeThread = new Thread(new Runnable() {
+            public void run() {
+                while (runningTimeThread) {
+                    increaseElapsedTime(0.05); // 5 Punkte pro Sekunde
 
-            while (running) {
-                try {
-                    canvas = surfaceHolder.lockCanvas();	//Get the canvas exclusively
-                    if(canvas == null) continue;
-                    synchronized (surfaceHolder) {			//Must be executed exclusively
-                        drawScreen(canvas);					//Draw bubbles
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException ex) {
+
+                        runningTimeThread=false;
                     }
-                    thisFrameTime = System.currentTimeMillis();		//Calculate the exact no. of frames since last loop
-                    framesSinceLastFrame = (float)(thisFrameTime - lastFrameTime)/msPerFrame;
-
-                    float fps = 1000.0f / ((float)samplesSum / fpsSamples.length);
-                    canvas.drawText(String.format("FPS: %f", fps), 10, 10, new Paint());
-
-                    calculateDisplay(canvas, framesSinceLastFrame);	//update positions of bubbles
-                    //Log.d("test", Float.toString(framesSinceLastFrame));
-
-                    thisFrameTime = System.currentTimeMillis();
-                    int timeDelta = (int) (thisFrameTime - lastFrameTime);
-
-                    samplesSum -= fpsSamples[samplePos];
-                    fpsSamples[samplePos++] = timeDelta;
-                    samplesSum += timeDelta;
-                    samplePos %= fpsSamples.length;
-
-                    lastFrameTime = thisFrameTime;
-
-                    if(timeDelta<msPerFrame)
-                        sleep(msPerFrame - timeDelta);
-
-                }catch(InterruptedException e){
-
-                }finally {
-                    if (canvas != null) surfaceHolder.unlockCanvasAndPost(canvas);
                 }
-            }
-        }
-        public  void startTimeThread() {
-            if(runningTimeThread) return;
-            runningTimeThread = true;
-            resetElapsedTime();
-            timeThread = new Thread(new Runnable() {
-                public void run() {
-                    while (runningTimeThread) {
-                        increaseElapsedTime(0.05); // 5 Punkte pro Sekunde
-
-                        try {
-                            Thread.sleep(10);
-                        } catch (InterruptedException ex) {
-
-                            runningTimeThread=false;
-                        }
-                    }
-                }});
-            timeThread.start();
-
-        }
+            }});
+        timeThread.start();
 
     }
-
 
 /****
  * Interfcae implementation
@@ -903,13 +864,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Called when main is up
      */
     public void surfaceCreated(SurfaceHolder holder) {
-        surfaceHolder = holder;
-        synchronized (this) {				//Must be executed exclusively
-            if (gameLoop == null) {
-                gameLoop = new GameLoop();	//Start animation here
-                gameLoop.start();
-            }
-        }
+            thread = new MainThread(getHolder(), this);
+            thread.setRunning(true);
+            thread.start();
     }
 
     /****
@@ -922,40 +879,37 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     /****
      * Called before main will be brought down
      */
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d("onPause()", "surfaceDestroyed");
-        synchronized (this) {				//Must be executed exclusively
-            if(gameLoop != null) {
-                gameLoop.running = false;
-                try {
-                    gameLoop.interrupt();
-                    gameLoop.join(500);
-                    if (gameLoop.isAlive()) {
-                        Log.e("onPause()", "thread is buggy");
-                    }
-                    if (!gameLoop.isAlive()) Log.e("onPause()", "thread working as intended");
-                    Log.d("onPause()", "runningSD: "+Boolean.toString(gameLoop.running));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            gameLoop = null;
 
-            if(timeThread != null) {
-                runningTimeThread = false;
-                try {
-                    timeThread.interrupt();
-                    timeThread.join(500);
-                    if (timeThread.isAlive()) {
-                        Log.e("onPause()", "thread is buggy");
-                    }
-                    if (!timeThread.isAlive()) Log.e("onPause()", "thread working as intended");
-                    Log.d("onPause()", "runningSD: "+Boolean.toString(runningTimeThread));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+    public void surfaceDestroyed(SurfaceHolder holder) {
+
+        thread.setRunning(false);
+        if (thread != null){
+            thread.interrupt();
+            thread = null;
+        }
+        /*
+        boolean retry = true;
+        while(retry){
+            try{
+                thread.setRunning(false);
+                thread.join();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            retry = false;
+        }
+        if (timeThread != null){
+            try{
+                timeThread.interrupt();
+                while (timeThread.isAlive()){
+                    timeThread.join();
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
             timeThread = null;
         }
+        */
     }
+
 }

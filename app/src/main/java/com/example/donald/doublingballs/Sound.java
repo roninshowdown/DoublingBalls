@@ -29,7 +29,7 @@ public class Sound {
     }
 
     private Sound(Context context){
-        soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC,0);
+        soundPool = new SoundPool(6, AudioManager.STREAM_MUSIC,0);
         hitSound = soundPool.load(context, R.raw.hit, 1);
         deathSound = soundPool.load(context, R.raw.deathsound, 1);
         bounceSound = soundPool.load(context, R.raw.bouncingball, 1);

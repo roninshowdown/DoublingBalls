@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.donald.doublingballs.GameView;
 import com.example.donald.doublingballs.Sound;
 
 public class ScoreActivity extends Activity {
@@ -19,6 +20,7 @@ public class ScoreActivity extends Activity {
     public static SharedPreferences settings;
     public int currentScore = 0;
     public static int highScore = 0;
+
     private Sound sound;
 
     @Override
@@ -72,7 +74,11 @@ public class ScoreActivity extends Activity {
             });
         }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
     public void onButtonClickBack(View v) {
         if (v.getId() == R.id.back) {
             sound.playButtonSound();
