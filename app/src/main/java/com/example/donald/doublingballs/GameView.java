@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.widget.Toast;
 
 import com.example.donald.doublingballs.activities.GameActivity;
 import com.example.donald.doublingballs.activities.R;
@@ -30,7 +31,7 @@ import com.example.donald.doublingballs.activities.ScoreActivity;
 import com.example.donald.doublingballs.activities.ShopActivity;
 
 enum GAME {
-    PENDING, START, OVER
+    PENDING, START, OVER, WAIT
 }
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
@@ -247,6 +248,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onTouchEvent(MotionEvent event) {
 
         if (gameMode == GAME.OVER) {
+
             if (!scoreActivity) return false;
                 scoreActivity = false;
 
@@ -255,8 +257,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     timeThread.interrupt();
                     timeThread = null;
                 }
-
-                new CountDownTimer(1000, 1000) {
+                new CountDownTimer(2000, 2000) {
 
                     public void onTick(long millisUntilFinished) {
                         //mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
@@ -270,7 +271,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         getContext().startActivity(i);
                     }
                 }.start();
-
 
         }
 
